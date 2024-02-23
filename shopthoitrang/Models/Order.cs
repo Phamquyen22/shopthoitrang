@@ -16,15 +16,12 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_order { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_order { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_user { get; set; }
+        public int id_user { get; set; }
 
-        [StringLength(50)]
-        public string id_discount { get; set; }
+        public int? id_discount { get; set; }
 
         public double? total { get; set; }
 

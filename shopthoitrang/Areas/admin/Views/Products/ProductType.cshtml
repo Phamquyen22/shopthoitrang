@@ -1,12 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Category";
+    ViewBag.Title = "ProductType";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
     database database = new database();
 }
-
 @using shopthoitrang.Models;
-@model List<Category>
+@model List<product_type>
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -19,17 +18,15 @@
         </div>
 
         <div class="section-body">
-            <h2 class="section-title">danh mục sản phẩm</h2>
-            <p class="section-lead">Các danh muc sản phẩm</p>
+            <h2 class="section-title">Loại sản phẩm</h2>
+            <p class="section-lead">Chúng tôi cần điền đầy đủ thông tin</p>
 
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-
                             <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
                             <h4></h4>
-
                             <div class="card-header-action">
                                 <form>
                                     <div class="input-group">
@@ -53,12 +50,10 @@
                                     {
                                         <div class="alert alert-success">
                                             @ViewBag.thanhcong
-                                            
                                         </div>
                                     }
 
                                 }
-
                                 <table class="table table-striped" id="sortable-table">
                                     <thead>
                                         <tr>
@@ -67,39 +62,39 @@
                                             </th>
                                             <th>Tên danh mục sản phẩm</th>
 
-                                            <th>Image</th>
+                                            <th>Tên loại sản phẩm</th>
+                                            <th>Hình ảnh</th>
 
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                     
-                                        @{ foreach (var c in Model)
+                                        @{
+                                            
+                                            foreach (var i in Model)
                                             {
+                                                
+                                                string namecate = database.Category.Where(c => c.id_cate == i.id_cate).Select(c => c.name_cate).FirstOrDefault();
+
                                                 <tr>
                                                     <td>
-                                                        @c.id_cate
+                                                        @i.id_protype
                                                     </td>
-                                                    <td>@c.name_cate</td>
+                                                    <td>@namecate</td>
 
+                                                    <td>@i.name_type</td>
                                                     <td>
-                                                        <img alt="image" src="~/public/img/cate/@c.image_cate" width="60" data-toggle="tooltip" title="@c.name_cate">
+                                                        <img alt="image" src="~/public/img/type/@i.image_type" width="60" data-toggle="tooltip" title="@i.name_type">
                                                     </td>
-
                                                     <td>
-                                                        <button class="btn btn-primary" onclick="editCategory('@c.id_cate','@c.name_cate')" data-toggle="modal" data-target="#exampleModal">Sửa</button>
-                                                        | <a class="btn btn-danger" href="@Url.Action("xoa_cate","Products",new{cateID=c.id_cate })">xóa</a>
+                                                        <button class="btn btn-primary" onclick="editCategory('@namecate','@i.id_protype','@i.name_type')" data-toggle="modal" data-target="#exampleModal">Sửa</button>
+                                                        | <a class="btn btn-danger" href="@Url.Action("xoa_type","Products",new{typeID=i.id_protype })">xóa</a>
                                                     </td>
                                                 </tr>
-
                                             }
-
                                         }
-
-
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
@@ -108,31 +103,49 @@
         </div>
     </section>
     <script>
-        function editCategory(cateID, cateName) {
+        function editCategory(loaidanhmuc, typeID, typeName) {
             // Set the value of the hidden input field in the modal
-            document.getElementById('cateID').value = cateID;
-            document.getElementById('cateName').value = cateName;
+            document.getElementById('typeID').value = typeID;
+            var cate_name = document.getElementById('cateName')
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(cate_name.options).findIndex(option => option.value === loaidanhmuc);
+                cate_name.selectedIndex = optionIndex;
+            }
+            document.getElementById('typeName').value = typeName;
 
         }
 
     </script>
-
-
     <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form action="@Url.Action("sua_cate", "Products")" method="post" enctype="multipart/form-data">
+                <form action="@Url.Action("sua_type", "Products")" method="post" enctype="multipart/form-data">
 
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="editCateName">Category id</label>
-                            <input type="text" class="form-control" id="cateID" name="cateID" value="">
+                            <div class="form-group">
+                                <label for="editCateName">Id loại sản phẩm</label>
+                                <input type="number" class="form-control" id="typeID" name="typeID" value="" readonly>
+                            </div>
+                            <label for="editCateName">Category name</label>
+                            <select id="idcate" name="idcate" class="form-control selectric">
+                                @{
+                                    var dulieu = database.Category.ToList();
+                                    foreach (var a in dulieu)
+                                    {
+                                        <option value="@a.id_cate">@a.name_cate</option>
+                                    }
+                                }
+
+                            </select>
+
                         </div>
                         <div class="form-group">
-                            <label for="editCateName">Category Name</label>
-                            <input type="text" class="form-control" id="cateName" name="cateName" value="">
+                            <label for="editCateName">tên loại sản phẩm</label>
+                            <input type="text" class="form-control" id="typeName" name="typeName" value="">
                         </div>
                         <div class="form-group">
                             <label for="file">Category Image URL</label>
@@ -152,19 +165,32 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form action="@Url.Action("add_cate", "Products")" method="post" enctype="multipart/form-data">
+                <form action="@Url.Action("add_type", "Products")" method="post" enctype="multipart/form-data">
 
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
 
+
                         <div class="form-group">
                             <label for="editCateName">Category Name</label>
-                            <input type="text" class="form-control" id="name_cateName" name="name_cateName" value="">
+                            <select id="idcatename" name="idcatename" class="form-control selectric">
+                                @{
+                                    var du = database.Category.ToList();
+                                    foreach (var a in du)
+                                    {
+                                        <option value="@a.id_cate">@a.name_cate</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCateName">tên loại sản phẩm</label>
+                            <input type="text" class="form-control" id="typeName" name="typeName" value="">
                         </div>
                         <div class="form-group">
                             <label for="file">Category Image URL</label>
@@ -172,10 +198,10 @@
 
                         </div>
 
-                    </div>
-                    <div class="modal-footer bg-whitesmoke br">
+                        <div class="modal-footer bg-whitesmoke br">
 
-                        <button type="submit" class="btn btn-primary" aria-label="Close">Thêm mới</button>
+                            <button type="submit" class="btn btn-primary" aria-label="Close">Thêm mới</button>
+                        </div>
                     </div>
                 </form>
 
@@ -184,3 +210,4 @@
         </div>
     </div>
 </div>
+

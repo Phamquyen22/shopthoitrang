@@ -16,8 +16,8 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_producer { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_producer { get; set; }
 
         public string name { get; set; }
 

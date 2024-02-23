@@ -11,9 +11,9 @@ namespace shopthoitrang.Areas.admin.Controllers
 {
     public class adminController : Controller
     {
-        private database db = new database();
-        // GET: admin/admin
 
+        // GET: admin/admin
+        private database db = new database();
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -67,7 +67,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 foreach(var a in check_inf)
                 {
-                    if (int.Parse(a) == ID_user)
+                    if (a == ID_user)
                     {
                         ID_user += 1;
                     }
@@ -82,7 +82,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             }
             var info_acc = new User_info
             {
-                id_user= ID_user.ToString(),
+                id_user= ID_user,
                 name =username,
                 phone=phone,
                 email=email,
@@ -95,7 +95,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 taikhoan=tk,
                 matkhau=mk,
-                id_user=ID_user.ToString(),
+                id_user=ID_user,
                 role=role,
                 acc_lock="false",
 
@@ -122,7 +122,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 var authTicket = new FormsAuthenticationTicket(
                    1,
-                   check.id_user,
+                   check.id_user.ToString(),
                    DateTime.Now,
                    DateTime.Now.AddDays(30),
                    false,

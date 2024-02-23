@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "Producer";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+}
+@using shopthoitrang.Models;
+@model List<producer>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+
+            <div class="breadcrumb bg-primary text-white-all">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">product</a></div>
+                <div class="breadcrumb-item">nhà sản xuất</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
+                            <h4></h4>
+
+                            <div class="card-header-action">
+
+                                <form>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                @{ if (@ViewBag.error != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @ViewBag.error
+                                        </div>
+                                    };
+                                    if (ViewBag.thanhcong != null)
+                                    {
+                                        <div class="alert alert-success">
+                                            @ViewBag.thanhcong
+                                        </div>
+                                    }
+
+                                }
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
+
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Tên nhà sản xuất</th>
+                                            <th>số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Ảnh nhà sản xuất</th>
+                                            <th>Thông tin</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var prdc in Model)
+                                        {
+
+
+                                            <tr>
+                                                <td>
+                                                    @prdc.id_producer
+                                                </td>
+                                                <td>@prdc.name</td>
+                                                <td>@prdc.phone</td>
+                                                <td>@prdc.email</td>
+                                                <td>@prdc.address</td>
+                                                <td>
+                                                    <img alt="image" src="~/public/img/producers/@prdc.photo" width="35" data-toggle="tooltip" title="@prdc.name">
+                                                </td>
+                                                <td>@prdc.info</td>
+
+                                                <td>
+                                                    <button class="btn btn-primary" onclick="editCategory('@prdc.id_producer','@prdc.name','@prdc.phone','@prdc.email','@prdc.address','@prdc.photo','@prdc.info')" data-toggle="modal" data-target="#exampleModal">Sửa</button>
+                                                    |
+                                                    <a class="btn btn-danger" href="@Url.Action("xoa_producer","Products",new{prdc=prdc.id_producer })">xóa</a>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function editCategory(pdcID, pdcName, pdcPhone, pdcEmail, pdcAddress, pdcPhoto, pdcInfo) {
+
+            document.getElementById('id_pdcID').value = pdcID;
+            document.getElementById('N_pdcName').value = pdcName;
+            document.getElementById('P_pdcPhone').value = pdcPhone;
+            document.getElementById('E_pdcEmail').value = pdcEmail;
+            document.getElementById('A_pdcAddress').value = pdcAddress;
+
+            document.getElementById('I_pdcInfo').value = pdcInfo;
+
+
+        }
+
+    </script>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("sua_producer","Products")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID nhà sản xuất</label>
+                            <input type="text" class="form-control" id="id_pdcID" name="id_pdcID" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Tên nhà sản xuất</label>
+                            <input type="text" class="form-control" id="N_pdcName" name="N_pdcName" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" class="form-control" id="P_pdcPhone" name="P_pdcPhone" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="E_pdcEmail" name="E_pdcEmail" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input type="text" class="form-control" id="A_pdcAddress" name="A_pdcAddress" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Ảnh nhà sản xuất</label>
+
+                            <input type="file" accept="image/*" class="form-control" id="f_file" name="f_file">
+
+                        </div>
+                        <div class="form-group">
+                            <label>Thông tin</label>
+                            <input type="text" class="form-control" id="I_pdcInfo" name="I_pdcInfo" value="">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("add_producer","Products")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>Tên nhà sản xuất</label>
+                            <input type="text" class="form-control" id="pdcName" name="pdcName" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" class="form-control" id="pdcPhone" name="pdcPhone" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="pdcEmail" name="pdcEmail" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input type="text" class="form-control" id="pdcAddress" name="pdcAddress" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Ảnh nhà sản xuất</label>
+
+                            <input type="file" accept="image/*" class="form-control" id="file" name="file">
+
+                        </div>
+                        <div class="form-group">
+                            <label>Thông tin</label>
+                            <input type="text" class="form-control" id="pdcInfo" name="pdcInfo" value="">
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Thêm mới</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>

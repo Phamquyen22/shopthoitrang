@@ -10,17 +10,15 @@ namespace shopthoitrang.Models
     public partial class comment
     {
         [Key]
-        [StringLength(50)]
-        public string id_comment { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_comment { get; set; }
 
-        [StringLength(50)]
-        public string id_product { get; set; }
+        public int? id_product { get; set; }
 
         [Column("comment")]
         public string comment1 { get; set; }
 
-        [StringLength(50)]
-        public string id_user { get; set; }
+        public int? id_user { get; set; }
 
         public string photo { get; set; }
 

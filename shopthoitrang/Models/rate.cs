@@ -10,16 +10,14 @@ namespace shopthoitrang.Models
     public partial class rate
     {
         [Key]
-        [StringLength(50)]
-        public string Id_rate { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id_rate { get; set; }
 
         public int? star_rate { get; set; }
 
-        [StringLength(50)]
-        public string id_product { get; set; }
+        public int? id_product { get; set; }
 
-        [StringLength(50)]
-        public string id_comment { get; set; }
+        public int? id_comment { get; set; }
 
         public virtual product product { get; set; }
     }

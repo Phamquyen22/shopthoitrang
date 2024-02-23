@@ -9,15 +9,12 @@ namespace shopthoitrang.Models
     public partial class Order_detail
     {
         [Key]
-        [StringLength(50)]
-        public string id_orderdetail { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_orderdetail { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_order { get; set; }
+        public int id_order { get; set; }
 
-        [StringLength(50)]
-        public string id_product { get; set; }
+        public int? id_product { get; set; }
 
         public string size_pro { get; set; }
 

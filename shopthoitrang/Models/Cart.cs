@@ -10,16 +10,12 @@ namespace shopthoitrang.Models
     public partial class Cart
     {
         [Key]
-        [StringLength(50)]
-        public string id_cart { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_cart { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_user { get; set; }
+        public int id_user { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_product { get; set; }
+        public int id_product { get; set; }
 
         public int? quantity_cart { get; set; }
 

@@ -119,15 +119,23 @@
                                     var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
                                     string username = authTicket.Name;
                                     string userData = authTicket.UserData;
+                                    int id = int.Parse(username);
+                                    var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+                                    if (ten != null)
+                                    {
+                                        <img alt="image" src="~/public/img/user/@ten.img" class="rounded-circle mr-2" style="width:50px; height:50px">
 
-                                    var ten = db.User_info.Where(c => c.id_user == username).FirstOrDefault();
-                                    <img alt="image" src="~/public/img/user/@ten.img" class="rounded-circle mr-2" style="width:50px; height:50px">
+                                        <div class="d-sm-none d-lg-inline-block">Hi,@ten.name </div>
+                                    }
+                                    else
+                                    {
 
-                                    <div class="d-sm-none d-lg-inline-block">Hi,@ten.name </div>
+                                        <div class="d-sm-none d-lg-inline-block">Hi, Error </div>
+                                    }
                                 }
                                 else
                                 {
-                                   
+
                                     <div class="d-sm-none d-lg-inline-block">Hi, Error </div>
                                 }
 
@@ -165,11 +173,11 @@
                         <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-passport"></i> <span>Products</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="/Admin/sanpham/nhomsanpham">Categories</a></li>
-                                <li><a class="nav-link" href="/Admin/sanpham/loaisanpham">product type</a></li>
+                                <li><a class="nav-link" href="@Url.Action("Category","Products")">Categories</a></li>
+                                <li><a class="nav-link" href="@Url.Action("ProductType","Products")">product type</a></li>
 
-                                <li><a class="nav-link" href="/Admin/sanpham/product">Products</a></li>
-                                <li><a class="nav-link" href="/Admin/sanpham/nhasanxuat">Producers</a></li>
+                                <li><a class="nav-link" href="@Url.Action("Producer","Products")">Producers</a></li>
+                                <li><a class="nav-link" href="@Url.Action("product","Products")">Products</a></li>
                             </ul>
                         </li>
 

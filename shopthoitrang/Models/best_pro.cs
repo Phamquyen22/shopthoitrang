@@ -9,11 +9,10 @@ namespace shopthoitrang.Models
     public partial class best_pro
     {
         [Key]
-        [StringLength(50)]
-        public string id_best_pro { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_best_pro { get; set; }
 
-        [StringLength(50)]
-        public string id_pro { get; set; }
+        public int? id_pro { get; set; }
 
         [StringLength(50)]
         public string date_end { get; set; }

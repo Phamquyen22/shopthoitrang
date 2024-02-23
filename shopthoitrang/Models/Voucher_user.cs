@@ -9,14 +9,12 @@ namespace shopthoitrang.Models
     public partial class Voucher_user
     {
         [Key]
-        [StringLength(50)]
-        public string id_voucher { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_voucher { get; set; }
 
-        [StringLength(50)]
-        public string id_discount { get; set; }
+        public int? id_discount { get; set; }
 
-        [StringLength(50)]
-        public string id_user { get; set; }
+        public int? id_user { get; set; }
 
         [StringLength(50)]
         public string status_use { get; set; }

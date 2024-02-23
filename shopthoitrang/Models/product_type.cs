@@ -15,15 +15,14 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_protype { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_protype { get; set; }
+
+        public int? id_cate { get; set; }
 
         public string name_type { get; set; }
 
         public string image_type { get; set; }
-
-        [StringLength(50)]
-        public string id_cate { get; set; }
 
         public virtual Category Category { get; set; }
 

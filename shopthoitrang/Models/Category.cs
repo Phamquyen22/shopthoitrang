@@ -16,8 +16,8 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_cate { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_cate { get; set; }
 
         public string name_cate { get; set; }
 

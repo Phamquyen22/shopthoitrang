@@ -1,0 +1,339 @@
+﻿
+@{
+    ViewBag.Title = "product";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+
+            <div class="breadcrumb bg-primary text-white-all">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">product</a></div>
+                <div class="breadcrumb-item">sản phẩm</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <h2 class="section-title">Loại sản phẩm</h2>
+            <p class="section-lead">Chúng tôi cần điền đầy đủ thông tin</p>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
+                            <h4></h4>
+                            <div class="card-header-action">
+                                <form>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                @{ if (@ViewBag.error != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @ViewBag.error
+                                        </div>
+                                    };
+                                    if (ViewBag.thanhcong != null)
+                                    {
+                                        <div class="alert alert-success">
+                                            @ViewBag.thanhcong
+                                        </div>
+                                    }
+
+                                }
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Tên nhà sản xuất</th>
+                                            <th>Tên loại sản phẩm</th>
+
+                                            <th>Tên sản phẩm</th>
+                                            <th>kích cỡ sản phẩm</th>
+                                            <th>Giá bán sản phẩm (VNĐ)</th>
+                                            <th>Giảm giá (%)</th>
+                                            <th>Ảnh sản phẩm</th>
+                                            <th>Ngày cập nhật sản phẩm</th>
+                                            <th>Thông tin sản phẩm</th>
+                                            <th>Sô lượng sản phẩm</th>
+                                            <th>Tình trạng</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var i in Model)
+                                            {
+
+                                                string nameprod = database.Producers.Where(c => c.pdcID == i.pdcID).Select(c => c.pdcName).FirstOrDefault();
+                                                string nametype = database.ProductTypes.Where(c => c.typeID == i.typeID).Select(c => c.typeName).FirstOrDefault();
+                                                <tr>
+                                                    <td>
+                                                        @i.proID
+                                                    </td>
+                                                    <td>@nameprod</td>
+
+                                                    <td>@nametype</td>
+                                                    <td>@i.proName</td>
+                                                    <td>@i.proSize</td>
+                                                    <td>@i.proPrice</td>
+                                                    <td>@i.proDiscount</td>
+                                                    <td>
+                                                        <img alt="image" src="~/public/img/product/product/@i.proPhoto" width="35" data-toggle="tooltip" title="@i.proPhoto">
+                                                    </td>
+                                                    <td>@i.proUpdateDate</td>
+                                                    <td><textarea class="form-control" style="width :250px; height:350px" readonly>@i.proDescription </textarea> </td>
+                                                    <td>@i.proQuantity</td>
+                                                    <td>@i.hide</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" onclick="editCategory('@i.proID','@nameprod','@nametype','@i.proName','@i.proSize','@i.proPrice','@i.proDiscount','@i.proPhoto','@i.proUpdateDate','@i.proDescription','@i.proQuantity','@i.hide')" data-toggle="modal" data-target="#exampleModal">Sửa</button> | <a class="btn btn-sm btn-danger" href="@Url.Action("xoa_sanpham","sanpham",new{proID =i.proID })">xóa</a>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function editCategory(proID, nameprod, nametype, proName, proSize, proPrice, proDiscount, proPhoto, proUpdateDate, proDescription, proQuantity, anh_ien) {
+            // Set the value of the hidden input field in the modal
+            document.getElementById('id_proID').value = proID;
+            var prod_name = document.getElementById('id_nameprod')
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(prod_name.options).findIndex(option => option.value === nameprod);
+                prod_name.selectedIndex = optionIndex;
+            }
+            var type_name = document.getElementById('id_nametype')
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(type_name.options).findIndex(option => option.value === nametype);
+                type_name.selectedIndex = optionIndex;
+            }
+            document.getElementById('N_proName').value = proName;
+            document.getElementById('N_proSize').value = proSize;
+            document.getElementById('N_proPrice').value = proPrice;
+            document.getElementById('N_proDiscount').value = proDiscount;
+            document.getElementById('N_proUpdateDate').value = proUpdateDate;
+            document.getElementById('N_proDescription').value = proDescription;
+            document.getElementById('N_proQuantity').value = proQuantity;
+            var anhien = document.getElementById('an_sp')
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(anhien.options).findIndex(option => option.value === anh_ien);
+                anhien.selectedIndex = optionIndex;
+            }
+
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote();
+        });
+    </script>
+    <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+        <div class="modal-dialog" style="max-width:900px" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("sua_sanpham", "sanpham")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group ">
+
+                                <label>Id loại sản phẩm</label>
+                                <input type="text" class="form-control" id="id_proID" name="id_proID" value="" readonly>
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Tên loại sản phẩm</label>
+                                <select id="id_nameprod" name="id_nameprod" class="form-control selectric">
+                                    @{
+                                        var dulieu_prod = database.Producers.ToList();
+                                        foreach (var a in dulieu_prod)
+                                        {
+                                            <option>@a.pdcName</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="form-group ">
+                                <label>Tên nhà sản xuất</label>
+                                <select id="id_nametype" name="id_nametype" class="form-control selectric">
+                                    @{
+                                        var dulieu_type = database.ProductTypes.ToList();
+                                        foreach (var a in dulieu_type)
+                                        {
+                                            <option>@a.typeName</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                            <div class="form-group ">
+                                <label>Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="N_proName" name="N_proName" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Cỡ sản phẩm</label>
+                                <input type="text" class="form-control" id="N_proSize" name="N_proSize" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Giá bán</label>
+                                <input type="number" class="form-control" id="N_proPrice" name="N_proPrice" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Giảm giá</label>
+                                <input type="number" min="0" max="100" class="form-control" id="N_proDiscount" name="N_proDiscount" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Ảnh sản phẩm</label>
+                                <input type="file" id="f_file" name="f_file" accept="image/*" class="form-control" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Ngày cập nhật sản phẩm</label>
+                                <input type="text" class="form-control datepicker" id="N_proUpdateDate" name="N_proUpdateDate" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Thông tin sản phẩm</label>
+                                <textarea type="text" class="form-control " id="N_proDescription" name="N_proDescription" value=""></textarea>
+                            </div>
+
+                            <div class="form-group ">
+                                <label>Số lượng sản phẩm</label>
+                                <input type="number" class="form-control" id="N_proQuantity" name="N_proQuantity" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Ẩn sản phẩm</label>
+                                <select id="an_sp" name="an_sp" class="form-control selectric">
+
+                                    <option>Hiện</option>
+                                    <option>Ẩn</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
+        <div class="modal-dialog" style="max-width:900px" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("add_sanpham", "sanpham")" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Tên loại sản phẩm</label>
+                                <select id="nameprod" name="nameprod" class="form-control selectric">
+                                    @{
+                                        var prod = database.Producers.ToList();
+                                        foreach (var a in prod)
+                                        {
+                                            <option>@a.pdcName</option>
+                                        }
+                                    }
+
+                                </select>
+
+                                <label>Tên nhà sản xuất</label>
+                                <select id="nametype" name="nametype" class="form-control selectric">
+                                    @{
+                                        var type = database.ProductTypes.ToList();
+                                        foreach (var a in type)
+                                        {
+                                            <option>@a.typeName</option>
+                                        }
+                                    }
+
+                                </select>
+
+                                <label>Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="proName" name="proName" value="">
+
+                                <label>Cỡ sản phẩm</label>
+                                <input type="text" class="form-control" id="proSize" name="proSize" value="">
+
+                                <label>Giá bán</label>
+                                <input type="number" class="form-control" id="proPrice" name="proPrice" value="">
+
+                                <label>Giảm giá</label>
+                                <input type="number" min="0" max="100" class="form-control" id="proDiscount" name="proDiscount" value="">
+
+                                <label>Ảnh sản phẩm</label>
+                                <input type="file" id="file" name="file" accept="image/*" class="form-control" value="">
+
+                                <label>Ngày cập nhật sản phẩm</label>
+                                <input type="text" class="form-control datepicker" id="proUpdateDate" name="proUpdateDate" value="">
+
+                                <label>Thông tin sản phẩm</label>
+                                <textarea type="text" class="form-control" id="proDescription" name="proDescription" value=""></textarea>
+
+                                <label>Số lượng sản phẩm</label>
+                                <input type="number" class="form-control" id="proQuantity" name="proQuantity" value="">
+
+                                <label>Ẩn sản phẩm</label>
+                                <select id="an_hsp" name="an_sp" class="form-control selectric">
+
+                                    <option selected>Hiện</option>
+                                    <option>Ẩn</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -20,16 +20,12 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_product { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_product { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_protype { get; set; }
+        public int id_protype { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_producer { get; set; }
+        public int id_producer { get; set; }
 
         [Required]
         public string name_pro { get; set; }

@@ -16,8 +16,8 @@ namespace shopthoitrang.Models
         }
 
         [Key]
-        [StringLength(50)]
-        public string id_discount { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int id_discount { get; set; }
 
         [Required]
         public string code { get; set; }

@@ -2515,6 +2515,9 @@
     <Content Include="Areas\admin\Views\admin\login.cshtml" />
     <Content Include="Areas\admin\Views\Order\donhang.cshtml" />
     <Content Include="Areas\admin\Views\Products\Category.cshtml" />
+    <Content Include="Areas\admin\Views\Products\ProductType.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Producer.cshtml" />
+    <Content Include="Areas\admin\Views\Products\product.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -2541,6 +2544,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\admin\Models\" />
+    <Folder Include="public\img\cate\" />
+    <Folder Include="public\img\type\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

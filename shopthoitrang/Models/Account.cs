@@ -20,9 +20,7 @@ namespace shopthoitrang.Models
         [StringLength(50)]
         public string acc_lock { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string id_user { get; set; }
+        public int id_user { get; set; }
 
         [StringLength(50)]
         public string role { get; set; }
