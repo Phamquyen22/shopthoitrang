@@ -130,6 +130,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\admin\adminAreaRegistration.cs" />
     <Compile Include="Areas\admin\Controllers\adminController.cs" />
+    <Compile Include="Areas\admin\Controllers\DiscountCodeController.cs" />
     <Compile Include="Areas\admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\admin\Controllers\ProductsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Models\product.cs" />
     <Compile Include="Models\product_type.cs" />
     <Compile Include="Models\rate.cs" />
+    <Compile Include="Models\sysdiagrams.cs" />
     <Compile Include="Models\User_info.cs" />
     <Compile Include="Models\Voucher_user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2295,6 +2297,7 @@
     <Content Include="public\img\blog\details\blog-author.jpg" />
     <Content Include="public\img\blog\details\blog-details.jpg" />
     <Content Include="public\img\breadcrumb-bg.jpg" />
+    <Content Include="public\img\cate\demo.jpg" />
     <Content Include="public\img\clients\client-1.png" />
     <Content Include="public\img\clients\client-2.png" />
     <Content Include="public\img\clients\client-3.png" />
@@ -2303,6 +2306,7 @@
     <Content Include="public\img\clients\client-6.png" />
     <Content Include="public\img\clients\client-7.png" />
     <Content Include="public\img\clients\client-8.png" />
+    <Content Include="public\img\discount\gam.png" />
     <Content Include="public\img\footer-logo.png" />
     <Content Include="public\img\hero\hero-1.jpg" />
     <Content Include="public\img\hero\hero-2.jpg" />
@@ -2320,7 +2324,9 @@
     <Content Include="public\img\instagram\instagram-6.jpg" />
     <Content Include="public\img\logo.png" />
     <Content Include="public\img\payment.png" />
+    <Content Include="public\img\producers\avatar-1.png" />
     <Content Include="public\img\product-sale.png" />
+    <Content Include="public\img\product\demo.jpg" />
     <Content Include="public\img\product\product-1.jpg" />
     <Content Include="public\img\product\product-10.jpg" />
     <Content Include="public\img\product\product-11.jpg" />
@@ -2348,6 +2354,7 @@
     <Content Include="public\img\shopping-cart\cart-2.jpg" />
     <Content Include="public\img\shopping-cart\cart-3.jpg" />
     <Content Include="public\img\shopping-cart\cart-4.jpg" />
+    <Content Include="public\img\type\demo.jpg" />
     <Content Include="public\img\user\avatar-1.png" />
     <Content Include="public\js\bootstrap.min.js" />
     <Content Include="public\js\jquery-3.3.1.min.js" />
@@ -2518,6 +2525,7 @@
     <Content Include="Areas\admin\Views\Products\ProductType.cshtml" />
     <Content Include="Areas\admin\Views\Products\Producer.cshtml" />
     <Content Include="Areas\admin\Views\Products\product.cshtml" />
+    <Content Include="Areas\admin\Views\DiscountCode\Discount.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -2544,8 +2552,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\admin\Models\" />
-    <Folder Include="public\img\cate\" />
-    <Folder Include="public\img\type\" />
+    <Folder Include="public\img\product\video\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

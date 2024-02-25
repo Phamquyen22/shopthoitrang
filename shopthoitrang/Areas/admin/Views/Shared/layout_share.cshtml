@@ -180,7 +180,13 @@
                                 <li><a class="nav-link" href="@Url.Action("product","Products")">Products</a></li>
                             </ul>
                         </li>
-
+                        <li class="dropdown">
+                            <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-passport"></i> <span>Discount code</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link" href="@Url.Action("Discount","DiscountCode")">Discount</a></li>
+                                
+                            </ul>
+                        </li>
                         <li class="menu-header">Order</li>
                         <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-bag"></i> <span>Order</span></a>
@@ -196,8 +202,8 @@
                         <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i> <span>Auth</span></a>
                             <ul class="dropdown-menu">
-                                
-                                    <li><a href="/Admin/admin/acc_management">Account management</a></li>
+
+                                <li><a href="/Admin/admin/acc_management">Account management</a></li>
                                 <li><a href="/Admin/admin/add_account">Add account </a></li>
                             </ul>
                         </li>

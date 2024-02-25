@@ -33,11 +33,26 @@ namespace shopthoitrang.Areas.admin.Controllers
             string photo=null;
             if (file != null && file.ContentLength > 0)
             {
-                photo = Path.GetFileName(file.FileName);
+                photo = DateTime.Now.ToString("yyyyMMddHHmmss") + "-" + Path.GetFileName(file.FileName);
                 string file_path = Path.Combine(Server.MapPath(url), photo);
                 file.SaveAs(file_path);
             }
             return photo;
+        }
+        private void xoa_file(string url,string filename)
+        {
+            if (filename != "demo.jpg" && filename != "avatar-1.png")
+            {
+                string file = Server.MapPath(url + filename);
+
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+
+                }
+            }
+               
+           
         }
         public ActionResult Category()
         {
@@ -65,10 +80,15 @@ namespace shopthoitrang.Areas.admin.Controllers
                     }
                 }
             }
+            string anh = "demo.jpg";
+            if (f_file != null && f_file.ContentLength > 0)
+            {
+                anh = file_upload("~/public/img/cate/", f_file);
+            }
             var cate = new Category {
                 id_cate = dem,
                 name_cate=name_cateName,
-                image_cate= file_upload("~/public/img/cate/", f_file)
+                image_cate= anh,
             };
             db.Category.Add(cate);
             db.SaveChanges();
@@ -86,7 +106,8 @@ namespace shopthoitrang.Areas.admin.Controllers
                 cate.name_cate = cateName;
                 if (file != null && file.ContentLength > 0)
                 {
-                cate.image_cate= file_upload("~/public/img/cate/", file);
+                    xoa_file("~/public/img/cate/" , cate.image_cate);
+                    cate.image_cate= file_upload("~/public/img/cate/", file);
                 }
                 db.SaveChanges();
                 ViewBag.thanhcong = "sua thanh cong";
@@ -107,6 +128,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             var cate = db.Category.Where(c => c.id_cate == id).FirstOrDefault();
             if (cate != null)
             {
+                xoa_file("~/public/img/cate/" , cate.image_cate);
                 db.Category.Remove(cate);
                 db.SaveChanges();
                 ViewBag.thanhcong = "xoa thanh cong";
@@ -146,12 +168,17 @@ namespace shopthoitrang.Areas.admin.Controllers
                     }
                 }
             }
+            string anh = "demo.jpg";
+            if (f_file != null && f_file.ContentLength > 0)
+            {
+                anh = file_upload("~/public/img/type/", f_file);
+            }
             var type_add = new product_type
             {
                 id_protype = dem,
                 id_cate = idcatename,
                 name_type = typeName,
-                image_type = file_upload("~/public/img/type/", f_file),
+                image_type = anh,
             };
             db.product_type.Add(type_add);
             db.SaveChanges();
@@ -168,8 +195,9 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 pro.id_cate = idcate;
                 pro.name_type = typeName;
-                if (file.ContentLength > 0 && file != null)
+                if (file != null)
                 {
+                    xoa_file("~/public/img/type/" , pro.image_type);
                     pro.image_type = file_upload("~/public/img/type/", file);
                 }
                 ViewBag.thanhcong = "Sua thanh cong loai san pham";
@@ -187,6 +215,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             var xoa = db.product_type.Where(t => t.id_protype == typeID).FirstOrDefault();
             if (xoa != null)
             {
+                xoa_file("~/public/img/type/" , xoa.image_type);
                 db.product_type.Remove(xoa);
                 db.SaveChanges();
                 ViewBag.thanhcong = "xoa thanh cong";
@@ -211,6 +240,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 return RedirectToAction("login", "admin");
             }
+
         }
         [HttpPost]
         public ActionResult add_producer(string pdcName,string pdcPhone,string pdcEmail, string pdcAddress,HttpPostedFileBase file, string pdcInfo)
@@ -224,14 +254,21 @@ namespace shopthoitrang.Areas.admin.Controllers
                     if (dem == i) dem += 1;
                 }
             }
-            var nhasx = new producer
+            string anh = "avatar-1.png";
+            if (file != null && file.ContentLength > 0)
+            {
+                anh = file_upload("~/public/img/producers/", file);
+            }
+                var nhasx = new producer
             {
                 id_producer=dem,
                 name=pdcName,
                 phone=pdcPhone,
                 email=pdcEmail,
                 address=pdcAddress,
-                photo=file_upload("~/public/img/type/producers/", file),
+  
+                photo = anh,
+                
                 info=pdcInfo
             };
             db.producer.Add(nhasx);
@@ -249,7 +286,10 @@ namespace shopthoitrang.Areas.admin.Controllers
                 tim.phone = P_pdcPhone;
                 tim.email = E_pdcEmail;
                 tim.address = A_pdcAddress;
-                if (f_file != null && f_file.ContentLength > 0) tim.photo = file_upload("~/public/img/type/producers", f_file);
+                if (f_file != null && f_file.ContentLength > 0) {
+                    xoa_file("~/public/img/producers/" , tim.photo);
+                    tim.photo = file_upload("~/public/img/producers/", f_file);
+                }
                 tim.info = I_pdcInfo;
                 db.SaveChanges();
                 ViewBag.thanhcong = "sua thanh cong";
@@ -262,10 +302,139 @@ namespace shopthoitrang.Areas.admin.Controllers
             var producer = db.producer.ToList();
             return View("Producer", producer);
         }
+        public ActionResult xoa_producer(int prdc)
+        {
+            var id = db.producer.Where(u => u.id_producer == prdc).FirstOrDefault();
+            if (id != null)
+            {
+                xoa_file("~/public/img/producers/" , id.photo);
+                db.producer.Remove(id);
+                db.SaveChanges();
+                ViewBag.thanhcong = "xoa thanh cong nha san xuat";
+            }
+            else
+            {
+                ViewBag.error = "nhà sản xuất không tồn tại";
+            }
+            var producer = db.producer.ToList();
+            return View("Producer", producer);
+        }
+
+
+
+
+
+
+
 
         public ActionResult product()
         {
-            return View();
+            //bool check = check_login();
+            //if (check)
+            //{
+            //    var prod = db.product.ToList();
+            //    return View(prod);
+            //}
+            //else
+            //    return RedirectToAction("login", "admin");
+            var prod = db.product.ToList();
+            return View(prod);
         }
+        [HttpPost]
+        public ActionResult add_product(int nameprod,int nametype, string proName, string proSize, string proColor,int proPrice, int proDiscount, HttpPostedFileBase file, HttpPostedFileBase V_file, string proTag, string proDescription, int proQuantity,string an_sp)
+        {
+            var id = db.product.Select(p => p.id_product).ToList();
+            int dem = 1;
+            if (id != null)
+            {
+                foreach (var i in id)
+                {
+                    if (dem == i) dem += 1;
+                }
+            }
+            string anh = "demo.jpg";
+            if (file != null && file.ContentLength > 0)
+            {
+                anh = file_upload("~/public/img/product/", file);
+            }
+            var pro = new product
+            {
+                id_product = dem,
+                id_producer = nameprod,
+                id_protype = nametype,
+                name_pro = proName,
+                size_pro = proSize,
+                color_pro = proColor,
+                price_pro = proPrice,
+                discount_pro = proDiscount,
+                photo_pro = anh,
+                video_pro = file_upload("~/public/img/product/", V_file),
+                date_update = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                tag = proTag,
+                info_pro = proDescription,
+                quantity_pro = proQuantity,
+                hide = an_sp,
+            };
+            db.product.Add(pro);
+            db.SaveChanges();
+            var prod = db.product.ToList();
+            return View("product", prod);
+        }
+        [HttpPost]
+        public ActionResult sua_product(int id_proID, int id_nameprod, int id_nametype, string N_proName, string N_proSize,string proColor,int N_proPrice,int N_proDiscount, HttpPostedFileBase file, HttpPostedFileBase V_file,string proTag, string N_proDescription,int N_proQuantity,string an_sp)
+        {
+            var tim = db.product.Where(id => id.id_product == id_proID).FirstOrDefault();
+            if (tim != null)
+            {
+                tim.id_producer = id_nameprod;
+                tim.id_protype = id_nametype;
+                tim.name_pro = N_proName;
+                tim.size_pro = N_proSize;
+                tim.color_pro = proColor;
+                tim.price_pro = N_proPrice;
+                tim.discount_pro = N_proDiscount;
+                if (file != null)
+                {
+                    xoa_file("~/public/img/product/" , tim.photo_pro);
+                    tim.photo_pro = file_upload("~/public/img/product/", file);
+                }
+                if (V_file != null)
+                {
+                    xoa_file("~/public/img/product/video", tim.video_pro);
+                    tim.photo_pro = file_upload("~/public/img/product/video", V_file);
+                }
+                tim.tag = proTag;
+                tim.quantity_pro = N_proQuantity;
+                tim.hide = an_sp;
+                tim.info_pro = N_proDescription;
+                db.SaveChanges();
+                ViewBag.thanhcong = "sua thanh cong";
+            }
+            else
+            {
+                ViewBag.error = "nha san xuan khong ton tai";
+            }
+
+            var product = db.product.ToList();
+            return View("product", product);
+        }
+        public ActionResult xoa_product(int proID)
+        {
+            var id = db.product.Where(u => u.id_product == proID).FirstOrDefault();
+            if (id != null)
+            {
+                xoa_file("~/public/img/product/", id.photo_pro);
+                db.product.Remove(id);
+                db.SaveChanges();
+                ViewBag.thanhcong = "xoa thanh cong nha san xuat";
+            }
+            else
+            {
+                ViewBag.error = "nhà sản xuất không tồn tại";
+            }
+            var prod = db.product.ToList();
+            return View("product", prod);
+        }
+
     }
 }

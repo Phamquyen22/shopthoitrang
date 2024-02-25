@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "product";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database database = new database();
 }
-
+@using shopthoitrang.Models;
+@model List<product>
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -62,12 +64,12 @@
                                             <th>Tên loại sản phẩm</th>
 
                                             <th>Tên sản phẩm</th>
-                                            <th>kích cỡ sản phẩm</th>
+                                            
                                             <th>Giá bán sản phẩm (VNĐ)</th>
                                             <th>Giảm giá (%)</th>
                                             <th>Ảnh sản phẩm</th>
                                             <th>Ngày cập nhật sản phẩm</th>
-                                            <th>Thông tin sản phẩm</th>
+                                            
                                             <th>Sô lượng sản phẩm</th>
                                             <th>Tình trạng</th>
                                             <th>Action</th>
@@ -78,28 +80,31 @@
                                             foreach (var i in Model)
                                             {
 
-                                                string nameprod = database.Producers.Where(c => c.pdcID == i.pdcID).Select(c => c.pdcName).FirstOrDefault();
-                                                string nametype = database.ProductTypes.Where(c => c.typeID == i.typeID).Select(c => c.typeName).FirstOrDefault();
+                                                string nameprod = database.producer.Where(c => c.id_producer == i.id_producer).Select(c => c.name).FirstOrDefault();
+                                                string nametype = database.product_type.Where(c => c.id_protype == i.id_protype).Select(c => c.name_type).FirstOrDefault();
                                                 <tr>
                                                     <td>
-                                                        @i.proID
+                                                        @i.id_product
                                                     </td>
+
                                                     <td>@nameprod</td>
 
                                                     <td>@nametype</td>
-                                                    <td>@i.proName</td>
-                                                    <td>@i.proSize</td>
-                                                    <td>@i.proPrice</td>
-                                                    <td>@i.proDiscount</td>
+                                                    <td>@i.name_pro</td>
+                                                    
+                                                    <td>@string.Format("{0:N0}", i.price_pro)</td>
+                                                    <td>@i.discount_pro</td>
                                                     <td>
-                                                        <img alt="image" src="~/public/img/product/product/@i.proPhoto" width="35" data-toggle="tooltip" title="@i.proPhoto">
+                                                        <img alt="image" src="~/public/img/product/@i.photo_pro" width="35" data-toggle="tooltip" title="@i.name_pro">
                                                     </td>
-                                                    <td>@i.proUpdateDate</td>
-                                                    <td><textarea class="form-control" style="width :250px; height:350px" readonly>@i.proDescription </textarea> </td>
-                                                    <td>@i.proQuantity</td>
+                                                    <td>@i.date_update</td>
+                                                    
+                                                    <td>@i.quantity_pro</td>
                                                     <td>@i.hide</td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="editCategory('@i.proID','@nameprod','@nametype','@i.proName','@i.proSize','@i.proPrice','@i.proDiscount','@i.proPhoto','@i.proUpdateDate','@i.proDescription','@i.proQuantity','@i.hide')" data-toggle="modal" data-target="#exampleModal">Sửa</button> | <a class="btn btn-sm btn-danger" href="@Url.Action("xoa_sanpham","sanpham",new{proID =i.proID })">xóa</a>
+                                                        
+                                                        <button class="btn btn-sm btn-primary" onclick="editCategory('@i.id_product','@i.id_producer','@i.id_protype','@i.name_pro','@i.size_pro','@i.color_pro','@i.price_pro','@i.discount_pro','@i.date_update','@i.tag','@i.info_pro','@i.quantity_pro','@i.hide','@i.video_pro','@i.photo_pro')" data-toggle="modal" data-target="#exampleModal">Sửa</button> 
+                                                        | <a class="btn btn-sm btn-danger" href="@Url.Action("xoa_product", "Products", new { proID = i.id_product })">xóa</a>
                                                     </td>
                                                 </tr>
 
@@ -115,9 +120,10 @@
         </div>
     </section>
     <script>
-        function editCategory(proID, nameprod, nametype, proName, proSize, proPrice, proDiscount, proPhoto, proUpdateDate, proDescription, proQuantity, anh_ien) {
-            // Set the value of the hidden input field in the modal
-            document.getElementById('id_proID').value = proID;
+        
+        function editCategory(id_product,nameprod,nametype,name_pro,size_pro,color_pro,price_pro,discount_pro,date_update,tag,info_pro,quantity_pro,hide,video,photo) {
+            
+            document.getElementById('id_proID').value = id_product;
             var prod_name = document.getElementById('id_nameprod')
             var condition = true;
             if (condition) {
@@ -130,20 +136,22 @@
                 var optionIndex = Array.from(type_name.options).findIndex(option => option.value === nametype);
                 type_name.selectedIndex = optionIndex;
             }
-            document.getElementById('N_proName').value = proName;
-            document.getElementById('N_proSize').value = proSize;
-            document.getElementById('N_proPrice').value = proPrice;
-            document.getElementById('N_proDiscount').value = proDiscount;
-            document.getElementById('N_proUpdateDate').value = proUpdateDate;
-            document.getElementById('N_proDescription').value = proDescription;
-            document.getElementById('N_proQuantity').value = proQuantity;
+            document.getElementById('N_proName').value = name_pro;
+            document.getElementById('N_proSize').value = size_pro;
+            document.getElementById('proColor').value = color_pro;
+            document.getElementById('N_proPrice').value = price_pro;
+            document.getElementById('N_proDiscount').value = discount_pro;
+            document.getElementById('N_proUpdateDate').value = date_update;
+            document.getElementById('proTag').value = tag;
+            document.getElementById('N_proDescription').value = info_pro;
+            document.getElementById('N_proQuantity').value = quantity_pro;
             var anhien = document.getElementById('an_sp')
             var condition = true;
             if (condition) {
-                var optionIndex = Array.from(anhien.options).findIndex(option => option.value === anh_ien);
+                var optionIndex = Array.from(anhien.options).findIndex(option => option.value === hide);
                 anhien.selectedIndex = optionIndex;
             }
-
+           
         }
 
     </script>
@@ -156,7 +164,7 @@
         <div class="modal-dialog" style="max-width:900px" role="document">
             <div class="modal-content">
 
-                <form action="@Url.Action("sua_sanpham", "sanpham")" method="post" enctype="multipart/form-data">
+                <form action="@Url.Action("sua_product", "Products")" method="post" enctype="multipart/form-data">
 
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
@@ -166,77 +174,68 @@
                                 <label>Id loại sản phẩm</label>
                                 <input type="text" class="form-control" id="id_proID" name="id_proID" value="" readonly>
                             </div>
-                            <div class="form-group ">
-
-                                <label>Tên loại sản phẩm</label>
-                                <select id="id_nameprod" name="id_nameprod" class="form-control selectric">
-                                    @{
-                                        var dulieu_prod = database.Producers.ToList();
-                                        foreach (var a in dulieu_prod)
-                                        {
-                                            <option>@a.pdcName</option>
-                                        }
+                            <label>Nhà sản xuất</label>
+                            <select id="id_nameprod" name="id_nameprod" class="form-control selectric">
+                                @{
+                                    var prod = database.producer.ToList();
+                                    foreach (var a in prod)
+                                    {
+                                        <option value="@a.id_producer">@a.name</option>
                                     }
+                                }
 
-                                </select>
-                            </div>
-                            <div class="form-group ">
-                                <label>Tên nhà sản xuất</label>
-                                <select id="id_nametype" name="id_nametype" class="form-control selectric">
-                                    @{
-                                        var dulieu_type = database.ProductTypes.ToList();
-                                        foreach (var a in dulieu_type)
-                                        {
-                                            <option>@a.typeName</option>
-                                        }
+                            </select>
+
+                            <label>Loại sản phẩm</label>
+                            <select id="id_nametype" name="id_nametype" class="form-control selectric">
+                                @{
+                                    var type = database.product_type.ToList();
+                                    foreach (var a in type)
+                                    {
+                                        <option value="@a.id_protype">@a.name_type</option>
                                     }
+                                }
 
-                                </select>
+                            </select>
 
-                            </div>
-                            <div class="form-group ">
-                                <label>Tên sản phẩm</label>
-                                <input type="text" class="form-control" id="N_proName" name="N_proName" value="">
-                            </div>
-                            <div class="form-group ">
-                                <label>Cỡ sản phẩm</label>
-                                <input type="text" class="form-control" id="N_proSize" name="N_proSize" value="">
-                            </div>
-                            <div class="form-group ">
-                                <label>Giá bán</label>
-                                <input type="number" class="form-control" id="N_proPrice" name="N_proPrice" value="">
-                            </div>
-                            <div class="form-group ">
-                                <label>Giảm giá</label>
-                                <input type="number" min="0" max="100" class="form-control" id="N_proDiscount" name="N_proDiscount" value="">
-                            </div>
-                            <div class="form-group ">
-                                <label>Ảnh sản phẩm</label>
-                                <input type="file" id="f_file" name="f_file" accept="image/*" class="form-control" value="">
-                            </div>
-                            <div class="form-group ">
-                                <label>Ngày cập nhật sản phẩm</label>
-                                <input type="text" class="form-control datepicker" id="N_proUpdateDate" name="N_proUpdateDate" value="">
-                            </div>
-                            <div class="form-group">
-                                <label>Thông tin sản phẩm</label>
-                                <textarea type="text" class="form-control " id="N_proDescription" name="N_proDescription" value=""></textarea>
-                            </div>
+                            <label>Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="N_proName" name="N_proName" value="">
 
-                            <div class="form-group ">
-                                <label>Số lượng sản phẩm</label>
-                                <input type="number" class="form-control" id="N_proQuantity" name="N_proQuantity" value="">
-                            </div>
-                            <div class="form-group">
-                                <label>Ẩn sản phẩm</label>
-                                <select id="an_sp" name="an_sp" class="form-control selectric">
+                            <label>Cỡ sản phẩm</label>
+                            <input type="text" class="form-control" id="N_proSize" name="N_proSize" value="">
+                            <label>Màu sản phẩm</label>
+                            <input type="text" class="form-control" id="proColor" name="proColor" value="">
 
-                                    <option>Hiện</option>
-                                    <option>Ẩn</option>
+                            <label>Giá bán</label>
+                            <input type="number" class="form-control" id="N_proPrice" name="N_proPrice" value="">
 
-                                </select>
+                            <label>Giảm giá</label>
+                            <input type="number" min="0" max="100" class="form-control" id="N_proDiscount" name="N_proDiscount" value="">
 
-                            </div>
+                            <label>Ảnh sản phẩm</label>
+                            <input type="file" id="file" name="file" accept="image/*" class="form-control" value="">
+                            <label>Video sản phẩm</label>
+                            <input type="file" id="V_file" name="V_file" accept="video/*" class="form-control" value="">
+
+                            <label>Ngày cập nhật sản phẩm</label>
+                            <input type="date" class="form-control datepicker" id="N_proUpdateDate" name="N_proUpdateDate" value="" readonly>
+
+                            <label>Tag sản phẩm</label>
+                            <input type="text" class="form-control" id="proTag" name="proTag" value="">
+
+                            <label>Thông tin sản phẩm</label>
+                            <textarea type="text" class="form-control" id="N_proDescription" name="N_proDescription" value=""></textarea>
+
+                            <label>Số lượng sản phẩm</label>
+                            <input type="number" class="form-control" id="N_proQuantity" name="N_proQuantity" value="">
+
+                            <label>Ẩn sản phẩm</label>
+                            <select id="an_sp" name="an_sp" class="form-control selectric">
+
+                                <option selected>Hiện</option>
+                                <option>Ẩn</option>
+
+                            </select>
                         </div>
 
 
@@ -257,30 +256,30 @@
         <div class="modal-dialog" style="max-width:900px" role="document">
             <div class="modal-content">
 
-                <form action="@Url.Action("add_sanpham", "sanpham")" method="post" enctype="multipart/form-data">
+                <form action="@Url.Action("add_product", "Products")" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="form-group">
                             <div class="form-group">
-                                <label>Tên loại sản phẩm</label>
+                                <label>Nhà sản xuất</label>
                                 <select id="nameprod" name="nameprod" class="form-control selectric">
                                     @{
-                                        var prod = database.Producers.ToList();
+                                        
                                         foreach (var a in prod)
                                         {
-                                            <option>@a.pdcName</option>
+                                            <option value="@a.id_producer">@a.name</option>
                                         }
                                     }
 
                                 </select>
 
-                                <label>Tên nhà sản xuất</label>
+                                <label>Loại sản phẩm</label>
                                 <select id="nametype" name="nametype" class="form-control selectric">
                                     @{
-                                        var type = database.ProductTypes.ToList();
+                                        
                                         foreach (var a in type)
                                         {
-                                            <option>@a.typeName</option>
+                                            <option value="@a.id_protype">@a.name_type</option>
                                         }
                                     }
 
@@ -291,24 +290,29 @@
 
                                 <label>Cỡ sản phẩm</label>
                                 <input type="text" class="form-control" id="proSize" name="proSize" value="">
+                                <label>Màu sản phẩm</label>
+                                <input type="text" class="form-control" id="proColor" name="proColor" value="">
 
                                 <label>Giá bán</label>
-                                <input type="number" class="form-control" id="proPrice" name="proPrice" value="">
+                                <input type="number" class="form-control" id="proPrice" name="proPrice" value="0">
 
                                 <label>Giảm giá</label>
-                                <input type="number" min="0" max="100" class="form-control" id="proDiscount" name="proDiscount" value="">
+                                <input type="number" min="0" max="100" class="form-control" id="proDiscount" name="proDiscount" value="0">
 
                                 <label>Ảnh sản phẩm</label>
                                 <input type="file" id="file" name="file" accept="image/*" class="form-control" value="">
+                                <label>Video sản phẩm</label>
+                                <input type="file" id="V_file" name="V_file" accept="video/*" class="form-control" value="">
 
-                                <label>Ngày cập nhật sản phẩm</label>
-                                <input type="text" class="form-control datepicker" id="proUpdateDate" name="proUpdateDate" value="">
+                                
+                                <label>Tag sản phẩm</label>
+                                <input type="text" class="form-control" id="proTag" name="proTag" value="">
 
                                 <label>Thông tin sản phẩm</label>
                                 <textarea type="text" class="form-control" id="proDescription" name="proDescription" value=""></textarea>
 
                                 <label>Số lượng sản phẩm</label>
-                                <input type="number" class="form-control" id="proQuantity" name="proQuantity" value="">
+                                <input type="number" class="form-control" id="proQuantity" name="proQuantity" value="0">
 
                                 <label>Ẩn sản phẩm</label>
                                 <select id="an_hsp" name="an_sp" class="form-control selectric">

@@ -35,9 +35,9 @@ namespace shopthoitrang.Models
         [StringLength(50)]
         public string color_pro { get; set; }
 
-        public string price_pro { get; set; }
+        public int? price_pro { get; set; }
 
-        public string discount_pro { get; set; }
+        public int? discount_pro { get; set; }
 
         public string photo_pro { get; set; }
 

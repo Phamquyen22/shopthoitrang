@@ -24,6 +24,7 @@ namespace shopthoitrang.Models
         public virtual DbSet<product> product { get; set; }
         public virtual DbSet<product_type> product_type { get; set; }
         public virtual DbSet<rate> rate { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User_info> User_info { get; set; }
         public virtual DbSet<Voucher_user> Voucher_user { get; set; }
 

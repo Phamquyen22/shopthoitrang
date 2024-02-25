@@ -1,0 +1,334 @@
+﻿
+@{
+    ViewBag.Title = "Discount";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+}
+@using shopthoitrang.Models;
+@model List<Discount_code>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+
+            <div class="breadcrumb bg-primary text-white-all">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">product</a></div>
+                <div class="breadcrumb-item">sản phẩm</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <h2 class="section-title">Loại sản phẩm</h2>
+            <p class="section-lead">Chúng tôi cần điền đầy đủ thông tin</p>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
+                            <h4></h4>
+                            <div class="card-header-action">
+                                <form>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                @{ if (@ViewBag.error != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @ViewBag.error
+                                        </div>
+                                    };
+                                    if (ViewBag.thanhcong != null)
+                                    {
+                                        <div class="alert alert-success">
+                                            @ViewBag.thanhcong
+                                        </div>
+                                    }
+
+                                }
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Tên mã giảm giá</th>
+                                            <th>code</th>
+                                            <th>giảm (%)</th>
+                                            <th>Số lượng</th>
+                                            <th>Ảnh</th>
+                                            <th>Ngày bắt đầu</th>
+                                            <th>Ngày kết thúc</th>
+                                            <th>Loại mã giảm giá</th>
+                                            <th>hạng người dùng</th>
+
+                                            <th>Thông tin mã giảm giá</th>
+                                            <th>Tình trạng</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var i in Model)
+                                            {
+                                                
+                                        <tr>
+                                            <td>
+                                                @i.id_discount
+                                            </td>
+
+                                            <td>@i.name_code</td>
+
+                                            <td>@i.code</td>
+                                            <td>@i.sale</td>
+
+                                            <td>@i.stock</td>
+                                            <td>
+                                                <img alt="image" src="~/public/img/discount/@i.photo" width="35" data-toggle="tooltip" title="@i.name_code">
+                                            </td>
+                                            <td>@i.start_date</td>
+
+                                            <td>@i.end_date</td>
+
+                                            <td>@i.type_voucher</td>
+                                            <td>@i.rank_user</td>
+                                            <td>@i.info</td>
+                                            <td>
+                                                @i.hide
+                                            </td>
+                                            <td>
+
+                                                <button class="btn btn-sm btn-primary" onclick="editCategory('@i.id_discount','@i.name_code','@i.code','@i.sale','@i.stock','@i.photo','@i.start_date','@i.end_date','@i.type_voucher','@i.rank_user','@i.info','@i.hide')" data-toggle="modal" data-target="#exampleModal">Sửa</button>
+                                                | <a class="btn btn-sm btn-danger" href="@Url.Action("xoa_discount", "DiscountCode", new { disID = i.id_discount })">xóa</a>
+                                            </td>
+                                        </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+
+        function editCategory(id_discount,namecode,code,sale,stock,photo,startdate,enddate,typediscount,rankuser,info,hide) {
+
+            document.getElementById('id_discount').value = id_discount;
+            document.getElementById('namecode').value = namecode;
+            document.getElementById('code').value = code;
+            document.getElementById('sale').value = sale;
+            
+            document.getElementById('stock').value = stock;
+            
+            document.getElementById('startdate').value = startdate;
+            document.getElementById('enddate').value = enddate;
+            document.getElementById('typediscount').value = typediscount;
+            document.getElementById('info').value = info;
+            
+            var an = document.getElementById('rankuser');
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(an.options).findIndex(option => option.value === rankuser);
+                an.selectedIndex = optionIndex;
+            }
+
+            
+            var anhien = document.getElementById('anmagiam');
+            var condition = true;
+            if (condition) {
+                var optioni = Array.from(anhien.options).findIndex(option => option.value === hide);
+                anhien.selectedIndex = optioni;
+            }
+
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote();
+        });
+    </script>
+    <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+        <div class="modal-dialog" style="max-width:900px" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("sua_discount", "DiscountCode")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group ">
+
+                                <label>Id mã giảm giá</label>
+                                <input type="text" class="form-control" id="id_discount" name="id_discount" value="" readonly>
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Tên mã giảm giá</label>
+                                <input type="text" class="form-control" id="namecode" name="namecode" value="">
+                            </div>
+
+                            <div class="form-group ">
+
+                                <label>Mã giảm giá</label>
+                                <input type="text" class="form-control" id="code" name="code" value="">
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Giảm giá</label>
+                                <input type="number" class="form-control" min="0" max="100" id="sale" name="sale" value="">
+                            </div>
+
+                            <div class="form-group ">
+
+                                <label>Số lượng</label>
+                                <input type="number" class="form-control" id="stock" name="stock" value="0">
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Ngày bắt đầu</label>
+                                <input type="date" class="form-control daterangepicker" id="startdate" name="startdate" value="">
+                            </div>
+                            <div class="form-group ">
+                                <label>Ngày kết thúc</label>
+                                <input type="date" class="form-control daterangepicker" id="enddate" name="enddate" value="">
+
+                                <label>Loại mã giảm giá</label>
+
+                                <select id="typediscount" name="typediscount" class=" form-control">
+                                    <option value="Vận chuyển">Vận chuyển</option>
+                                    <option value="Giảm giá">Giảm giá</option>
+                                </select>
+                                <label>Xếp hạng người dùng có thể dùng</label>
+
+                                <select id="rankuser" name="rankuser" class=" form-control">
+                                    <option value="Đồng">Đồng</option>
+                                    <option value="Bạc">Bạc</option>
+                                    <option value="Vàng">Vàng</option>
+                                    <option value="Kim cương">Kim cương</option>
+                                    <option value="Untimate">Untimate</option>
+                                    <option value="Người mới">Người mới</option>
+                                </select>
+                                <div class="form-group ">
+                                    <label>Thông tin mã</label>
+                                    <textarea type="text" class="form-control" id="info" name="info" value=""></textarea>
+                                </div>
+                                <label>Ẩn mã</label>
+                                <select id="anmagiam" name="anmagiam" class="form-control selectric">
+
+                                    <option value="Hiện" selected>Hiện</option>
+                                    <option value="Ẩn">Ẩn</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
+        <div class="modal-dialog" style="max-width:900px" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("add_discount", "DiscountCode")" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <div class="form-group ">
+
+                                <label>Tên mã giảm giá</label>
+                                <input type="text" class="form-control" id="namecodeq" name="namecodeq" value="">
+                            </div>
+
+                            <div class="form-group ">
+
+                                <label>Mã giảm giá</label>
+                                <input type="text" class="form-control" id="codeq" name="codeq" value="">
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Giảm giá</label>
+                                <input type="number" class="form-control" min="0" max="100" id="saleq" name="saleq" value="0">
+                            </div>
+                            <div class="form-group ">
+
+                                <label>Số lượng</label>
+                                <input type="number" class="form-control" id="stockq" name="stockq" value="0">
+
+
+                                <label>Ngày bắt đầu</label>
+                                <input type="date" class="form-control datepicker" id="startdateq" name="startdateq" value="">
+
+                                <label>Ngày kết thúc</label>
+                                <input type="date" class="form-control daterangepicker" id="enddateq" name="enddateq" value="">
+
+                                <label>Loại mã giảm giá</label>
+
+                                <select id="typediscountq" name="typediscountq" class=" form-control">
+                                    <option value="Vận chuyển">Vận chuyển</option>
+                                    <option value="Giảm giá">Giảm giá</option>
+                                </select>
+                                <label>Xếp hạng người dùng có thể dùng</label>
+
+                                <select id="rankuserq" name="rankuserq" class=" form-control">
+                                    <option value="Đồng">Đồng</option>
+                                    <option value="Bạc">Bạc</option>
+                                    <option value="Vàng">Vàng</option>
+                                    <option value="Kim cương">Kim cương</option>
+                                    <option value="Untimate">Untimate</option>
+                                    <option value="Người mới">Người mới</option>
+                                </select>
+                                <label>thông tin mã</label>
+                                <textarea type="text" class="form-control" id="infoq" name="infoq" value=""></textarea>
+
+                                <label>Ẩn mã</label>
+                                <select id="an_spq" name="an_spq" class="form-control selectric">
+
+                                    <option selected>Hiện</option>
+                                    <option>Ẩn</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "acc_management";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database database = new database();
 }
-
+@using shopthoitrang.Models;
+@model List<Account>
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -55,13 +57,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @{ foreach (var u in Model)
+                                        @{ 
+                                            foreach (var u in Model)
                                             {
+                                                var acc = database.User_info.Where(++-++.`
+                                                    ````+)
                                                 <tr>
 
                                                     <td>@u.id_user</td>
                                                     <td>
-                                                        <img alt="image" src="~/public/img/user/@u.img" width="60" data-toggle="tooltip" title="@u.img">
+                                                        <img alt="image" src="~/public/img/user/@u." width="60" data-toggle="tooltip" title="@u.img">
                                                     </td>
 
                                                     <td>@u.name</td>

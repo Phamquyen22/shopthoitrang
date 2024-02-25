@@ -41,7 +41,10 @@ namespace shopthoitrang.Areas.admin.Controllers
         {
             bool check = check_login();
             if (check)
-                return View();
+            {
+                var acc = db.Account.ToList();
+                return View(acc);
+            }
             else
             {
                 return RedirectToAction("login", "admin");
@@ -56,6 +59,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 return RedirectToAction("login", "admin");
             }
+            
         }
 
         [HttpPost]
@@ -75,8 +79,8 @@ namespace shopthoitrang.Areas.admin.Controllers
                 
             }
             string photo = "avatar-1.png";
-            if(file !=null && file.ContentLength > 0){
-                photo = Path.GetFileName(file.FileName);
+            if (file != null && file.ContentLength > 0) {
+                photo = DateTime.Now.ToString("yyyyMMddHHmmss") +"-"+ Path.GetFileName(file.FileName);
                 string file_path = Path.Combine(Server.MapPath("~/public/img/user/"), photo);
                 file.SaveAs(file_path);
             }
