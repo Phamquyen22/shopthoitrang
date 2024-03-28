@@ -51,9 +51,12 @@
                                     <div class="form-group">
                                         @{ if (@ViewBag.error != null)
                                             {
-                                                <div class="alert alert-danger">
-                                                    @ViewBag.error
-                                                </div>};
+                                        <div class="alert alert-danger">
+                                            <button class="close" data-dismiss="alert">
+                                                <span>×</span>
+                                            </button>
+                                            @ViewBag.error
+                                        </div>};
                                         }
                                         <label for="taikhoan">User name</label>
                                         <input id="taikhoan" type="text" class="form-control" name="taikhoan" tabindex="1" required autofocus>
@@ -76,7 +79,7 @@
 
 
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                                        <button type="submit"  class="btn btn-primary btn-lg btn-block" tabindex="4">
                                             Login
                                         </button>
                                     </div>
@@ -87,7 +90,8 @@
                         </div>
 
                         <div class="simple-footer">
-                            Copyright &copy; Stisla 2023
+                            Copyright &copy; Quyền
+
                         </div>
                     </div>
                 </div>

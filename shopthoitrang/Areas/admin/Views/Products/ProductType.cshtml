@@ -42,15 +42,21 @@
                             <div class="table-responsive">
                                 @{ if (@ViewBag.error != null)
                                     {
-                                        <div class="alert alert-danger">
-                                            @ViewBag.error
-                                        </div>
+                                <div class="alert alert-danger">
+                                    <button class="close" data-dismiss="alert">
+                                        <span>×</span>
+                                    </button>
+                                    @ViewBag.error
+                                </div>
                                     };
                                     if (ViewBag.thanhcong != null)
                                     {
-                                        <div class="alert alert-success">
-                                            @ViewBag.thanhcong
-                                        </div>
+                                <div class="alert alert-success">
+                                    <button class="close" data-dismiss="alert">
+                                        <span>×</span>
+                                    </button>
+                                    @ViewBag.thanhcong
+                                </div>
                                     }
 
                                 }

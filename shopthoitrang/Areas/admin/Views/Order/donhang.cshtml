@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "donhang";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database database = new database();
 }
-
+@using shopthoitrang.Models;
+@model List<Order>
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -65,7 +67,7 @@
                                             </th>
                                             <th>Số điện thoại người mua</th>
                                             <th>Tên người đặt hàng</th>
-                                            <th>Chú thích đơn hàng</th>
+                                            <th>Mã giảm giá đã áp dụng</th>
                                             <th>Ngày đặt đơn</th>
                                             <th>tình trạng đơn hàng</th>
                                             <th>Action</th>
@@ -75,33 +77,45 @@
 
                                         @{ foreach (var order in Model)
                                             {
-                                                var nameor = database.User_role.Where(or => or.id_user == order.id_user).Select(u => u.name).FirstOrDefault();
-                                                <tr>
-                                                    <td>
-                                                        @order.orderID
-                                                    </td>
-                                                    <td>@order.o_phone</td>
-                                                    <td>@nameor</td>
-                                                    <td>@order.orderMessage</td>
-                                                    <td>@order.orderDateTime</td>
-                                                    @{ if (order.orderStatus == "Chờ xác nhận")
-                                                        {
-                                                            <td><div class="badge badge-danger">@order.orderStatus</div></td>
-                                                        }
-                                                        else if (order.orderStatus == "Chờ vận chuyển")
-                                                        {
-                                                            <td><div class="badge badge-warning">@order.orderStatus</div></td>
-                                                        }
-                                                        else if (order.orderStatus == "Hoàn thành")
-                                                        {
-                                                            <td><div class="badge badge-success">@order.orderStatus</div></td>
+                                                var nameor = database.User_info.Where(or => or.id_user == order.id_user).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                @order.id_order
+                                            </td>
+                                            <td>@nameor.phone</td>
+                                            <td>@nameor.name</td>
+                                            <td>@order.id_discount</td>
+                                            <td>@order.date_order</td>
+                                            @{ if (order.status_order == "Chờ xác nhận")
+                                                {
+                                                    <td><div class="badge badge-danger">@order.status_order</div></td>
+                                                }
+                                                else if (order.status_order == "Chờ vận chuyển")
+                                                {
+                                                    <td><div class="badge badge-warning">@order.status_order</div></td>
+                                                }
+                                                else if (order.status_order == "Hoàn thành")
+                                                {
+                                                    <td><div class="badge badge-success">@order.status_order</div></td>
 
-                                                        }
-                                                    }
+                                                }
 
-                                                    <td><a href="@Url.Action("xacnhan", "donhang", new { orderID = @order.orderID, check = "Chờ vận chuyển", action = "donhang" })" alt="Xác nhận" class="btn btn-icon btn-sm btn-success"><i class="far fa-check-circle"></i></a> | <a href="@Url.Action("detail", "donhang", new { orderID = @order.orderID })" class="btn btn-icon btn-sm btn-info"><i class="fas fa-info-circle"></i></a> |<a href="@Url.Action("xoa_donhang", "donhang", new { orderID = @order.orderID })" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-times"></i></a></td>
 
-                                                </tr>
+                                                if (order.payment_status == "Chờ thanh toán")
+                                                {
+                                                    <td><div class="badge badge-danger">@order.payment_status</div></td>
+                                                }
+                                                
+                                                else if (order.payment_status == "Đã thanh toán")
+                                                {
+                                                    <td><div class="badge badge-success">@order.payment_status</div></td>
+
+                                                }
+                                            }
+                                            
+                                            <td><a href="@Url.Action("xacnhan", "donhang", new { orderID = @order.id_order, check = "Chờ vận chuyển", action = "donhang" })" alt="Xác nhận" class="btn btn-icon btn-sm btn-success"><i class="far fa-check-circle"></i></a> | <a href="@Url.Action("detail", "donhang", new { orderID = @order.id_order })" class="btn btn-icon btn-sm btn-info"><i class="fas fa-info-circle"></i></a> |<a href="@Url.Action("xoa_donhang", "donhang", new { orderID = @order.orderID })" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-times"></i></a></td>
+
+                                        </tr>
                                             }
                                         }
 

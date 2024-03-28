@@ -3,6 +3,7 @@
     ViewBag.Title = "acc_management";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
     database database = new database();
+
 }
 @using shopthoitrang.Models;
 @model List<Account>
@@ -38,6 +39,26 @@
                             </div>
                         </div>
                         <div class="card-body p-0">
+                            @{ if (@ViewBag.error != null)
+                                {
+                                    <div class="alert alert-danger alert-dismissible show fade">
+                                        <button class="close" data-dismiss="alert">
+                                            <span>×</span>
+                                        </button>
+                                        @ViewBag.error
+                                    </div>
+                                };
+                                if (ViewBag.thanhcong != null)
+                                {
+                                    <div class="alert alert-success alert-dismissible show fade">
+                                        <button class="close" data-dismiss="alert">
+                                            <span>×</span>
+                                        </button>
+                                        @ViewBag.thanhcong
+                                    </div>
+                                }
+
+                            }
                             <div class="table-responsive">
                                 <table class="table table-striped" id="sortable-table">
                                     <thead>
@@ -50,54 +71,53 @@
                                             <th>Địa chỉ</th>
                                             <th>Số điện thoại</th>
                                             <th>Email</th>
-                                            <th>Ngày sinh</th>
+                                            <th>Hạng người dùng</th>
                                             <th>Status</th>
                                             <th>Quyền người dùng</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @{ 
+                                        @{
                                             foreach (var u in Model)
                                             {
-                                                var acc = database.User_info.Where(++-++.`
-                                                    ````+)
+                                                var acc = database.User_info.Where(c => c.id_user == u.id_user).FirstOrDefault();
                                                 <tr>
 
                                                     <td>@u.id_user</td>
                                                     <td>
-                                                        <img alt="image" src="~/public/img/user/@u." width="60" data-toggle="tooltip" title="@u.img">
+                                                        <img alt="image" src="~/public/img/user/@acc.img" width="60" data-toggle="tooltip" title="@acc.name">
                                                     </td>
 
-                                                    <td>@u.name</td>
-                                                    <td>@u.address</td>
-                                                    <td>@u.phone</td>
-                                                    <td>@u.email</td>
-                                                    <td>@u.ngaysinh</td>
+                                                    <td>@acc.name</td>
+                                                    <td>@acc.address</td>
+                                                    <td>@acc.phone</td>
+                                                    <td>@acc.email</td>
+                                                    <td>@acc.rank_user</td>
 
                                                     <td>
-                                                        @{ if (u._lock == "false")
+                                                        @{ if (u.acc_lock == "false")
                                                             {
                                                                 <div class="badge badge-danger">
-                                                                    @u._lock
+                                                                    @u.acc_lock
                                                                 </div>
                                                             }
                                                             else
                                                             {
                                                                 <div class="badge badge-success">
-                                                                    @u._lock
+                                                                    @u.acc_lock
                                                                 </div>
                                                             }
                                                         }
                                                     </td>
                                                     <td>@u.role</td>
                                                     <td>
-                                                        <button class="btn btn-primary" onclick="editCategory('@u.tk','@u.name','@u.address','@u.phone','@u.email','@u.ngaysinh','@u._lock','@u.role')" data-toggle="modal" data-target="#exampleModal">Sửa</button>| <a href="@Url.Action("xoa_nguoidung","Admin",new {taikhoan=u.tk})" class="btn btn-danger" style="color:white">xóa</a>
+                                                        <button class="btn btn-primary" onclick="editCategory('@u.taikhoan','@u.matkhau','@acc.name','@acc.address','@acc.phone','@acc.email','@acc.birthday','@u.acc_lock','@u.role','@acc.rank_user')" data-toggle="modal" data-target="#exampleModal">Sửa</button>| <a href="@Url.Action("del_account", "admin", new { taikhoan = u.taikhoan })" class="btn btn-danger" style="color:white">xóa</a>
                                                     </td>
 
 
                                                 </tr>
-                                            }
+                                                            }
                                         }
                                     </tbody>
                                 </table>
@@ -110,14 +130,15 @@
     </section>
     <script>
 
-        function editCategory(tk,name, address, phone, email, ngaysinh, _lock, role) {
+        function editCategory(tk,mk,name, address, phone, email, ngaysinh, _lock, role,rank) {
             document.getElementById('taikhoan').value = tk;
+            document.getElementById('matkhau').value = mk;
             document.getElementById('name').value = name;
             document.getElementById('address').value = address;
             document.getElementById('phone').value = phone;
             document.getElementById('email').value = email;
             document.getElementById('ngaysinh').value = ngaysinh;
-            var a= document.getElementById('_lock');
+            var a= document.getElementById('acc_lock');
             var condition = true;
             if (condition) {
                 var optionIndex = Array.from(a.options).findIndex(option => option.value === _lock);
@@ -130,6 +151,12 @@
                 var optionIndex = Array.from(kq.options).findIndex(option => option.value === role);
                 kq.selectedIndex = optionIndex;
             }
+            var rank_user = document.getElementById('rank');
+            var condition = true;
+            if (condition) {
+                var optionIndex = Array.from(rank_user.options).findIndex(option => option.value === rank);
+                rank_user.selectedIndex = optionIndex;
+            }
         }
 
     </script>
@@ -137,13 +164,17 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
-                <form action="@Url.Action("sua_nguoidung", "Admin")" method="post" enctype="multipart/form-data">
+                <form action="@Url.Action("acc_management", "admin")" method="post" enctype="multipart/form-data">
 
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Tài khoản</label>
                             <input type="text" class="form-control" id="taikhoan" name="taikhoan" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <input type="text" class="form-control" id="matkhau" name="matkhau" value="">
                         </div>
                         <div class="form-group">
                             <label>Tên người dùng</label>
@@ -168,8 +199,21 @@
                         </div>
                         <div class="form-group">
 
+                            <label>Xếp hạng người dùng</label>
+                            <select id="rank" name="rank" class="form-control ">
+                                <option value="Đồng">Đồng</option>
+                                <option value="Bạc">Bạc</option>
+                                <option value="Vàng">Vàng</option>
+                                <option value="Kim cương">Kim cương</option>
+                                <option value="Untimate">Untimate</option>
+                                <option value="Người mới">Người mới</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+
                             <label>Trạng thái tài khoản</label>
-                            <select id="khoa" name="khoa" class="form-control ">
+                            <select id="acc_lock" name="acc_lock" class="form-control ">
                                 <option value="true">true</option>
                                 <option value="false">false</option>
                             </select>
@@ -178,12 +222,29 @@
 
                             <label>Quyền quản trị</label>
                             <select id="role" name="role" class="form-control ">
-                                <option value="admin">admin</option>
-                                <option value="management">management</option>
                                 <option value="user">user</option>
+                                <option value="management">management</option>
+                                @{
+                                    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+
+                                    if (authCookie != null)
+                                    {
+                                        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+                                        string userData = authTicket.UserData;
+                                        if (userData == "admin")
+                                        {
+                                            <option value="admin">admin</option>
+
+                                        }
+                                    }
+
+
+                                }
                             </select>
 
                         </div>
+
 
 
                     </div>

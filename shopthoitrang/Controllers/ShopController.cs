@@ -6,15 +6,19 @@ using System.Web.Mvc;
 using shopthoitrang.Models;
 namespace shopthoitrang.Controllers
 {
-    public class HomeController : Controller
+    public class ShopController : Controller
     {
+        // GET: Shop
         private database db = new database();
-        public ActionResult Index()
+        public ActionResult product()
         {
-            
             return View();
         }
-
-       
+        [HttpGet]
+        public ActionResult getpro()
+        {
+            var chao = "xin chao banj";
+            return Content(chao);
+        }
     }
 }

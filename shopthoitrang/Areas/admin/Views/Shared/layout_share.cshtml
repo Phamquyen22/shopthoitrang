@@ -4,7 +4,7 @@
 }
 @using shopthoitrang.Models;
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
@@ -45,12 +45,12 @@
                         <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
                         <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
                     </ul>
-                    <div class="search-element">
+                    @*<div class="search-element">
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
                         <button class="btn" type="submit"><i class="fas fa-search"></i></button>
                         <div class="search-backdrop"></div>
 
-                    </div>
+                    </div>*@
                 </form>
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown dropdown-list-toggle">
@@ -125,7 +125,7 @@
                                     {
                                         <img alt="image" src="~/public/img/user/@ten.img" class="rounded-circle mr-2" style="width:50px; height:50px">
 
-                                        <div class="d-sm-none d-lg-inline-block">Hi,@ten.name </div>
+                                        <div class="d-sm-none d-lg-inline-block">Hi, @ten.name </div>
                                     }
                                     else
                                     {
@@ -191,10 +191,10 @@
                         <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-bag"></i> <span>Order</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="/Admin/donhang/donhang">Đơn hàng</a></li>
-                                <li><a class="nav-link" href="/Admin/donhang/choxacnhan">Đơn hàng chờ xác nhận</a></li>
-                                <li><a class="nav-link" href="/Admin/donhang/chovanchuyen">Đơn hàng chờ vận chuyển</a></li>
-                                <li><a class="nav-link" href="/Admin/donhang/donhoanthanh">Đơn hàng hoàn thành</a></li>
+                                <li><a class="nav-link" href="/admin/Order/donhang">Đơn hàng</a></li>
+                                <li><a class="nav-link" href="/admin/Order/choxacnhan">Đơn hàng chờ xác nhận</a></li>
+                                <li><a class="nav-link" href="/admin/Order/chovanchuyen">Đơn hàng chờ vận chuyển</a></li>
+                                <li><a class="nav-link" href="/admin/Order/donhoanthanh">Đơn hàng hoàn thành</a></li>
                             </ul>
                         </li>
 
