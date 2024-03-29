@@ -12,6 +12,8 @@ namespace shopthoitrang.Controllers
         private database db = new database();
         public ActionResult product()
         {
+            Uri currentUrl = Request.Url;
+            TempData["trangtruoc"] = currentUrl.ToString();
             return View();
         }
         [HttpGet]

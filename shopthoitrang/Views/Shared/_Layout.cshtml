@@ -1,6 +1,7 @@
 ﻿@using shopthoitrang.Models;
-@{ 
+@{
     database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -11,7 +12,7 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@ViewBag.tile</title>
+    <title>@ViewBag.Title</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
@@ -47,37 +48,96 @@
     <!-- Header Section Begin -->
     <header class="header">
 
-        <div class="container fixed-top bg-light">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="@Url.Action("Index","Home")"><img src="~/public/img/logo.png" alt=""></a>
+                        <a href="@Url.Action("Index", "Home")">
+                            <div class="stage">
+                                <div class="wrapper">
+                                    <div class="slash"></div>
+                                    <div class="sides">
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                    </div>
+                                    <div class="text">
+                                        <div class="text--backing">SHOP.FASHION</div>
+                                        <div class="text--left">
+                                            <div class="inner">SHOP.FASHION</div>
+                                        </div>
+                                        <div class="text--right">
+                                            <div class="inner">SHOP.FASHION</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="@Url.Action("Index","Home")">Home</a></li>
-                            
+
+                            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+
                             <li>
-                                <a href="@Url.Action("product","Shop")">Shop</a>
+                                <a href="@Url.Action("product", "Shop")">Shop</a>
                                 <ul class="dropdown">
                                     @{
                                         var cate = db.Category.ToList();
                                         foreach (var data in cate)
                                         {
-                                            <li><a href="@Url.Action("category","Shop",new { idcate = data.id_cate})">@data.name_cate</a></li>
+                                            <li><a href="@Url.Action("category", "Shop", new { idcate = data.id_cate })">@data.name_cate</a></li>
                                         }
 
                                     }
-
-
-
                                 </ul>
                             </li>
                             <li><a href="./blog.html">Blog</a></li>
                             <li><a href="./contact.html">Contacts</a></li>
-                            <li><a href="./login.html">Sign in</a></li>
+                            @{ if (authCookie == null)
+                                {
+                                    string user = Session["id_user"] as string;
+                                    if (user != null)
+                                    {
+                                        int id = int.Parse(user);
+                                        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+                                        <li>
+                                            <a href="@Url.Action("Login", "Home")">@ten.name</a>
+                                            <ul class="dropdown">
+                                                <li>
+                                                    <a href="@Url.Action("Login", "Home")">Sign out</a>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                    <li><a href="@Url.Action("Login", "Home")">Sign in</a></li>
+                                    }
+                                }
+                                else
+                                {
+                                    var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                                    string username = authTicket.Name;
+                                    string userData = authTicket.UserData;
+                                    int id = int.Parse(username);
+                                    var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+                                    <li>
+                                        <a href="@Url.Action("Login", "Home")">@ten.name</a>
+                                        <ul class="dropdown">
+                                            <li>
+                                                <a href="@Url.Action("Login", "Home")">Sign out</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+
+                                }
+                            }
                         </ul>
                     </nav>
                 </div>

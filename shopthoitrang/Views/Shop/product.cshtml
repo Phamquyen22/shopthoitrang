@@ -3,6 +3,7 @@
     ViewBag.Title = "product";
     Layout = "~/Views/Shared/_Layout.cshtml";
     database db = new database();
+    
 }
 @using shopthoitrang.Models;
 <section class="shop spad">
@@ -190,6 +191,7 @@
                     </div>
                 </div>
             </div>
+           
             <div class="col-lg-9">
                 <div class="shop__product__option">
                     <div class="row">
@@ -363,19 +365,7 @@
                         }
                     }
                     <script>
-                        function getData() {
-                            $.ajax({
-                                        url: '@Url.Action("getpro", "Shop")',
-                                        type: 'POST',
-                                        data: { proID: proID , quantity: quantity },
-                                success: function (result) {
-                                    console.log(result)
-                                        },
-                                        error: function () {
-
-                                        }
-                                    });
-                        }
+                        
 
                     </script>
 
