@@ -19,6 +19,8 @@ namespace shopthoitrang.Models
 
         public int? id_comment { get; set; }
 
+        public virtual comment comment { get; set; }
+
         public virtual product product { get; set; }
     }
 }

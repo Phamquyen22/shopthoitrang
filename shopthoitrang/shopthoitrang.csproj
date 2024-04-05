@@ -152,7 +152,6 @@
     <Compile Include="Models\product.cs" />
     <Compile Include="Models\product_type.cs" />
     <Compile Include="Models\rate.cs" />
-    <Compile Include="Models\sysdiagrams.cs" />
     <Compile Include="Models\User_info.cs" />
     <Compile Include="Models\Voucher_user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2268,6 +2267,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\css\detail.css" />
     <Content Include="public\css\elegant-icons.css" />
     <Content Include="public\css\font-awesome.min.css" />
     <Content Include="public\css\magnific-popup.css" />
@@ -2664,12 +2664,13 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shop\product.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Shop\detail.cshtml" />
+    <Content Include="Views\Cart\Cart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\admin\Models\" />
     <Folder Include="public\img\product\video\" />
-    <Folder Include="Views\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

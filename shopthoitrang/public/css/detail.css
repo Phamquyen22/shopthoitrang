@@ -1,0 +1,750 @@
+﻿.radio-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 50px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .radio-inputs > * {
+        margin: 6px;
+    }
+
+.radio-input:checked + .radio-tile {
+    border-color: #2260ff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    color: #2260ff;
+}
+
+    .radio-input:checked + .radio-tile:before {
+        transform: scale(1);
+        opacity: 1;
+        background-color: #2260ff;
+        border-color: #2260ff;
+    }
+
+    .radio-input:checked + .radio-tile .radio-icon svg {
+        fill: #2260ff;
+    }
+
+    .radio-input:checked + .radio-tile .radio-label {
+        color: #2260ff;
+    }
+
+.radio-input:focus + .radio-tile {
+    border-color: #2260ff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
+}
+
+    .radio-input:focus + .radio-tile:before {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+.radio-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    min-height: 50px;
+    border-radius: 0.5rem;
+    border: 2px solid #b5bfd9;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.15s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+    .radio-tile:before {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 0.75rem;
+        height: 0.75rem;
+        border: 2px solid #b5bfd9;
+        background-color: #fff;
+        border-radius: 50%;
+        top: 0.25rem;
+        left: 0.25rem;
+        opacity: 0;
+        transform: scale(0);
+        transition: 0.25s ease;
+    }
+
+    .radio-tile:hover {
+        border-color: #2260ff;
+    }
+
+        .radio-tile:hover:before {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+.radio-icon svg {
+    width: 2rem;
+    height: 2rem;
+    fill: #494949;
+}
+
+.radio-label {
+    color: #707070;
+    transition: 0.375s ease;
+    text-align: center;
+    font-size: 13px;
+}
+
+.radio-input {
+    clip: rect(0 0 0 0);
+    -webkit-clip-path: inset(100%);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.product_description_area {
+    padding-bottom: 120px;
+    margin-top: 60px;
+}
+
+@media (max-width: 991px) {
+    /* line 761, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area {
+        margin-top: 0px;
+        padding-bottom: 70px;
+    }
+}
+
+/* line 771, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.product_description_area .nav.nav-tabs {
+    display: block;
+    border: none;
+    padding: 10px 0px;
+}
+
+    /* line 776, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area .nav.nav-tabs li {
+        display: inline-block;
+        margin-right: 7px;
+    }
+
+        /* line 780, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .nav.nav-tabs li:last-child {
+            margin-right: 0px;
+        }
+
+        /* line 784, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .nav.nav-tabs li a {
+            padding: 0px;
+            border: none;
+            line-height: 38px;
+            background: #fff;
+            border: 1px solid #eeeeee;
+            border-radius: 0px;
+            padding: 0px 30px;
+            color: #2a2a2a;
+            font-size: 13px;
+            font-weight: normal;
+            border-radius: 50px;
+        }
+
+@media (max-width: 991px) {
+    /* line 784, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area .nav.nav-tabs li a {
+        padding: 0px 20px;
+        margin-bottom: 10px;
+    }
+}
+
+/* line 803, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.product_description_area .nav.nav-tabs li a.active {
+    background: #ff3368;
+    color: #fff;
+    border-color: #ff3368;
+    box-shadow: -1.717px 8.835px 29.76px 2.24px rgba(255, 51, 104, 0.18);
+}
+
+/* line 813, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.product_description_area .tab-content {
+    padding-top: 30px;
+}
+
+    /* line 818, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area .tab-content .total_rate .box_total {
+        background: #ecfdff;
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border: 1px solid #dddddd;
+    }
+
+        /* line 824, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .box_total h4 {
+            color: #ff3368;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        /* line 830, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .box_total h5 {
+            color: #2a2a2a;
+            margin-bottom: 0px;
+            font-size: 24px;
+        }
+
+        /* line 836, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .box_total h6 {
+            color: #2a2a2a;
+            margin-bottom: 0px;
+            font-size: 14px;
+            color: #797979;
+            font-weight: normal;
+        }
+
+    /* line 845, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area .tab-content .total_rate .rating_list {
+        margin-bottom: 30px;
+    }
+
+        /* line 848, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .rating_list h3 {
+            font-size: 18px;
+            color: #2a2a2a;
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* line 858, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .rating_list .list li a {
+            font-size: 14px;
+            color: #797979;
+        }
+
+            /* line 862, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .product_description_area .tab-content .total_rate .rating_list .list li a i {
+                color: #fbd600;
+            }
+
+        /* line 870, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .total_rate .rating_list .list li:nth-child a i:last-child {
+            color: #eeeeee;
+        }
+
+    /* line 881, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .product_description_area .tab-content .table {
+        margin-bottom: 0px;
+    }
+
+        /* line 886, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .table tbody tr td {
+            padding-left: 65px;
+            padding-right: 65px;
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+
+            /* line 892, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .product_description_area .tab-content .table tbody tr td h5 {
+                font-size: 14px;
+                font-family: "Poppins", sans-serif;
+                font-weight: normal;
+                color: #797979;
+                margin-bottom: 0px;
+                white-space: nowrap;
+            }
+
+        /* line 903, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .product_description_area .tab-content .table tbody tr:first-child td {
+            border-top: 0px;
+        }
+.review_box h4 {
+    font-size: 24px;
+    color: #2a2a2a;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* line 995, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box p {
+    margin-bottom: 0px;
+    display: inline-block;
+    font-weight: 500;
+}
+
+/* line 1001, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box .list {
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+    /* line 1006, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_box .list li {
+        display: inline-block;
+    }
+
+        /* line 1009, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .review_box .list li a {
+            display: inline-block;
+            color: #fbd600;
+        }
+
+/* line 1016, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box .form-control {
+    height: 50px;
+    border-radius: 0;
+}
+
+/* line 1020, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box ::placeholder {
+    font-size: 14px;
+}
+
+/* line 1023, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box .btn_3 {
+    padding: 13px 39px;
+}
+
+/* line 1026, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+.review_box .contact_form {
+    margin-top: 15px;
+}
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    gap: 15px;
+    background-color: #007ACC;
+    outline: 3px #007ACC solid;
+    outline-offset: -3px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 400ms;
+}
+
+    .button .text {
+        color: white;
+        font-weight: 700;
+        font-size: 1em;
+        transition: 400ms;
+    }
+
+    .button svg path {
+        transition: 400ms;
+    }
+
+    .button:hover {
+        background-color: transparent;
+    }
+
+        .button:hover .text {
+            color: #007ACC;
+        }
+
+        .button:hover svg path {
+            fill: #007ACC;
+        }
+
+.group {
+    position: relative;
+}
+
+.input {
+    font-size: 16px;
+    padding: 20px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #515151;
+    background: transparent;
+}
+
+    .input:focus {
+        outline: none;
+    }
+
+.group label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 8px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.input:focus ~ label, .input:valid ~ label {
+    top: -10px;
+    font-size: 14px;
+    color: #5264AE;
+}
+
+.bar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+    .bar:before, .bar:after {
+        content: '';
+        height: 2px;
+        width: 0;
+        bottom: 1px;
+        position: absolute;
+        background: #5264AE;
+        transition: 0.2s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    .bar:before {
+        left: 50%;
+    }
+
+    .bar:after {
+        right: 50%;
+    }
+
+.input:focus ~ .bar:before, .input:focus ~ .bar:after {
+    width: 50%;
+}
+
+.highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.input:focus ~ .highlight {
+    animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+.rating {
+    display: inline-block;
+}
+
+    .rating input {
+        display: none;
+    }
+
+    .rating label {
+        float: right;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.3s;
+    }
+
+        .rating label:before {
+            content: '\2605';
+            font-size: 25px;
+        }
+
+        .rating input:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #6f00ff;
+            transition: color 0.3s;
+        }
+.review_item {
+    margin-bottom: 35px;
+}
+
+    /* line 918, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_item:last-child {
+        margin-bottom: 0px;
+    }
+
+    /* line 922, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_item p {
+        color: #797979;
+    }
+
+    /* line 926, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_item .media {
+        position: relative;
+    }
+
+        /* line 929, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .review_item .media .d-flex {
+            padding-right: 15px;
+        }
+
+        /* line 933, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+        .review_item .media .media-body {
+            vertical-align: middle;
+            align-self: center;
+        }
+
+            /* line 937, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .review_item .media .media-body h4 {
+                margin-bottom: 0px;
+                font-size: 14px;
+                color: #2a2a2a;
+                font-family: "Poppins", sans-serif;
+                margin-bottom: 8px;
+            }
+
+            /* line 945, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .review_item .media .media-body i {
+                color: #fbd600;
+            }
+
+            /* line 949, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .review_item .media .media-body h5 {
+                font-size: 13px;
+                font-weight: normal;
+                color: #797979;
+            }
+
+            /* line 955, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+            .review_item .media .media-body .reply_btn {
+                border: 1px solid #e0e0e0;
+                padding: 0px 28px;
+                display: inline-block;
+                line-height: 32px;
+                border-radius: 16px;
+                font-size: 14px;
+                font-family: "Poppins", sans-serif;
+                color: #2a2a2a;
+                position: absolute;
+                right: 0px;
+                top: 14px;
+            }
+
+                /* line 968, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+                .review_item .media .media-body .reply_btn:hover {
+                    background: #ff3368;
+                    border-color: #ff3368;
+                    color: #fff;
+                }
+
+    /* line 977, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_item p {
+        padding-top: 10px;
+        margin-bottom: 0px;
+    }
+
+    /* line 982, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
+    .review_item.reply {
+        padding-left: 28px;
+    }
+
+.muasam {
+    border: none;
+    width: 200px;
+    height: 50px;
+    border-radius: 3em;
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    
+    background: #1C1A1C;
+    cursor: pointer;
+    transition: all 450ms ease-in-out;
+}
+
+.sparkle {
+    fill: #AAAAAA;
+    transition: all 800ms ease;
+}
+
+.muasam .text {
+    font-weight: 600;
+    color:white;
+    font-size: medium;
+}
+
+.muasam:hover {
+    background: linear-gradient(0deg,#A47CF3,#683FEA);
+    box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4), inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 4px rgba(255, 255, 255, 0.2), 0px 0px 180px 0px #9917FF;
+    transform: translateY(-2px);
+}
+
+    .muasam:hover .text {
+        color: white;
+    }
+
+    .muasam:hover .sparkle {
+        fill: white;
+        transform: scale(1.2);
+    }
+
+
+.thanhtoan {
+    outline: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 250px;
+    height: 50px;
+    border-radius: 0.5em;
+    box-shadow: 0 0.625em 1em 0 rgba(30, 143, 255, 0.35);
+    overflow: hidden;
+}
+
+    .thanhtoan div {
+        transform: translateY(0px);
+        width: 100%;
+    }
+
+    .thanhtoan,
+    .thanhtoan div {
+        transition: 0.6s cubic-bezier(.16,1,.3,1);
+    }
+
+        .thanhtoan div span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 50px;
+            padding: 0.95em 2.7em;
+        }
+
+        .thanhtoan div:nth-child(1) {
+            background-color: #1e90ff;
+        }
+
+        .thanhtoan div:nth-child(2) {
+            background-color: #21dc62;
+        }
+
+        .thanhtoan:hover {
+            box-shadow: 0 0.625em 1em 0 rgba(33, 220, 98, 0.35);
+        }
+
+            .thanhtoan:hover div {
+                transform: translateY(-50px);
+            }
+
+        .thanhtoan p {
+            margin-top:15px;
+            font-size: 17px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .thanhtoan:active {
+            transform: scale(0.95);
+        }
+
+
+.notifications-container {
+    width: 320px;
+    height: auto;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index:99;
+    position:fixed;
+    float:right;
+    top:30px;
+    right:30px;
+    
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+.success {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    background-color: rgb(240 253 244);
+}
+
+.succes-svg {
+    color: rgb(74 222 128);
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.success-prompt-wrap {
+    margin-left: 0.75rem;
+}
+
+.success-prompt-heading {
+    font-weight: bold;
+    color: rgb(22 101 52);
+}
+
+.success-prompt-prompt {
+    margin-top: 0.5rem;
+    color: rgb(21 128 61);
+}
+
+.success-button-container {
+    display: flex;
+    margin-top: 0.875rem;
+    margin-bottom: -0.375rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.success-button-main {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: #ECFDF5;
+    color: rgb(22 101 52);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: bold;
+    border-radius: 0.375rem;
+    border: none
+}
+
+    .success-button-main:hover {
+        background-color: #D1FAE5;
+    }
+
+.success-button-secondary {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.75rem;
+    background-color: #ECFDF5;
+    color: #065F46;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.375rem;
+    border: none;
+}

@@ -14,7 +14,6 @@ namespace shopthoitrang.Models
         {
             best_pro = new HashSet<best_pro>();
             Cart = new HashSet<Cart>();
-            comment = new HashSet<comment>();
             Order_detail = new HashSet<Order_detail>();
             rate = new HashSet<rate>();
         }
@@ -62,9 +61,6 @@ namespace shopthoitrang.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cart> Cart { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<comment> comment { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order_detail> Order_detail { get; set; }

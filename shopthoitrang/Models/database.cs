@@ -24,7 +24,6 @@ namespace shopthoitrang.Models
         public virtual DbSet<product> product { get; set; }
         public virtual DbSet<product_type> product_type { get; set; }
         public virtual DbSet<rate> rate { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User_info> User_info { get; set; }
         public virtual DbSet<Voucher_user> Voucher_user { get; set; }
 
@@ -39,6 +38,11 @@ namespace shopthoitrang.Models
                 .Property(e => e.date_post)
                 .IsFixedLength();
 
+            modelBuilder.Entity<comment>()
+                .HasMany(e => e.rate)
+                .WithOptional(e => e.comment)
+                .WillCascadeOnDelete();
+
             modelBuilder.Entity<Discount_code>()
                 .Property(e => e.hide)
                 .IsFixedLength();
@@ -52,11 +56,6 @@ namespace shopthoitrang.Models
                 .HasMany(e => e.best_pro)
                 .WithOptional(e => e.product)
                 .HasForeignKey(e => e.id_pro)
-                .WillCascadeOnDelete();
-
-            modelBuilder.Entity<product>()
-                .HasMany(e => e.comment)
-                .WithOptional(e => e.product)
                 .WillCascadeOnDelete();
 
             modelBuilder.Entity<product>()

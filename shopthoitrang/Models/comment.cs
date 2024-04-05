@@ -9,14 +9,18 @@ namespace shopthoitrang.Models
     [Table("comment")]
     public partial class comment
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public comment()
+        {
+            rate = new HashSet<rate>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int id_comment { get; set; }
 
-        public int? id_product { get; set; }
-
         [Column("comment")]
-        public string comment1 { get; set; }
+        public string Comment { get; set; }
 
         public int? id_user { get; set; }
 
@@ -25,6 +29,7 @@ namespace shopthoitrang.Models
         [StringLength(10)]
         public string date_post { get; set; }
 
-        public virtual product product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<rate> rate { get; set; }
     }
 }

@@ -1,7 +1,22 @@
 ﻿@using shopthoitrang.Models;
 @{
     database db = new database();
+
     var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -19,6 +34,7 @@
           rel="stylesheet">
 
     <!-- Css Styles -->
+    <link rel="stylesheet" href="~/public/css/detail.css" type="text/css">
     <link rel="stylesheet" href="~/public/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="~/public/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="~/public/css/elegant-icons.css" type="text/css">
@@ -27,6 +43,7 @@
     <link rel="stylesheet" href="~/public/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/public/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/public/css/style.css" type="text/css">
+
 </head>
 <body>
     <!-- Page Preloder -->
@@ -36,14 +53,7 @@
 
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
-    <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="~/public/img/icon/search.png" alt=""></a>
-            <a href="#"><img src="~/public/img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="~/public/img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
-    </div>
+    
     <!-- Offcanvas Menu End -->
     <!-- Header Section Begin -->
     <header class="header">
@@ -102,7 +112,7 @@
                                     string user = Session["id_user"] as string;
                                     if (user != null)
                                     {
-                                        int id = int.Parse(user);
+                                        
                                         var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
                                         <li>
                                             <a href="@Url.Action("Login", "Home")">@ten.name</a>
@@ -116,15 +126,12 @@
                                     }
                                     else
                                     {
-                                    <li><a href="@Url.Action("Login", "Home")">Sign in</a></li>
+                                        <li><a href="@Url.Action("Login", "Home")">Sign in</a></li>
                                     }
                                 }
                                 else
                                 {
-                                    var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                                    string username = authTicket.Name;
-                                    string userData = authTicket.UserData;
-                                    int id = int.Parse(username);
+                                    
                                     var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
                                     <li>
                                         <a href="@Url.Action("Login", "Home")">@ten.name</a>
@@ -146,8 +153,33 @@
                         <a id="search_1" href="javascript:void(0)"><img src="~/public/img/icon/search.png" alt=""></a>
 
                         <a href="#"><img src="~/public/img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="~/public/img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        @{
+                            if (id != -1)
+                            {
+                                var giohang = db.Cart.Where(c => c.id_user == id).ToList();
+                                int tongtien = 0;
+                                foreach (var it in giohang)
+                                {
+                                    var item = db.product.Where(c => c.id_product == it.id_product).FirstOrDefault();
+
+                                    var tien = (item.price_pro - (item.price_pro * item.discount_pro / 100))*it.quantity_cart;
+
+                                    tongtien += tien ?? 0;
+
+                                }
+                                string gia = string.Format("{0:#,##0}₫", tongtien);
+                                <a href="@Url.Action("Cart","Cart")"><img src="~/public/img/icon/cart.png" alt=""> <span id="solg">@giohang.Count</span></a>
+                                <div id="gia" class="price">@gia</div>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Cart","Cart")"><img src="~/public/img/icon/cart.png" alt=""> <span id="solg">0</span></a>
+                                <div id="gia" class="price">$0.00</div>
+                            }
+
+                        }
+
+
                     </div>
                 </div>
             </div>
@@ -219,11 +251,12 @@
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         <p>
                             Copyright ©
+                             2024 - 
                             <script>
                                 document.write(new Date().getFullYear());
-                            </script>2020
+                            </script>
                             All rights reserved | This template is made with <i class="fa fa-heart-o"
-                                                                                aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                                                                aria-hidden="true"></i> by <a href="#" target="_blank">Quyen</a>
                         </p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </div>
@@ -231,11 +264,31 @@
             </div>
         </div>
     </footer>
+    @*<script>
+        setInterval(function () {
+           
+            $.ajax({
+                url: '/Shop/getpro',
+                type:'POST',
+                success: function (response) {
+                    if (response.success === true) {
+                        var gia = document.getElementById('gia');
+                        var solghang = document.getElementById('solg');
+                        gia.innerText = response.giatien;
+                        solghang.innerText = response.tongsohang;
+                    } 
+                },
+            })
+            
+        }, 4000); 
+    </script>*@
 
     <!-- Footer Section End -->
     <!-- Search Begin -->
     <!-- Search End -->
     <!-- Js Plugins -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script src="~/public/js/jquery-3.3.1.min.js"></script>
     <script src="~/public/js/bootstrap.min.js"></script>
     <script src="~/public/js/jquery.nice-select.min.js"></script>

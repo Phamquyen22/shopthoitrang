@@ -1,0 +1,169 @@
+﻿
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
+}
+@using shopthoitrang.Models;
+@model List<Cart>
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th></th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    var pro = db.product.Where(p => p.id_product == item.id_product).FirstOrDefault();
+                                    var tien = pro.price_pro - (pro.price_pro * pro.discount_pro / 100);
+                                    string gia = string.Format("{0:#,##0}₫", tien);
+                                    <tr>
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img style="max-height:60px" src="~/public/img/product/@pro.photo_pro" alt="@pro.name_pro">
+                                            </div>
+                                            
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <a href="@Url.Action("detail","Shop",new {id_pro=item.id_product})">
+                                                <h5>@pro.name_pro</h5>
+                                            </a>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <h5>@gia</h5>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input id="soluonghang" onchange="soluong('@item.id_product','@tien')" type="number" min="0" max="99" value="@item.quantity_cart" placeholder="1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="tongtien" class="cart__price">@(tien * item.quantity_cart) ₫</td>
+                                        <td class="cart__close"><a href="#"><i class="fa fa-close"></i></a></td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="muasam">
+                            <a href="@Url.Action("product","Shop")"><span class="text">Continue Shopping</span> </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Discount codes</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Coupon code">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Subtotal <span>$ 169.50</span></li>
+                        <li>Total <span>$ 169.50</span></li>
+                    </ul>
+                    <a href="#" class="thanhtoan">
+                        <div>
+                            <span>
+                                <p>Proceed to checkout</p>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <p>Thanks order</p>
+                            </span>
+                        </div>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function soluong(id_product,gia) {
+        var onhap = document.getElementById('soluonghang').value;
+        var tong = document.getElementById('tongtien');
+        var sl = parseInt(onhap);
+        var gia = sl * gia;
+        tong.innerHTML = gia + '₫';
+
+        $.ajax({
+            url: '@Url.Action("update_cart", "Cart")',
+            type: 'POST',
+            data: {
+                id_pro: id_product,
+                quantity: sl,
+            },
+            success: function (response) {
+                if (response.success === true) {
+                    console.log('Sửa giỏ hàng thành công')
+                }
+                else if (response.redirectUrl != null) {
+                    window.location.href = response.redirectUrl;
+                }
+            },
+            error: function (xhr, status, error) {
+                
+                console.error(xhr.responseText);
+            }
+
+        });
+    }
+</script>

@@ -1,0 +1,669 @@
+﻿@using shopthoitrang.Models
+@model product
+@{
+    ViewBag.Title = "Sản phẩm " + Model.name_pro;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+   
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
+}
+
+
+<!-- Shop Details Section Begin -->
+<section class="shop-details">
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__breadcrumb">
+                        <a href="~/Views/Home/Index.cshtml">Home</a>
+                        <a href="~/Views/Shop/product.cshtml">Shop</a>
+                        <span>Product Details</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
+                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
+                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
+                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
+                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="~/public/img/product/@Model.photo_pro " alt="">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="~/public/img/product/@Model.photo_pro " alt="">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="~/public/img/product/@Model.photo_pro " alt="">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-4" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="~/public/img/product/@Model.photo_pro " alt="">
+                                <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1" class="video-popup"><i class="fa fa-play"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product__details__content">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>@Model.name_pro</h4>
+                        <div class="rating">
+                            @{
+
+                                var danhgia = db.rate.Where(r => r.id_product == Model.id_product).Select(r => r.star_rate).ToList();
+                                int rate = 0, demso = 0;
+                                if (danhgia.Count > 0)
+                                {
+                                    foreach (var dem in danhgia)
+                                    {
+                                        demso += dem ?? 0;
+                                    }
+                                    rate = demso / danhgia.Count;
+                                }
+                                for (int i = 0; i < rate; i++)
+                                {
+                                    <i class="fa fa-star"></i>
+                                }
+                                for (int i = 0; i < 5 - rate; i++)
+                                {
+                                    <i class="fa fa-star-o"></i>
+                                }
+                                <span> - @danhgia.Count Reviews</span>
+                            }
+
+                        </div>
+                        @{
+                            var tien = Model.price_pro - (Model.price_pro * Model.discount_pro / 100);
+                            string gia = string.Format("{0:#,##0}₫", tien);
+                        }
+                        <h3>@gia<span>@Model.price_pro đ</span></h3>
+                        <p>
+                            @Model.info_pro
+                        </p>
+                        <hr />
+                        <form id="myform">
+                            <div class="product__details__option">
+                                <div class="product__details__option__size">
+                                    <input name="id_pro" value="@Model.id_product" hidden />
+                                    <span>Size:</span>
+                                    @{
+                                        var size = db.product.Where(p => p.id_product == Model.id_product).Select(c => c.size_pro).FirstOrDefault();
+                                        var mang = size.Split(',').Select(c => c.Trim()).ToList();
+                                        foreach (var item in mang)
+                                        {
+                                            <label for="@item">
+                                                @item
+                                                <input type="radio" id="@item" value="@item" name="size">
+                                            </label>
+                                        }
+                                    }
+
+                                    <div class="shop__product__option__right">
+                                        <span>Color :</span>
+                                        <select name="color">
+                                            @{
+                                                var color = db.product.Where(c => c.id_product == Model.id_product).Select(c => c.color_pro).FirstOrDefault();
+                                                if (color != null)
+                                                {
+                                                    var list = color.Split(',').Select(c => c.Trim()).ToList();
+                                                    foreach (var item in list)
+                                                    {
+                                                        <option value="@item">@item</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="product__details__cart__option">
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" value="1" name="quantity">
+                                    </div>
+                                </div>
+
+                                <a href="javascript:void(0)" onclick="themgiohang()" class="primary-btn">add to cart</a>
+                            </div>
+                        </form>
+                        <div class="product__details__btns__option">
+                            @{
+                                bool che = false;
+                                if (id != -1)
+                                {
+                                    var check = db.User_info.Where(p => p.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                                    if (check != null)
+                                    {
+                                        var data = check.Split(',').ToList();
+                                        string idpro = Model.id_product.ToString();
+
+                                        foreach (var yt in data)
+                                        {
+
+                                            if (yt == idpro)
+                                            {
+                                                che = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (che)
+                                {
+                                    <a id="tomau" href="javascript:void(0)" onclick="them('@Model.id_product')" style="color:palevioletred"><i class="fa fa-heart"></i> add to wishlist</a>
+                                }
+                                else
+                                {
+                                    <a id="tomau" href="javascript:void(0)" onclick="them('@Model.id_product')"><i class="fa fa-heart"></i> add to wishlist</a>
+                                }
+
+
+                            }
+
+                        </div>
+                        <div class="product__details__last__option">
+                            <h5><span>Guaranteed Safe Checkout</span></h5>
+                            <img src="img/shop-details/details-payment.png" alt="">
+                            <ul>
+                                <li><span>SKU:</span> @Model.id_product</li>
+                                @{
+                                    var type_pro = db.product_type.Where(c => c.id_protype == Model.id_protype).FirstOrDefault();
+                                    var cate = db.Category.Where(c => c.id_cate == type_pro.id_cate).FirstOrDefault();
+                                }
+                                <li><span>Categories:</span> @cate.name_cate</li>
+                                <li><span>Tag:</span>@Model.tag</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-5"
+                                   role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">
+                                    Customer
+                                    Previews(@danhgia.Count)
+                                </a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <p class="note">
+                                        @Model.info_pro
+                                    </p>
+
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <section class="product_description_area">
+                                        <div class="container">
+
+                                            <div class="tab-content" id="myTabContent">
+
+                                                <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="row total_rate">
+                                                                <div class="col-6">
+                                                                    <div class="box_total">
+                                                                        <h5>Overall</h5>
+                                                                        <h4>@rate</h4>
+                                                                        <h6>(@danhgia.Count Reviews)</h6>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="rating_list">
+                                                                        <h3>Based on @danhgia.Count Reviews</h3>
+                                                                        <ul class="list">
+                                                                            @{
+                                                                                int sao5 = db.rate.Where(p => p.id_product == Model.id_product && p.star_rate == 5).Select(c => c.star_rate).Count();
+                                                                                int sao4 = db.rate.Where(p => p.id_product == Model.id_product && p.star_rate == 4).Select(c => c.star_rate).Count();
+                                                                                int sao3 = db.rate.Where(p => p.id_product == Model.id_product && p.star_rate == 3).Select(c => c.star_rate).Count();
+                                                                                int sao2 = db.rate.Where(p => p.id_product == Model.id_product && p.star_rate == 2).Select(c => c.star_rate).Count();
+                                                                                int sao1 = db.rate.Where(p => p.id_product == Model.id_product && p.star_rate == 1).Select(c => c.star_rate).Count();
+                                                                            }
+                                                                            <li>
+                                                                                <a href="#">
+                                                                                    5 Star
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i> @sao5
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">
+                                                                                    4 Star
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i> @sao4
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">
+                                                                                    3 Star
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i> @sao3
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">
+                                                                                    2 Star
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i> @sao2
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">
+                                                                                    1 Star
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i>
+                                                                                    <i class="fa fa-star"></i> @sao1
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="review_list">
+                                                                @{
+
+                                                                    var danhgia_ng_dung = db.rate.Where(r => r.id_product == Model.id_product).ToList();
+                                                                    foreach (var item in danhgia_ng_dung)
+                                                                    {
+                                                                        var ten = db.comment.Where(c => c.id_comment == item.id_comment).FirstOrDefault();
+                                                                        string tenng = null;
+                                                                        if (ten != null)
+                                                                        {
+                                                                            tenng = db.User_info.Where(c => c.id_user == ten.id_user).Select(p => p.name).FirstOrDefault();
+                                                                        }
+                                                                        <div class="review_item">
+                                                                            <div class="media">
+                                                                                <div class="">
+                                                                                    <img style="height:70px ;border-radius:50%; margin-right:10px" src="~/public/img/user/avatar-1.png" alt="" />
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                    <h4>@tenng</h4>
+                                                                                    @for (int i = 0; i < item.star_rate; i++)
+                                                                                    {
+                                                                                        <i class="fa fa-star"></i>
+                                                                                    }
+                                                                                    @for (int i = 0; i < 5 - item.star_rate; i++)
+                                                                                    {
+                                                                                        <i class="fa fa-star-o"></i>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                            @{
+
+                                                                                if (ten != null)
+                                                                                {
+                                                                                    <p>
+
+                                                                                        @ten.Comment
+                                                                                    </p>}
+                                                                            }
+                                                                        </div>
+
+                                                                    }
+                                                                }
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="review_box">
+                                                                <h4>Add a Review</h4>
+                                                                <h6>Your Rating:</h6>
+                                                                <div class="rating">
+                                                                    <input value="5" name="rating" id="star5" type="radio">
+                                                                    <label for="star5"></label>
+                                                                    <input value="4" name="rating" id="star4" type="radio">
+                                                                    <label for="star4"></label>
+                                                                    <input value="3" name="rating" id="star3" type="radio">
+                                                                    <label for="star3"></label>
+                                                                    <input value="2" name="rating" id="star2" type="radio">
+                                                                    <label for="star2"></label>
+                                                                    <input value="1" name="rating" id="star1" type="radio">
+                                                                    <label for="star1"></label>
+                                                                </div>
+
+                                                                <form class="row contact_form" action="" method="post" novalidate="novalidate">
+                                                                    <div class="col-md-12 form-group">
+                                                                        <div class="group">
+                                                                            <input required="" type="text" class="input">
+                                                                            <span class="highlight"></span>
+                                                                            <span class="bar"></span>
+                                                                            <label>Name</label>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12 form-group">
+                                                                        <div class="group">
+                                                                            <textarea required="" type="text" class="input"></textarea>
+                                                                            <span class="highlight"></span>
+                                                                            <span class="bar"></span>
+                                                                            <label>comment</label>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12 text-right">
+                                                                        <button type="submit" value="submit" class="button">
+
+                                                                            <p class="text">Submit Now</p>
+
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Details Section End -->
+<!-- Related Section Begin -->
+<section class="related spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="related-title">Related Product</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
+                        <span class="label">New</span>
+                        <ul class="product__hover">
+                            <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                            <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6>Piqué Biker Jacket</h6>
+                        <a href="#" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>$67.24</h5>
+                        <div class="product__color__select">
+                            <label for="pc-1">
+                                <input type="radio" id="pc-1">
+                            </label>
+                            <label class="active black" for="pc-2">
+                                <input type="radio" id="pc-2">
+                            </label>
+                            <label class="grey" for="pc-3">
+                                <input type="radio" id="pc-3">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
+                        <ul class="product__hover">
+                            <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                            <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6>Piqué Biker Jacket</h6>
+                        <a href="#" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>$67.24</h5>
+                        <div class="product__color__select">
+                            <label for="pc-4">
+                                <input type="radio" id="pc-4">
+                            </label>
+                            <label class="active black" for="pc-5">
+                                <input type="radio" id="pc-5">
+                            </label>
+                            <label class="grey" for="pc-6">
+                                <input type="radio" id="pc-6">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                <div class="product__item sale">
+                    <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
+                        <span class="label">Sale</span>
+                        <ul class="product__hover">
+                            <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                            <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6>Multi-pocket Chest Bag</h6>
+                        <a href="#" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>$43.48</h5>
+                        <div class="product__color__select">
+                            <label for="pc-7">
+                                <input type="radio" id="pc-7">
+                            </label>
+                            <label class="active black" for="pc-8">
+                                <input type="radio" id="pc-8">
+                            </label>
+                            <label class="grey" for="pc-9">
+                                <input type="radio" id="pc-9">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="img/product/product-4.jpg">
+                        <ul class="product__hover">
+                            <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                            <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
+                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6>Diagonal Textured Cap</h6>
+                        <a href="#" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>$60.9</h5>
+                        <div class="product__color__select">
+                            <label for="pc-10">
+                                <input type="radio" id="pc-10">
+                            </label>
+                            <label class="active black" for="pc-11">
+                                <input type="radio" id="pc-11">
+                            </label>
+                            <label class="grey" for="pc-12">
+                                <input type="radio" id="pc-12">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="notification" class="notifications-container" style="display:none">
+    <div class="success">
+        <div class="flex">
+            <div class="flex-shrink-0">
+
+                <svg class="succes-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div class="success-prompt-wrap">
+                <p class="success-prompt-heading">
+                    Thành công !!
+                </p><div class="success-prompt-prompt">
+                    <p>Đã được cập nhập</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function them(id_product) {
+        $.ajax({
+            url: '@Url.Action("favourite", "Shop")',
+            type: 'POST',
+            data: {
+                id_pro:id_product,
+            },
+        })
+        var tomau = document.getElementById('tomau');
+        if (tomau.style.color == 'palevioletred') {
+            tomau.style.color = '';
+        }
+        else {
+            tomau.style.color ='palevioletred';
+        }
+        var notification = document.getElementById('notification');
+        notification.style.display = "block";
+        setTimeout(function () {
+            notification.style.display = "none";
+        }, 2000);
+    }
+    function themgiohang() {
+    var form = document.getElementById('myform');
+    var formData = new FormData(form);
+
+    $.ajax({
+        url: '@Url.Action("addtocart", "Cart")',
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function(response) {
+            if (response.success === true) {
+                console.log('Thêm sản phẩm vào giỏ hàng thành công');
+                alert("Thêm sản phẩm vào giỏ hàng thành công");
+            } else if (response.redirectUrl != null) {
+                window.location.href = response.redirectUrl;
+            }
+        },
+        error: function(xhr, status, error) {
+            // Xử lý lỗi, nếu có
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+</script>
+<!-- Related Section End -->

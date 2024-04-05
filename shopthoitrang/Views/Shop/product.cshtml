@@ -3,7 +3,22 @@
     ViewBag.Title = "product";
     Layout = "~/Views/Shared/_Layout.cshtml";
     database db = new database();
-    
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
 }
 @using shopthoitrang.Models;
 <section class="shop spad">
@@ -38,15 +53,15 @@
                                     <div class="card-body">
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
-                                                <li><a href="#">Men (20)</a></li>
-                                                <li><a href="#">Women (20)</a></li>
-                                                <li><a href="#">Bags (20)</a></li>
-                                                <li><a href="#">Clothing (20)</a></li>
-                                                <li><a href="#">Shoes (20)</a></li>
-                                                <li><a href="#">Accessories (20)</a></li>
-                                                <li><a href="#">Kids (20)</a></li>
-                                                <li><a href="#">Kids (20)</a></li>
-                                                <li><a href="#">Kids (20)</a></li>
+                                                @{
+                                                    var cate = db.Category.ToList();
+                                                    foreach (var item in cate)
+                                                    {
+                                                        <li><a href="#">@item.name_cate</a></li>
+                                                    }
+                                                }
+
+
                                             </ul>
                                         </div>
                                     </div>
@@ -59,11 +74,16 @@
                                 <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="shop__sidebar__brand">
-                                            <ul>
-                                                <li><a href="#">Louis Vuitton</a></li>
-                                                <li><a href="#">Chanel</a></li>
-                                                <li><a href="#">Hermes</a></li>
-                                                <li><a href="#">Gucci</a></li>
+                                            <ul class="nice-scroll">
+                                                @{
+                                                    var barnding = db.producer.ToList();
+                                                    foreach (var p in barnding)
+                                                    {
+                                                        <li><a href="#">@p.name</a></li>
+                                                    }
+                                                }
+
+
                                             </ul>
                                         </div>
                                     </div>
@@ -191,7 +211,7 @@
                     </div>
                 </div>
             </div>
-           
+
             <div class="col-lg-9">
                 <div class="shop__product__option">
                     <div class="row">
@@ -216,12 +236,33 @@
                         foreach (var item in pro)
                         {
                             var tien = item.price_pro - (item.price_pro * item.discount_pro / 100);
-                            string gia = string.Format("{0:#,##0}₫", tien); ;
+                            string gia = string.Format("{0:#,##0}₫", tien);
 
                             var SinceUpdate = (DateTime.Now - DateTime.Parse(item.date_update)).Days;
                             string idsp = "sp" + item.id_product;
                             var danhgia = db.rate.Where(r => r.id_product == item.id_product).Select(r => r.star_rate).ToList();
                             int rate = 0, demso = 0;
+
+                            bool yeeuthich = false;
+                            if (id != -1)
+                            {
+                                var check = db.User_info.Where(p => p.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                                if (check != null)
+                                {
+                                    var data = check.Split(',').ToList();
+                                    string idpro = item.id_product.ToString();
+
+                                    foreach (var yt in data)
+                                    {
+
+                                        if (yt == idpro)
+                                        {
+                                            yeeuthich = true;
+                                        }
+                                    }
+                                }
+                            }
+
                             if (danhgia.Count > 0)
                             {
                                 foreach (var dem in danhgia)
@@ -235,21 +276,30 @@
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item sale">
                                         <div class="product__item__pic">
-                                            <a class="product__item__pic " href="#">
+                                            <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                                 <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                             </a>
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                        <img src="/public/img/icon/heart.png" alt="">
+                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                        @{ if (yeeuthich)
+                                                            {
+                                                                <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                            }
+                                                        }
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="product__item__text">
                                             <h6>@item.name_pro</h6>
-                                            <a href="#" class="add-cart">+ Add To Cart</a>
+                                            <a href="javascript:void(0)" onclick="themgiohang('@item.id_product','đỏ','1','M')" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
                                                 @{
                                                     for (int i = 0; i < rate; i++)
@@ -278,14 +328,23 @@
                                     <div class="product__item sale">
 
                                         <div class="product__item__pic">
-                                            <a class="product__item__pic " href="#">
+                                            <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                                 <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                             </a>
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                        <img src="/public/img/icon/heart.png" alt="">
+                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                        @{ if (yeeuthich)
+                                                            {
+                                                                <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                            }
+                                                        }
                                                     </a>
                                                 </li>
                                             </ul>
@@ -294,7 +353,7 @@
                                         <div class="product__item__text">
                                             <h6>@item.name_pro</h6>
 
-                                            <a href="#" class="add-cart">+ Add To Cart</a>
+                                            <a href="javascript:void(0)" onclick="themgiohang('@item.id_product','đỏ','1','M')" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
                                                 @{
                                                     for (int i = 0; i < rate; i++)
@@ -325,14 +384,23 @@
                                         <div class="product__item sale">
 
                                             <div class="product__item__pic">
-                                                <a class="product__item__pic " href="#">
+                                                <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                                     <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                                 </a>
                                                 <span class="label">Sale</span>
                                                 <ul class="product__hover">
                                                     <li>
-                                                        <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                            <img src="/public/img/icon/heart.png" alt="">
+                                                        <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                            @{ if (yeeuthich)
+                                                                {
+                                                                    <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                                }
+                                                            }
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -340,7 +408,7 @@
 
                                             <div class="product__item__text">
                                                 <h6>@item.name_pro</h6>
-                                                <a href="#" class="add-cart " onclick="getData()">+ Add To Cart</a>
+                                                <a href="javascript:void(0)" class="add-cart " onclick="themgiohang('@item.id_product','đỏ','1','M')">+ Add To Cart</a>
                                                 <div class="rating">
                                                     @{
                                                         for (int i = 0; i < rate; i++)
@@ -365,7 +433,7 @@
                         }
                     }
                     <script>
-                        
+
 
                     </script>
 
@@ -377,12 +445,58 @@
     </div>
 </section>
 <script>
-    function yeu(idbutton) {
-        var yeuthichElement = document.getElementById(idbutton);
-        if (yeuthichElement.innerHTML == '<img src="/public/img/icon/heart_red.png" alt="">') {
-            yeuthichElement.innerHTML = '<img src="/public/img/icon/heart.png" alt="">';
+    function yeu(idbutton,id_product) {
+        
+        $.ajax({
+            url: '@Url.Action("favourite", "Shop")',
+            type: 'POST',
+            data: {
+                id_pro:id_product,
+            },
+            success: function (response) {
+                if (response.success === true) {
+                    console.log('Thêm sản phẩm yêu thích thành công')
+                }
+                else if (response.redirectUrl != null) {
+                    window.location.href = response.redirectUrl;
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle errors, if any
+                console.error(xhr.responseText);
+            }
+        })
+        var yeuthichElement = document.getElementById('anh');
+        if (yeuthichElement.getAttribute('src') === '/public/img/icon/heart_red.png') {
+            yeuthichElement.setAttribute('src', '/public/img/icon/heart.png');
         } else {
-            yeuthichElement.innerHTML = '<img src="/public/img/icon/heart_red.png" alt="">';
+            yeuthichElement.setAttribute('src', '/public/img/icon/heart_red.png');
         }
+           
+    }
+    function themgiohang(id_pro,color, quantity,size) {
+         $.ajax({
+                url: '@Url.Action("addtocart", "Cart")',
+                type: 'POST',
+                data: {
+
+                    id_pro: id_pro,
+                    color: color,
+                    quantity: quantity,
+                    size: size
+                },
+             success: function (response) {
+                 if (response.success === true) {
+                     console.log('Thêm sản phẩm vào giỏ hàng thành công')
+                 }
+                 else if (response.redirectUrl!=null) {
+                     window.location.href = response.redirectUrl;
+                 }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors, if any
+                    console.error(xhr.responseText);
+                }
+            });
     }
 </script>

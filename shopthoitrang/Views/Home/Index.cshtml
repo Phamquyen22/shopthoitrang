@@ -4,7 +4,22 @@
     ViewBag.Title = "Trang chủ | Fashsion";
     ViewBag.date = "03/30/2024";
     database db = new database();
-    
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
 }
 @using shopthoitrang.Models;
 
@@ -231,7 +246,7 @@
                                 <div class="product__item sale">
 
                                     <div class="product__item__pic">
-                                        <a class="product__item__pic " href="#">
+                                        <a class="product__item__pic " href="#" >
                                             <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                         </a>
                                         <span class="label">Sale</span>
