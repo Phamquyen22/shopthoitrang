@@ -148,6 +148,7 @@
     <Compile Include="Models\Discount_code.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Order_detail.cs" />
+    <Compile Include="Models\payment\VnPayLibrary.cs" />
     <Compile Include="Models\producer.cs" />
     <Compile Include="Models\product.cs" />
     <Compile Include="Models\product_type.cs" />
@@ -2666,6 +2667,8 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Shop\detail.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
+    <Content Include="Views\Cart\checkout.cshtml" />
+    <Content Include="Views\Cart\order.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
