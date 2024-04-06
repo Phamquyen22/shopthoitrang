@@ -42,7 +42,7 @@ namespace shopthoitrang.Controllers
         }
 
         
-        public void favourite(int id_pro)
+        public JsonResult favourite(int id_pro)
         {
             bool check = check_login();
             if (check)
@@ -69,20 +69,21 @@ namespace shopthoitrang.Controllers
                             break;
                         }
                     }
+                    return Json(new { success = true });
                 }
                 else
                 {
                     var them = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
                     them.favourite_pro += "," + id_pro.ToString();
                     db.SaveChanges();
-                    
+                    return Json(new { success=true });
                 }
 
             }
             else
             {
                 TempData["trangtruoc"] = Request.UrlReferrer?.ToString();
-                
+                return Json(new { success = true, redirectUrl = "/Home/Login" });
             }
            
         }

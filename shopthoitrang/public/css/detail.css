@@ -749,25 +749,63 @@
     border: none;
 }
 .onhapdulieu {
-    max-width: 350px;
+    width:73%;
     padding: 15px;
     font-size: 17px;
     color: black;
     border-top-left-radius: .5em;
     border-bottom-left-radius: .5em;
-    border: 1px solid black;
+    border: 0px solid #fff;
     margin-right: -10px;
 }
 
 .nutbam {
     border: none;
+    color: white;
     background-color: #1363DF;
     text-decoration: none;
     padding: 15px;
     padding-bottom: 17px;
     font-size: 17px;
-    color: #fff;
     border-top-right-radius: .5em;
     border-bottom-right-radius: .5em;
     cursor: pointer;
+}
+.checkbox-wrapper input[type="radio"] {
+    display: none;
+}
+
+.checkbox-wrapper .terms-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+    .checkbox-wrapper .terms-label .label-text {
+        margin-left: 10px;
+    }
+
+.checkbox-wrapper .checkbox-svg {
+    width:18px;
+    height: 18px;
+}
+
+.checkbox-wrapper .checkbox-box {
+    fill: rgba(207, 205, 205, 0.425);
+    stroke: #8c00ff;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper .checkbox-tick {
+    stroke: #8c00ff;
+    stroke-dasharray: 172;
+    stroke-dashoffset: 172;
+    transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper input[type="radio"]:checked + .terms-label .checkbox-box,
+.checkbox-wrapper input[type="radio"]:checked + .terms-label .checkbox-tick {
+    stroke-dashoffset: 0;
 }

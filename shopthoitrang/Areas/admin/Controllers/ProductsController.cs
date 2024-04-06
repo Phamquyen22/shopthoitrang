@@ -369,7 +369,7 @@ namespace shopthoitrang.Areas.admin.Controllers
                 discount_pro = proDiscount,
                 photo_pro = anh,
                 video_pro = file_upload("~/public/img/product/", V_file),
-                date_update = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                date_update = DateTime.Now.ToString("yyyy-MM-dd"),
                 tag = proTag,
                 info_pro = proDescription,
                 quantity_pro = proQuantity,

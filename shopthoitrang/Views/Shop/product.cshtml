@@ -18,6 +18,7 @@
     else
     {
         username = Session["id_user"] as string;
+        id = int.Parse(username);
     }
 }
 @using shopthoitrang.Models;
@@ -282,15 +283,15 @@
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                    <a href="javascript:void(0)"  onclick="yeu('@idsp','@item.id_product')">
                                                         @{ if (yeeuthich)
                                                             {
-                                                                <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                                <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
                                                             }
                                                             else
                                                             {
 
-                                                                <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                                <img id="@idsp" src="/public/img/icon/heart.png" alt="">
                                                             }
                                                         }
                                                     </a>
@@ -334,15 +335,15 @@
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                    <a href="javascript:void(0)"  onclick="yeu('@idsp','@item.id_product')">
                                                         @{ if (yeeuthich)
                                                             {
-                                                                <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                                <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
                                                             }
                                                             else
                                                             {
 
-                                                                <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                                <img id="@idsp" src="/public/img/icon/heart.png" alt="">
                                                             }
                                                         }
                                                     </a>
@@ -390,15 +391,15 @@
                                                 <span class="label">Sale</span>
                                                 <ul class="product__hover">
                                                     <li>
-                                                        <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp','@item.id_product')">
+                                                        <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product')">
                                                             @{ if (yeeuthich)
                                                                 {
-                                                                    <img id="anh" src="/public/img/icon/heart_red.png" alt="">
+                                                                    <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
                                                                 }
                                                                 else
                                                                 {
 
-                                                                    <img id="anh" src="/public/img/icon/heart.png" alt="">
+                                                                    <img id="@idsp" src="/public/img/icon/heart.png" alt="">
                                                                 }
                                                             }
                                                         </a>
@@ -454,8 +455,15 @@
                 id_pro:id_product,
             },
             success: function (response) {
-                if (response.success === true) {
+                if (response.success == true) {
                     console.log('Thêm sản phẩm yêu thích thành công')
+                    var yeuthichElement = document.getElementById(idbutton);
+
+                    if (yeuthichElement.getAttribute('src') == '/public/img/icon/heart_red.png') {
+                        yeuthichElement.setAttribute('src', '/public/img/icon/heart.png');
+                    } else {
+                        yeuthichElement.setAttribute('src', '/public/img/icon/heart_red.png');
+                    }
                 }
                 else if (response.redirectUrl != null) {
                     window.location.href = response.redirectUrl;
@@ -466,12 +474,7 @@
                 console.error(xhr.responseText);
             }
         })
-        var yeuthichElement = document.getElementById('anh');
-        if (yeuthichElement.getAttribute('src') === '/public/img/icon/heart_red.png') {
-            yeuthichElement.setAttribute('src', '/public/img/icon/heart.png');
-        } else {
-            yeuthichElement.setAttribute('src', '/public/img/icon/heart_red.png');
-        }
+       
            
     }
     function themgiohang(id_pro,color, quantity,size) {

@@ -2,8 +2,27 @@
 @{
     ViewBag.Title = "checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
 
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+@model List<Cart>
 <section class="breadcrumb-option">
     <div class="container">
         <div class="row">
@@ -11,8 +30,8 @@
                 <div class="breadcrumb__text">
                     <h4>Check Out</h4>
                     <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
-                        <a href="./shop.html">Shop</a>
+                        <a href="@Url.Action("Index","Home")">Home</a>
+                        <a href="@Url.Action("product","Home")">Shop</a>
                         <span>Check Out</span>
                     </div>
                 </div>
@@ -25,137 +44,164 @@
 <section class="checkout spad">
     <div class="container">
         <div class="checkout__form">
-            <form action="#">
+            <form action="@Url.Action("thanhtoan","Cart")" method="post">
+                
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
-                        <h6 class="coupon__code">
-                            <span class="icon_tag_alt"></span> Have a coupon? <a href="#">
-                                Click
-                                here
-                            </a> to enter your code
-                        </h6>
+
                         <h6 class="checkout__title">Billing Details</h6>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
-                                    <p>Fist Name<span>*</span></p>
-                                    <input type="text">
+                                    <p>Name<span>*</span></p>
+                                    <input name="name" type="text" value="@ten.name">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Last Name<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="checkout__input">
-                            <p>Country<span>*</span></p>
-                            <input type="text">
                         </div>
                         <div class="checkout__input">
                             <p>Address<span>*</span></p>
-                            <input type="text" placeholder="Street Address" class="checkout__input__add">
-                            <input type="text" placeholder="Apartment, suite, unite ect (optinal)">
-                        </div>
-                        <div class="checkout__input">
-                            <p>Town/City<span>*</span></p>
-                            <input type="text">
-                        </div>
-                        <div class="checkout__input">
-                            <p>Country/State<span>*</span></p>
-                            <input type="text">
-                        </div>
-                        <div class="checkout__input">
-                            <p>Postcode / ZIP<span>*</span></p>
-                            <input type="text">
+                            <input name="address" type="text" placeholder="Address" value="@ten.address" class="checkout__input__add">
+                            
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Phone<span>*</span></p>
-                                    <input type="text">
+                                    <input name="phone" type="text" value="@ten.phone">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Email<span>*</span></p>
-                                    <input type="text">
+                                    <input name="email" type="text" value="@ten.email">
                                 </div>
                             </div>
                         </div>
-                        <div class="checkout__input__checkbox">
-                            <label for="acc">
-                                Create an account?
-                                <input type="checkbox" id="acc">
-                                <span class="checkmark"></span>
-                            </label>
-                            <p>
-                                Create an account by entering the information below. If you are a returning customer
-                                please login at the top of the page
-                            </p>
-                        </div>
-                        <div class="checkout__input">
-                            <p>Account Password<span>*</span></p>
-                            <input type="text">
-                        </div>
-                        <div class="checkout__input__checkbox">
-                            <label for="diff-acc">
-                                Note about your order, e.g, special noe for delivery
-                                <input type="checkbox" id="diff-acc">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="checkout__input">
-                            <p>Order notes<span>*</span></p>
-                            <input type="text"
-                                   placeholder="Notes about your order, e.g. special notes for delivery.">
-                        </div>
+                        
                     </div>
+
+
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
                             <h4 class="order__title">Your order</h4>
                             <div class="checkout__order__products">Product <span>Total</span></div>
                             <ul class="checkout__total__products">
-                                <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
-                                <li>02. German chocolate <span>$ 170.0</span></li>
-                                <li>03. Sweet autumn <span>$ 170.0</span></li>
-                                <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                                @{
+                                    int dem = 0;
+                                    int tongtien = 0;
+                                    foreach (var list in Model)
+                                    {
+                                        var pro = db.product.Where(c => c.id_product == list.id_product).FirstOrDefault();
+                                        dem++;
+                                        var tien = (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)) * list.quantity_cart;
+                                        tongtien += tien ?? 0;
+                                        string giatong = string.Format("{0:#,##0}₫", tien);
+                                        <li>@dem. @pro.name_pro (x @list.quantity_cart) <span>@giatong</span></li>
+
+                                    }
+                                }
                             </ul>
+                            <h6 class="coupon__code">
+                                <span class="icon_tag_alt"></span> Have a coupon?
+                            </h6>
+                            <div class="cart__discount">
+
+                                <h6>Discount codes</h6>
+                                <div>
+                                    <input class="onhapdulieu" name="voucher" id="voucher" type="text" placeholder="Coupon code">
+                                    <a class="nutbam" onclick="voucher(@tongtien)"style="color:white">Apply</a>
+                                </div>
+
+
+                            </div>
                             <ul class="checkout__total__all">
-                                <li>Subtotal <span>$750.99</span></li>
-                                <li>Total <span>$750.99</span></li>
+                                <li>Subtotal <span>@(string.Format("{0:#,##0}₫", tongtien) )</span></li>
+                                <li>shipping fee <span>16,000₫</span></li>
+                                <li>Discount <span id="discount">-0₫</span></li>
+                                <li>Total <span id="tongtien">@(string.Format("{0:#,##0}₫", tongtien + 16000))</span></li>
                             </ul>
-                            <div class="checkout__input__checkbox">
-                                <label for="acc-or">
-                                    Create an account?
-                                    <input type="checkbox" id="acc-or">
-                                    <span class="checkmark"></span>
+
+                            <input type="number" name="tongtien" value="@tongtien" hidden />
+                            <div class="checkbox-wrapper">
+                                <input id="terms-checkbox-37" name="payment" value="VNPAY" type="radio">
+                                <label class="terms-label" for="terms-checkbox-37">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
+                                        <mask fill="white" id="path-1-inside-1_476_5-37">
+                                            <rect height="200" width="200"></rect>
+                                        </mask>
+                                        <rect mask="url(#path-1-inside-1_476_5-37)" stroke-width="40" class="checkbox-box" height="200" width="200"></rect>
+                                        <path stroke-width="15" d="M52 111.018L76.9867 136L149 64" class="checkbox-tick"></path>
+                                    </svg>
+                                    <span class="label-text">Payment VNpay</span>
                                 </label>
                             </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua.
-                            </p>
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Check Payment
-                                    <input type="checkbox" id="payment">
-                                    <span class="checkmark"></span>
+                            <div class="checkbox-wrapper">
+                                <input id="terms-checkbox-36" name="payment" value="COD" checked type="radio">
+                                <label class="terms-label" for="terms-checkbox-36">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
+                                        <mask fill="white" id="path-1-inside-1_476_5-37">
+                                            <rect height="200" width="200"></rect>
+                                        </mask>
+                                        <rect mask="url(#path-1-inside-1_476_5-37)" stroke-width="40" class="checkbox-box" height="200" width="200"></rect>
+                                        <path stroke-width="15" d="M52 111.018L76.9867 136L149 64" class="checkbox-tick"></path>
+                                    </svg>
+                                    <span class="label-text">COD</span>
                                 </label>
                             </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="checkbox" id="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <a  href="@Url.Action("thanhtoan","Cart")" class="site-btn">PLACE ORDER</a>
+                            <button type="submit"  class="thanhtoan">
+                                <div>
+                                    <span>
+                                        <p style="color:white">Proceed to ORDER</p>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <p>Thanks order</p>
+                                    </span>
+                                </div>
+
+                            </button>
+                            
                         </div>
                     </div>
+
+
                 </div>
             </form>
         </div>
     </div>
 </section>
+<script>
+    function formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    function voucher(tong) {
+        var code_voucher = document.getElementById('voucher').value;
+        var tongtien = document.getElementById('tongtien');
+        var discount = document.getElementById('discount');
+
+        $.ajax({
+            url: '@Url.Action("voucher","Cart")',
+            type: 'POST',
+            data: {
+                code_vchr:code_voucher
+            },
+            success: function (res) {
+                if (res.success) {
+                    if (res.code_data.sale <= 100) {
+
+                        tongtien.innerHTML = formatCurrency((tong + 16000) - (tong * res.code_data.sale / 100)) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(tong * res.code_data.sale / 100) + '₫';
+                    } else {
+                        tongtien.innerHTML = formatCurrency(tong + 16000 - res.code_data.sale) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(res.code_data.sale) + '₫';
+                    }
+                }
+                else {
+                    tongtien.innerHTML = formatCurrency(tong+16000) + '₫';
+                    discount.innerHTML = '- 0₫';
+                }
+            }
+        });
+    }
+</script>

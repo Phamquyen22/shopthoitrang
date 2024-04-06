@@ -2514,24 +2514,25 @@ ol {
 }
 
 .checkout__input {
-	margin-bottom: 6px;
+	margin-bottom: 2px;
 }
 
 .checkout__input p {
-	color: #111111;
-	margin-bottom: 12px;
+	color: black;
+    font-size:19px;
+	margin-bottom: 6px;
 }
 
 .checkout__input p span {
-	color: #e53637;
+	color: red;
 }
 
 .checkout__input input {
 	height: 50px;
 	width: 100%;
-	border: 1px solid #e1e1e1;
-	font-size: 14px;
-	color: #b7b7b7;
+	border: 2px solid #e1e1e1;
+	font-size: 17px;
+	color: black;
 	padding-left: 20px;
 	margin-bottom: 20px;
 }
@@ -2557,8 +2558,8 @@ ol {
 }
 
 .checkout__input__checkbox label {
-	font-size: 15px;
-	color: #0d0d0d;
+	font-size: 17px;
+	color: Black;
 	position: relative;
 	padding-left: 30px;
 	cursor: pointer;

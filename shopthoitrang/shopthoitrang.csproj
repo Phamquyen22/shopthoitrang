@@ -2668,7 +2668,8 @@
     <Content Include="Views\Shop\detail.cshtml" />
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\checkout.cshtml" />
-    <Content Include="Views\Cart\order.cshtml" />
+    <Content Include="Views\Cart\VNpay.cshtml" />
+    <Content Include="Views\Cart\COD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
