@@ -93,20 +93,10 @@
                             <li><a href="@Url.Action("Index", "Home")">Home</a></li>
 
                             <li>
-                                <a href="@Url.Action("product", "Shop")">Shop</a>
-                                <ul class="dropdown">
-                                    @{
-                                        var cate = db.Category.ToList();
-                                        foreach (var data in cate)
-                                        {
-                                            <li><a href="@Url.Action("category", "Shop", new { idcate = data.id_cate })">@data.name_cate</a></li>
-                                        }
-
-                                    }
-                                </ul>
+                                <a href="@Url.Action("Product", "Shop")">Shop</a>
+                                
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                            <li><a href="@Url.Action("Contact","User")">Contacts</a></li>
                             @{ if (authCookie == null)
                                 {
                                     string user = Session["id_user"] as string;
@@ -118,8 +108,20 @@
                                             <a href="@Url.Action("Login", "Home")">@ten.name</a>
                                             <ul class="dropdown">
                                                 <li>
+                                                    <a href="@Url.Action("Profile", "User")">Profile</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="@Url.Action("Orderlist","User")">Order List</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("favourite","User")">favorites list</a>
+                                                </li>
+                                                <li>
+                                                <li>
                                                     <a href="@Url.Action("Login", "Home")">Sign out</a>
                                                 </li>
+                                                
                                             </ul>
 
                                         </li>
@@ -134,10 +136,28 @@
                                     
                                     var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
                                     <li>
-                                        <a href="@Url.Action("Login", "Home")">@ten.name</a>
-                                        <ul class="dropdown">
+                                        <a href="@Url.Action("Profile", "User")">@ten.name</a>
+                                        <ul class="dropdown" style="background-color:white">
+
                                             <li>
-                                                <a href="@Url.Action("Login", "Home")">Sign out</a>
+                                                <div class="profile ">
+
+                                                    <div class="profile-pic"><img style="object-fit:cover;"  src="~/public/img/user/@ten.img"/></div>
+                                                    <div class="bottom">
+                                                        <div class="content">
+                                                            <span class="name">@ten.name</span>
+                                                            <a  href="@Url.Action("Profile", "User")">Profile</a>
+                                                            <a  href="@Url.Action("Orderlist","User")">Order List</a>
+                                                            <a href="@Url.Action("favourite","User")">favorites list</a>
+                                                        </div>
+                                                        <div class="bottom-bottom">
+                                                            <div class="social-links-container">
+                                                                
+                                                            </div>
+                                                            <a class="button" href="@Url.Action("Login", "Home")">Sign out</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </li>
                                         </ul>
 
@@ -197,53 +217,42 @@
         </div>
     </header>
 
-    @RenderBody();
+    @RenderBody()
     <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="~/public/img/footer-logo.png" alt=""></a>
+                        <div class="header__logo">
+                            <a href="@Url.Action("Index", "Home")">
+                                <div class="stage">
+                                    <div class="wrapper">
+                                        <div class="slash"></div>
+                                        <div class="sides">
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                        </div>
+                                        <div class="text">
+                                            <div class="text--backing">SHOP.FASHION</div>
+                                            <div class="text--left">
+                                                <div class="inner">SHOP.FASHION</div>
+                                            </div>
+                                            <div class="text--right">
+                                                <div class="inner">SHOP.FASHION</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
+                        <p>Thời trang độc đáo, phong cách riêng của bạn.</p>
                         <a href="#"><img src="~/public/img/payment.png" alt=""></a>
                     </div>
                 </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivary</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>NewLetter</h6>
-                        <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                
+                
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -264,7 +273,7 @@
             </div>
         </div>
     </footer>
-    @*<script>
+    <script>
         setInterval(function () {
            
             $.ajax({
@@ -281,7 +290,7 @@
             })
             
         }, 4000); 
-    </script>*@
+    </script>
 
     <!-- Footer Section End -->
     <!-- Search Begin -->

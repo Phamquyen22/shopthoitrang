@@ -72,7 +72,48 @@ namespace shopthoitrang.Controllers
             }
         }
 
-
+        public ActionResult Signup()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Signup(string name,string phone, string address, string email, string username, string password)
+        {
+            User_info user = new User_info();
+            Account acc = new Account();
+            int id_user = 0;
+            var dem =db.User_info.Select(c => c.id_user).ToList();
+            foreach(var item in dem)
+            {
+                if (id_user == item) id_user += 1;
+            }
+            var check = db.Account.Where(c => c.taikhoan == username.Trim()).FirstOrDefault();
+            if (check == null)
+            {
+                acc.taikhoan = username.Trim();
+                acc.matkhau = password.Trim();
+                acc.id_user = id_user;
+                acc.role = "user";
+                acc.acc_lock = "true";
+                user.name = name;
+                user.phone = phone;
+                user.address = address;
+                user.email = email;
+                user.rank_user = "Đồng";
+                user.img = "avatar-1.png";
+                db.User_info.Add(user);
+                db.SaveChanges();
+                db.Account.Add(acc);
+                db.SaveChanges();
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                ViewBag.error = "User name đã tồn tại";
+                return View();
+            }
+           
+        }
 
     }
 }

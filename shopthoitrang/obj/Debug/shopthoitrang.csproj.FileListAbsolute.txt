@@ -153,8 +153,8 @@ D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\bin\System.Web.WebPages.
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\bin\Newtonsoft.Json.xml
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\bin\Antlr3.Runtime.pdb
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.csprojAssemblyReference.cache
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.csproj.CoreCompileInputs.cache
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.csproj.CopyComplete
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.dll
 D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.pdb
+D:\HOC\DO_AN_ƯEB\web deloy\shopthoitrang\shopthoitrang\obj\Debug\shopthoitrang.csprojAssemblyReference.cache

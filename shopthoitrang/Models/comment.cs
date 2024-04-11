@@ -20,7 +20,7 @@ namespace shopthoitrang.Models
         public int id_comment { get; set; }
 
         [Column("comment")]
-        public string Comment { get; set; }
+        public string comment1 { get; set; }
 
         public int? id_user { get; set; }
 

@@ -32,7 +32,10 @@ namespace shopthoitrang.Controllers
         {
             Uri currentUrl = Request.Url;
             TempData["trangtruoc"] = currentUrl.ToString();
-            return View();
+            ViewBag.page_index = db.product.Select(c=>c.id_product).Count();
+            Session.Add("controller", "Product");
+            var data = db.product.OrderByDescending(c => c.id_product).Skip(0).Take(9).ToList();
+            return View(data);
         }
         
         public ActionResult detail(int id_pro)
@@ -110,9 +113,80 @@ namespace shopthoitrang.Controllers
                 }
             return Json(new { success = false });
         }
+        public ActionResult nextpage(int page = 0,int search=0)
+        {
+            int so = (page-1)*9;
+            var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+            return View(data);
+        }
+        public ActionResult barnding(int page, int id = 0)
+        {
+            int so = (page - 1) * 9;
+            Uri currentUrl = Request.Url;
+            TempData["trangtruoc"] = currentUrl.ToString();
+            int tim = 0;
+            if (id == 0)
+            {
+                string key = Session["timkiem"] as string;
+                if (key != null)
+                {
+                    tim = int.Parse(key);
+                    var data = db.product.Where(c => c.id_producer == tim).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Where(c => c.id_protype == tim).Select(c => c.id_product).Count();
+                    return View(data);
+                }
+                else
+                {
+                    var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Select(c => c.id_product).Count();
+                    return View(data);
+                }
+
+            }
+            else
+            {
+                Session.Add("timkiem", id);
+                var data = db.product.Where(c => c.id_producer == id).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                ViewBag.page_index = db.product.Where(c => c.id_producer == id).Select(c => c.id_product).Count();
+                return View(data);
+            }
+        }
+        public ActionResult category(int page,int id=0)
+        {
+            int so = (page - 1) * 9;
+            Uri currentUrl = Request.Url;
+            TempData["trangtruoc"] = currentUrl.ToString();
+            int tim = 0;
+            if (id == 0)
+            {
+                string key = Session["timkiem"] as string;
+                if (key != null)
+                {
+                    tim = int.Parse(key);
+                    var type = db.product_type.Where(c => c.id_cate == tim).Select(c => c.id_protype).FirstOrDefault();
+                    var data = db.product.Where(c => c.id_protype == type).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Where(c => c.id_protype == type).Select(c => c.id_product).Count();
+                    return View(data);
+                }
+                else
+                {
+                   
+                    var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Select(c => c.id_product).Count();
+                    return View(data);
+                }
+                
+            }
+            else
+            {
+                Session.Add("timkiem", id);
+                var type = db.product_type.Where(c => c.id_cate == id).Select(c => c.id_protype).FirstOrDefault();
+                var data = db.product.Where(c => c.id_protype == type).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                ViewBag.page_index = db.product.Where(c => c.id_protype == type).Select(c => c.id_product).Count();
+                return View(data);
+            }
             
+        }
        
-
-
     }
 }

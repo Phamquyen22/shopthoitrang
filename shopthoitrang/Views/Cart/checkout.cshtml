@@ -122,7 +122,7 @@
                             </ul>
 
                             <input type="number" name="tongtien" value="@tongtien" hidden />
-                            <div class="checkbox-wrapper">
+                            <div class="checkbox-wrapper" id="VNPAY">
                                 <input id="terms-checkbox-37" name="payment" value="VNPAY" type="radio">
                                 <label class="terms-label" for="terms-checkbox-37">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
@@ -184,20 +184,35 @@
             url: '@Url.Action("voucher","Cart")',
             type: 'POST',
             data: {
-                code_vchr:code_voucher
+                code_vchr: code_voucher
             },
             success: function (res) {
                 if (res.success) {
-                    if (res.code_data.sale <= 100) {
+                    if (res.code_data <= 100) {
 
-                        tongtien.innerHTML = formatCurrency((tong + 16000) - (tong * res.code_data.sale / 100)) + '₫';
+                        tongtien.innerHTML = formatCurrency((tong + 16000) - (tong * res.code_data / 100)) + '₫';
                         discount.innerHTML = '- ' + formatCurrency(tong * res.code_data.sale / 100) + '₫';
                     } else {
-                        tongtien.innerHTML = formatCurrency(tong + 16000 - res.code_data.sale) + '₫';
-                        discount.innerHTML = '- ' + formatCurrency(res.code_data.sale) + '₫';
+                        var kq = 0;
+                        
+                        if ((tong + 16000 - res.code_data) < 5000) {
+
+                            kq = tong + 16000 - res.code_data;
+                            var vnpay = document.getElementById('VNPAY');
+                            vnpay.style.display = "none";
+                            if ((tong + 16000 - res.code_data) < 0)
+                                kq = 0;
+                        } else {
+                            var vnpay = document.getElementById('VNPAY');
+                            vnpay.style.display = "block";
+                        }
+                        tongtien.innerHTML = formatCurrency(kq) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(res.code_data) + '₫';
                     }
                 }
                 else {
+                    var vnpay = document.getElementById('VNPAY');
+                    vnpay.style.display = "block";
                     tongtien.innerHTML = formatCurrency(tong+16000) + '₫';
                     discount.innerHTML = '- 0₫';
                 }

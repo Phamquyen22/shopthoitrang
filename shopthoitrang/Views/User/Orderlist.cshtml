@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Orderlist";
+    Layout = null;
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    var ten = db.User_info.Where(i => i.id_user == id).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4 pb-5">
+            <!-- Account Sidebar-->
+            <div class="author-card pb-3">
+                <div class="author-card-cover" style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);">
+                    <a class="btn" style="background-color:white" href="#" data-toggle="tooltip">
+                        @ten.rank_user
+                    </a>
+                </div>
+                <div class="author-card-profile">
+                    <div class="author-card-avatar">
+                        <a href="javascript:void(0)" onclick="show()">
+                            <img src="~/public/img/user/@ten.img" alt="@ten.name">
+                        </a>
+                    </div>
+                    <div class="author-card-details">
+                        <h5 class="author-card-name text-lg">@ten.name</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard">
+                <nav class="list-group">
+                    <a class="list-group-item" style="color:black" href="@Url.Action("Profile","User")">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Profile settings</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="list-group-item" style="color:black" onclick="orderlist('@Url.Action("Orderlist", "User")')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
+                                @{ var cout_order = db.Order.Where(c => c.id_user == id).Count();}
+                            </div><span class="badge badge-secondary">@cout_order</span>
+                        </div>
+                    </a>
+                    <a class="list-group-item" style="color:black" onclick="favouritelist('@Url.Action("Favourite", "User")')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">favorites list</div>
+                            </div>
+                        </div>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Profile Settings-->
+
+        <div class="col-lg-8 pb-5">
+
+            <div class="shopping__cart__table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code Orders</th>
+
+                            <th>Discount Code</th>
+                            <th>Order Status</th>
+                            <th>Payment Status</th>
+
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var data_list = db.Order.Where(c => c.id_user == id).ToList();
+                            foreach (var item in data_list)
+                            {
+                                var code = db.Discount_code.Where(p => p.id_discount == item.id_discount).FirstOrDefault();
+
+                                <tr>
+                                    <td class="product__cart__item">@item.id_order</td>
+                                    @if (code != null)
+                                    {
+                                        <td class="product__cart__item">@code.name_code</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="product__cart__item"></td>
+                                    }
+                                    <td class="product__cart__item">@item.status_order</td>
+                                    <td class="product__cart__item">@item.payment_status</td>
+                                    <td class="product__cart__item">@item.total</td>
+                                    <td><a class="btn btn-primary" onclick="order_list('@Url.Action("order_list","User",new {order_id=item.id_order})')"><i class="fa  fa-info"></i></a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        
+
+    </div>
+</div>
+<div class="deltail_order" style="display:none" id="deltail_order">
+    <div class="col-lg-12 pb-8">
+        
+        <div class="shopping__cart__table">
+            <a class="btn right" onclick="order_list_hide()">
+                <i class="fa fa-close"></i>
+            </a>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+
+                        <th>Tên sản phẩm</th>
+                        <th>Giá tiền</th>
+                        <th>Số lượng</th>
+
+                        <th>Total</th>
+                        
+                    </tr>
+                </thead>
+                <tbody class="nice-scroll" id="list_product">
+                    
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>

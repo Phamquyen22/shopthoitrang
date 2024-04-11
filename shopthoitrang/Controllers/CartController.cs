@@ -201,7 +201,7 @@ namespace shopthoitrang.Controllers
         {
             var data = db.Discount_code.Where(d => d.code == code_vchr).FirstOrDefault();
             if (data != null)   
-                return Json(new {code_data=data, success =true});
+                return Json(new {code_data=data.sale, success =true});
             else
                 return Json(new { success = false});
         }
@@ -249,9 +249,10 @@ namespace shopthoitrang.Controllers
             
             int id = id_acc();
             var data = db.Cart.Where(c => c.id_user == id).ToList();
-        
+            
             db.Order.Add(order);
             db.SaveChanges();
+            
             foreach (var item in data)
             {
                 Order_detail odr_detail = new Order_detail();
@@ -263,12 +264,20 @@ namespace shopthoitrang.Controllers
                 odr_detail.color_pro = item.color_pro;
                 odr_detail.quantity_pro = item.quantity_cart;
                 db.Order_detail.Add(odr_detail);
+                var pro = db.product.Where(c => c.id_product == item.id_product).FirstOrDefault();
+                pro.buy_count += 1;
                 db.SaveChanges();
             }
             DateTime CreatedDate = DateTime.Now;
-            
+            var cartItems = db.Cart.Where(c => c.id_user == id).ToList();
+            foreach (var cartItem in cartItems)
+            {
+                db.Cart.Remove(cartItem);
+            }
+            db.SaveChanges();
+
             //Build URL for VNPAY
-            if (payment == "VNPAY")
+            if (payment == "VNPAY" &&Amount>=5000&&Amount<=1000000000)
             {
                 VnPayLibrary vnpay = new VnPayLibrary();
 

@@ -136,6 +136,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -144,8 +145,10 @@
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\comment.cs" />
+    <Compile Include="Models\Conversations.cs" />
     <Compile Include="Models\database.cs" />
     <Compile Include="Models\Discount_code.cs" />
+    <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Order_detail.cs" />
     <Compile Include="Models\payment\VnPayLibrary.cs" />
@@ -2267,7 +2270,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="public\css\all.min.css" />
     <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\css\components.css" />
     <Content Include="public\css\detail.css" />
     <Content Include="public\css\elegant-icons.css" />
     <Content Include="public\css\font-awesome.min.css" />
@@ -2358,8 +2363,10 @@
     <Content Include="public\img\shopping-cart\cart-3.jpg" />
     <Content Include="public\img\shopping-cart\cart-4.jpg" />
     <Content Include="public\img\type\demo.jpg" />
+    <Content Include="public\img\typing.svg" />
     <Content Include="public\img\user\avatar-1.png" />
     <Content Include="public\js\bootstrap.min.js" />
+    <Content Include="public\js\custom.js" />
     <Content Include="public\js\jquery-3.3.1.min.js" />
     <Content Include="public\js\jquery.countdown.min.js" />
     <Content Include="public\js\jquery.magnific-popup.min.js" />
@@ -2369,6 +2376,8 @@
     <Content Include="public\js\main.js" />
     <Content Include="public\js\mixitup.min.js" />
     <Content Include="public\js\owl.carousel.min.js" />
+    <Content Include="public\js\scripts.js" />
+    <Content Include="public\js\stisla.js" />
     <Content Include="public\login\css\bootstrap.min.css" />
     <Content Include="public\login\css\bootstrap\mixins\_border-radius.css" />
     <Content Include="public\login\css\bootstrap\mixins\_reset-text.css" />
@@ -2652,7 +2661,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -2670,6 +2681,16 @@
     <Content Include="Views\Cart\checkout.cshtml" />
     <Content Include="Views\Cart\VNpay.cshtml" />
     <Content Include="Views\Cart\COD.cshtml" />
+    <Content Include="Views\User\profile.cshtml" />
+    <Content Include="Views\User\Orderlist.cshtml" />
+    <Content Include="Views\User\Favourite.cshtml" />
+    <Content Include="Views\Shop\nextpage.cshtml" />
+    <Content Include="Views\Shop\category.cshtml" />
+    <Content Include="Views\Shop\barnding.cshtml" />
+    <Content Include="Views\User\Contact.cshtml" />
+    <Content Include="Views\User\message.cshtml" />
+    <Content Include="Views\Home\Signup.cshtml" />
+    <Content Include="Views\User\order_list.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2707,11 +2728,10 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49812</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49812/</IISUrl>
+          <IISUrl>http://localhost:54545/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://localhost:49813/</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

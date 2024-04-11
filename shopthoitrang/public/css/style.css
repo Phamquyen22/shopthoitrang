@@ -1206,7 +1206,7 @@ ol {
 .shop__sidebar__categories ul,
 .shop__sidebar__price ul,
 .shop__sidebar__brand ul {
-	height: 225px;
+	height: auto;
 }
 
 .shop__sidebar__categories ul li,
@@ -1905,8 +1905,8 @@ ol {
 -----------------------*/
 
 .footer {
-	background: #111111;
-	padding-top: 70px;
+    background-color: #FFFFCC;
+    padding-top: 70px;
 }
 
 .footer__about {
@@ -1931,7 +1931,7 @@ ol {
 }
 
 .footer__widget h6 {
-	color: #ffffff;
+	color: black;
 	font-size: 15px;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -1944,14 +1944,14 @@ ol {
 	list-style: none;
 }
 
-.footer__widget ul li a {
-	color: #b7b7b7;
-	font-size: 15px;
-}
+    .footer__widget ul li a {
+        color: #CFCFCF;
+        font-size: 15px;
+    }
 
-.footer__widget .footer__newslatter p {
-	color: #b7b7b7;
-}
+    .footer__widget .footer__newslatter p {
+        color: #CFCFCF;
+    }
 
 .footer__widget .footer__newslatter form {
 	position: relative;

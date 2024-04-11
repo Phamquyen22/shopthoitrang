@@ -17,7 +17,9 @@ namespace shopthoitrang.Models
         public virtual DbSet<Cart> Cart { get; set; }
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<comment> comment { get; set; }
+        public virtual DbSet<Conversations> Conversations { get; set; }
         public virtual DbSet<Discount_code> Discount_code { get; set; }
+        public virtual DbSet<Messages> Messages { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Order_detail> Order_detail { get; set; }
         public virtual DbSet<producer> producer { get; set; }
@@ -41,6 +43,11 @@ namespace shopthoitrang.Models
             modelBuilder.Entity<comment>()
                 .HasMany(e => e.rate)
                 .WithOptional(e => e.comment)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Conversations>()
+                .HasMany(e => e.Messages)
+                .WithOptional(e => e.Conversations)
                 .WillCascadeOnDelete();
 
             modelBuilder.Entity<Discount_code>()

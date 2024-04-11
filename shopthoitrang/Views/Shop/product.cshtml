@@ -22,6 +22,9 @@
     }
 }
 @using shopthoitrang.Models;
+@model List<product>
+<script src="~/public/js/custom.js" type="text/javascript"></script>
+
 <section class="shop spad">
     <section class="breadcrumb-option">
         <div class="container">
@@ -58,10 +61,9 @@
                                                     var cate = db.Category.ToList();
                                                     foreach (var item in cate)
                                                     {
-                                                        <li><a href="#">@item.name_cate</a></li>
+                                                        <li><a onclick="category('@Url.Action("Category","Shop",new { Page=1,id=item.id_cate })')">@item.name_cate</a></li>
                                                     }
                                                 }
-
 
                                             </ul>
                                         </div>
@@ -80,7 +82,7 @@
                                                     var barnding = db.producer.ToList();
                                                     foreach (var p in barnding)
                                                     {
-                                                        <li><a href="#">@p.name</a></li>
+                                                        <li><a onclick="category('@Url.Action("Barnding","Shop",new { Page=1,id=p.id_producer })')">@p.name</a></li>
                                                     }
                                                 }
 
@@ -90,151 +92,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                </div>
-                                <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__price">
-                                            <ul>
-                                                <li><a href="#">$0.00 - $50.00</a></li>
-                                                <li><a href="#">$50.00 - $100.00</a></li>
-                                                <li><a href="#">$100.00 - $150.00</a></li>
-                                                <li><a href="#">$150.00 - $200.00</a></li>
-                                                <li><a href="#">$200.00 - $250.00</a></li>
-                                                <li><a href="#">250.00+</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                </div>
-                                <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__size">
-                                            <label for="xs">
-                                                xs
-                                                <input type="radio" id="xs">
-                                            </label>
-                                            <label for="sm">
-                                                s
-                                                <input type="radio" id="sm">
-                                            </label>
-                                            <label for="md">
-                                                m
-                                                <input type="radio" id="md">
-                                            </label>
-                                            <label for="xl">
-                                                xl
-                                                <input type="radio" id="xl">
-                                            </label>
-                                            <label for="2xl">
-                                                2xl
-                                                <input type="radio" id="2xl">
-                                            </label>
-                                            <label for="xxl">
-                                                xxl
-                                                <input type="radio" id="xxl">
-                                            </label>
-                                            <label for="3xl">
-                                                3xl
-                                                <input type="radio" id="3xl">
-                                            </label>
-                                            <label for="4xl">
-                                                4xl
-                                                <input type="radio" id="4xl">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
-                                </div>
-                                <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__color">
-                                            <label class="c-1" for="sp-1">
-                                                <input type="radio" id="sp-1">
-                                            </label>
-                                            <label class="c-2" for="sp-2">
-                                                <input type="radio" id="sp-2">
-                                            </label>
-                                            <label class="c-3" for="sp-3">
-                                                <input type="radio" id="sp-3">
-                                            </label>
-                                            <label class="c-4" for="sp-4">
-                                                <input type="radio" id="sp-4">
-                                            </label>
-                                            <label class="c-5" for="sp-5">
-                                                <input type="radio" id="sp-5">
-                                            </label>
-                                            <label class="c-6" for="sp-6">
-                                                <input type="radio" id="sp-6">
-                                            </label>
-                                            <label class="c-7" for="sp-7">
-                                                <input type="radio" id="sp-7">
-                                            </label>
-                                            <label class="c-8" for="sp-8">
-                                                <input type="radio" id="sp-8">
-                                            </label>
-                                            <label class="c-9" for="sp-9">
-                                                <input type="radio" id="sp-9">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
-                                </div>
-                                <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__tags">
-                                            <a href="#">Product</a>
-                                            <a href="#">Bags</a>
-                                            <a href="#">Shoes</a>
-                                            <a href="#">Fashio</a>
-                                            <a href="#">Clothing</a>
-                                            <a href="#">Hats</a>
-                                            <a href="#">Accessories</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-9">
-                <div class="shop__product__option">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="col-lg-9" id="layout_product" >
 
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__right">
-                                <p>Sort by Price:</p>
-                                <select>
-                                    <option value="">Low To High</option>
-                                    <option value="">$0 - $55</option>
-                                    <option value="">$55 - $100</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
+                <div class="row" id="nextpage">
                     @{
-                        var pro = db.product.OrderByDescending(c => c.discount_pro).Take(9).ToList();
-                        foreach (var item in pro)
+                        foreach (var item in Model)
                         {
                             var tien = item.price_pro - (item.price_pro * item.discount_pro / 100);
                             string gia = string.Format("{0:#,##0}₫", tien);
@@ -283,7 +152,7 @@
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)"  onclick="yeu('@idsp','@item.id_product')">
+                                                    <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
                                                         @{ if (yeeuthich)
                                                             {
                                                                 <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
@@ -300,7 +169,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>@item.name_pro</h6>
-                                            <a href="javascript:void(0)" onclick="themgiohang('@item.id_product','đỏ','1','M')" class="add-cart">+ Add To Cart</a>
+                                            <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                             <div class="rating">
                                                 @{
                                                     for (int i = 0; i < rate; i++)
@@ -335,7 +204,7 @@
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li>
-                                                    <a href="javascript:void(0)"  onclick="yeu('@idsp','@item.id_product')">
+                                                    <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
                                                         @{ if (yeeuthich)
                                                             {
                                                                 <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
@@ -354,7 +223,7 @@
                                         <div class="product__item__text">
                                             <h6>@item.name_pro</h6>
 
-                                            <a href="javascript:void(0)" onclick="themgiohang('@item.id_product','đỏ','1','M')" class="add-cart">+ Add To Cart</a>
+                                            <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                             <div class="rating">
                                                 @{
                                                     for (int i = 0; i < rate; i++)
@@ -391,7 +260,7 @@
                                                 <span class="label">Sale</span>
                                                 <ul class="product__hover">
                                                     <li>
-                                                        <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product')">
+                                                        <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
                                                             @{ if (yeeuthich)
                                                                 {
                                                                     <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
@@ -409,7 +278,7 @@
 
                                             <div class="product__item__text">
                                                 <h6>@item.name_pro</h6>
-                                                <a href="javascript:void(0)" class="add-cart " onclick="themgiohang('@item.id_product','đỏ','1','M')">+ Add To Cart</a>
+                                                <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                                 <div class="rating">
                                                     @{
                                                         for (int i = 0; i < rate; i++)
@@ -433,73 +302,29 @@
                             }
                         }
                     }
-                    <script>
-
-
-                    </script>
 
                 </div>
 
 
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product__pagination">
+                            @{
+
+                                int kq = ViewBag.page_index / 9;
+
+
+                                for (int i = 1; i <= kq+1; i++)
+                                {
+                                    var pageid = "page"+i.ToString();
+                                    <a id="@pageid" onclick="nextpage('@Url.Action("nextpage","Shop",new {page=i})',@i,@kq)">@i</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-<script>
-    function yeu(idbutton,id_product) {
-        
-        $.ajax({
-            url: '@Url.Action("favourite", "Shop")',
-            type: 'POST',
-            data: {
-                id_pro:id_product,
-            },
-            success: function (response) {
-                if (response.success == true) {
-                    console.log('Thêm sản phẩm yêu thích thành công')
-                    var yeuthichElement = document.getElementById(idbutton);
-
-                    if (yeuthichElement.getAttribute('src') == '/public/img/icon/heart_red.png') {
-                        yeuthichElement.setAttribute('src', '/public/img/icon/heart.png');
-                    } else {
-                        yeuthichElement.setAttribute('src', '/public/img/icon/heart_red.png');
-                    }
-                }
-                else if (response.redirectUrl != null) {
-                    window.location.href = response.redirectUrl;
-                }
-            },
-            error: function (xhr, status, error) {
-                // Handle errors, if any
-                console.error(xhr.responseText);
-            }
-        })
-       
-           
-    }
-    function themgiohang(id_pro,color, quantity,size) {
-         $.ajax({
-                url: '@Url.Action("addtocart", "Cart")',
-                type: 'POST',
-                data: {
-
-                    id_pro: id_pro,
-                    color: color,
-                    quantity: quantity,
-                    size: size
-                },
-             success: function (response) {
-                 if (response.success === true) {
-                     console.log('Thêm sản phẩm vào giỏ hàng thành công')
-                 }
-                 else if (response.redirectUrl!=null) {
-                     window.location.href = response.redirectUrl;
-                 }
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors, if any
-                    console.error(xhr.responseText);
-                }
-            });
-    }
-</script>
