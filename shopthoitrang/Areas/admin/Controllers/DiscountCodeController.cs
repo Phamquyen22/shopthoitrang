@@ -4,13 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using shopthoitrang.Models;
 namespace shopthoitrang.Areas.admin.Controllers
 {
     public class DiscountCodeController : Controller
     {
         // GET: admin/DiscountCode
-        database db = new database();
+        private database db = new database();
+        private string username, userData = null;
+        private bool check_login()
+        {
+            var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            string user = Session["id_user"] as string;
+            bool check = false;
+            if (authCookie != null)
+            {
+
+                var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                username = authTicket.Name;
+                userData = authTicket.UserData;
+                if (userData == "admin")
+                    check = true;
+            }
+            else if (user != null)
+            {
+                username = Session["id_user"] as string;
+                int id = int.Parse(user);
+                var tk = db.Account.Where(c => c.id_user == id).FirstOrDefault();
+                if (tk.role == "admin") check = true;
+            }
+            return check;
+
+        }
         public ActionResult Discount()
         {
             var code = db.Discount_code.ToList();

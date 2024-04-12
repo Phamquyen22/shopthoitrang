@@ -23,6 +23,7 @@
 }
 @using shopthoitrang.Models;
 @model List<Cart>
+<script src="~/public/js/custom.js"></script>
 <section class="breadcrumb-option">
     <div class="container">
         <div class="row">
@@ -66,74 +67,74 @@
                                     var pro = db.product.Where(p => p.id_product == item.id_product).FirstOrDefault();
                                     var tien = pro.price_pro - (pro.price_pro * pro.discount_pro / 100);
                                     string gia = string.Format("{0:#,##0}₫", tien);
+                                    string sanpham = "sanpham" + item.id_product;
+                                    <tr id="@sanpham">
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img style="max-height:60px" src="~/public/img/product/@pro.photo_pro" alt="@pro.name_pro">
+                                            </div>
 
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img style="max-height:60px" src="~/public/img/product/@pro.photo_pro" alt="@pro.name_pro">
-                                    </div>
-
-                                </td>
-                                <td class="product__cart__item">
-                                    <a href="@Url.Action("detail", "Shop", new { id_pro = item.id_product })">
-                                        <h5>@pro.name_pro</h5>
-                                    </a>
-                                </td>
-                                <td class="product__cart__item">
-                                    <select id="color">
-                                        @{
-                                            var listcolor = pro.color_pro.Trim().Split(',');
-                                            foreach (var color in listcolor)
-                                            {
-                                                if (color == item.color_pro)
-                                                {
-                                                    <option selected value="@color">@color</option>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <a href="@Url.Action("detail", "Shop", new { id_pro = item.id_product })">
+                                                <h5>@pro.name_pro</h5>
+                                            </a>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <select id="color">
+                                                @{
+                                                    var listcolor = pro.color_pro.Trim().Split(',');
+                                                    foreach (var color in listcolor)
+                                                    {
+                                                        if (color == item.color_pro)
+                                                        {
+                                                            <option selected value="@color">@color</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@color">@color</option>
+                                                        }
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    <option value="@color">@color</option>
+                                            </select>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <select id="size">
+                                                @{
+                                                    var listsize = pro.size_pro.Trim().Split(',');
+                                                    foreach (var size in listsize)
+                                                    {
+                                                        if (size == item.size_pro)
+                                                        {
+                                                            <option selected value="@size">@size</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@size">@size</option>
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
-                                    </select>
-                                </td>
-                                <td class="product__cart__item">
-                                    <select id="size">
-                                        @{
-                                            var listsize = pro.size_pro.Trim().Split(',');
-                                            foreach (var size in listsize)
-                                            {
-                                                if (size == item.size_pro)
-                                                {
-                                                    <option selected value="@size">@size</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@size">@size</option>
-                                                }
-                                            }
-                                        }
-                                    </select>
+                                            </select>
 
-                                </td>
+                                        </td>
 
-                                <td class="product__cart__item">
-                                   
-                                    <h5>@gia</h5>
-                                   
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input id="@("soluonghang"+item.id_product)" onchange="soluong('@item.id_product','@tien')" type="number" min="0" max="99" value="@item.quantity_cart" placeholder="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td id="@("tongtien"+item.id_product)" class="cart__price">@(tien * item.quantity_cart) ₫</td>
-                                <td class="cart__close"><a href="@Url.Action("xoa_cart", "Cart", new { id_pro = item.id_product })"><i class="fa fa-close"></i></a></td>
-                            </tr>
+                                        <td class="product__cart__item">
 
-                                            }
+                                            <h5>@gia</h5>
+
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input id="@("soluonghang"+item.id_product)" onchange="soluong('@item.id_product','@tien')" type="number" min="0" max="99" value="@item.quantity_cart" placeholder="1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="@("tongtien"+item.id_product)" class="cart__price">@(tien * item.quantity_cart) ₫</td>
+                                        <td class="cart__close"><a href="javascript:void(0)" onclick="xoacart('@Url.Action("xoa_cart", "Cart", new { id_pro = item.id_product })','@sanpham')"><i class="fa fa-close"></i></a></td>
+                                    </tr>
+
+                                }
                             }
 
                         </tbody>
@@ -145,11 +146,11 @@
                             <a href="@Url.Action("product", "Shop")"><span class="text">Continue Shopping</span> </a>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="col-lg-4">
-               
+
                 <div class="cart__total">
 
                     <h6>Cart total</h6>
@@ -176,7 +177,7 @@
                                 <li>Total <span id="totaltien">0 ₫</span></li>
                             }
                         }
-                        
+
                     </ul>
                     <a href="@Url.Action("checkout","Cart")" class="thanhtoan">
                         <div>
@@ -196,59 +197,3 @@
         </div>
     </div>
 </section>
-<script>
-    function formatCurrency(amount) {
-        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    function soluong(id_product, gia) {
-        var onhap = document.getElementById('soluonghang' + id_product).value;
-        var tong = document.getElementById('tongtien' + id_product);
-        var sl = parseInt(onhap);
-        var giasp = sl * gia;
-        var tongtien = document.getElementById('totaltien');
-        
-        tong.innerHTML = formatCurrency(giasp)+'₫';
-
-        $.ajax({
-            url: '@Url.Action("update_cart", "Cart")',
-            type: 'POST',
-            data: {
-                id_pro: id_product,
-                quantity: sl,
-            },
-            success: function (response) {
-                if (response.success === true) {
-                
-                    $.ajax({
-                        url: '@Url.Action("resulttotal", "Cart")',
-                        type: 'POST',
-            
-                        success: function (response) {
-                            if (response.success) {
-                                console.log('cập nhập giá thành công ');
-                                tongtien.innerHTML = response.giatien;
-                            }
-                            else if (response.redirectUrl != null) {
-                                window.location.href = response.redirectUrl;
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                
-                            console.error(xhr.responseText);
-                        }
-
-                    });
-                }
-                else if (response.redirectUrl != null) {
-                    window.location.href = response.redirectUrl;
-                }
-            },
-            error: function (xhr, status, error) {
-                
-                console.error(xhr.responseText);
-            }
-
-        });
-        
-    }
-</script>

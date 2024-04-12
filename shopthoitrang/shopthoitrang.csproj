@@ -51,7 +51,18 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=7.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.7.1.1\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net35\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -118,6 +129,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -130,6 +142,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\admin\adminAreaRegistration.cs" />
     <Compile Include="Areas\admin\Controllers\adminController.cs" />
+    <Compile Include="Areas\admin\Controllers\ContactController.cs" />
     <Compile Include="Areas\admin\Controllers\DiscountCodeController.cs" />
     <Compile Include="Areas\admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\admin\Controllers\ProductsController.cs" />
@@ -2262,6 +2275,7 @@
     <Content Include="Areas\admin\assets\modules\upload-preview\assets\js\jquery.uploadPreview.js" />
     <Content Include="Areas\admin\assets\modules\upload-preview\assets\js\jquery.uploadPreview.min.js" />
     <Content Include="Areas\admin\assets\modules\upload-preview\index.html" />
+    <Content Include="Areas\admin\assets\order.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -2650,6 +2664,13 @@
     <Content Include="public\login\scss\bootstrap\_utilities.scss" />
     <Content Include="public\login\scss\bootstrap\_variables.scss" />
     <Content Include="public\login\scss\style.scss" />
+    <Content Include="Areas\admin\Views\Order\orderdetail.cshtml" />
+    <Content Include="Areas\admin\Views\Order\choxacnhan.cshtml" />
+    <Content Include="Areas\admin\Views\Order\delivery.cshtml" />
+    <Content Include="Areas\admin\Views\Order\ordercompleted.cshtml" />
+    <Content Include="Areas\admin\Views\admin\get_mes.cshtml" />
+    <Content Include="Areas\admin\Views\Contact\Contact.cshtml" />
+    <Content Include="Areas\admin\Views\Contact\chat.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -2691,6 +2712,7 @@
     <Content Include="Views\User\message.cshtml" />
     <Content Include="Views\Home\Signup.cshtml" />
     <Content Include="Views\User\order_list.cshtml" />
+    <Content Include="Views\Shop\search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

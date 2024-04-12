@@ -23,7 +23,7 @@
 }
 @using shopthoitrang.Models;
 
-
+<script src="~/public/js/custom.js"></script>
 <!-- Header Section End -->
 <!-- Hero Section Begin -->
 <section class="hero">
@@ -143,6 +143,25 @@
                     string idsp = "sp" + item.id_product;
                     var danhgia = db.rate.Where(r => r.id_product == item.id_product).Select(r => r.star_rate).ToList();
                     int rate = 0, demso = 0;
+                    bool yeeuthich = false;
+                    if (id != -1)
+                    {
+                        var check = db.User_info.Where(p => p.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                        if (check != null)
+                        {
+                            var data = check.Split(',').ToList();
+                            string idpro = item.id_product.ToString();
+
+                            foreach (var yt in data)
+                            {
+
+                                if (yt == idpro)
+                                {
+                                    yeeuthich = true;
+                                }
+                            }
+                        }
+                    }
                     if (danhgia.Count > 0)
                     {
                         foreach (var dem in danhgia)
@@ -153,24 +172,33 @@
                     }
                     if (SinceUpdate < 3)
                     {
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item sale">
                                 <div class="product__item__pic">
-                                    <a class="product__item__pic " href="#">
+                                    <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                         <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                     </a>
                                     <span class="label">Sale</span>
                                     <ul class="product__hover">
                                         <li>
-                                            <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                <img src="/public/img/icon/heart.png" alt="">
+                                            <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                @{ if (yeeuthich)
+                                                    {
+                                                        <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                    }
+                                                }
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
                                     <h6>@item.name_pro</h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                     <div class="rating">
                                         @{
                                             for (int i = 0; i < rate; i++)
@@ -194,19 +222,28 @@
                     }
                     else if (item.discount_pro > 10)
                     {
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
+                        <div class="col-lg-4 col-md-6 col-sm-6">
 
                             <div class="product__item sale">
 
                                 <div class="product__item__pic">
-                                    <a class="product__item__pic " href="#">
+                                    <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                         <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                     </a>
                                     <span class="label">Sale</span>
                                     <ul class="product__hover">
                                         <li>
-                                            <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                <img src="/public/img/icon/heart.png" alt="">
+                                            <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                @{ if (yeeuthich)
+                                                    {
+                                                        <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                    }
+                                                }
                                             </a>
                                         </li>
                                     </ul>
@@ -214,8 +251,8 @@
 
                                 <div class="product__item__text">
                                     <h6>@item.name_pro</h6>
-                                    
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+
+                                    <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                     <div class="rating">
                                         @{
                                             for (int i = 0; i < rate; i++)
@@ -241,19 +278,28 @@
                     }
                     else
                     {
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix">
+                        <div class="col-lg-4 col-md-6 col-sm-6 ">
                             <a href="#">
                                 <div class="product__item sale">
 
                                     <div class="product__item__pic">
-                                        <a class="product__item__pic " href="#" >
+                                        <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
                                             <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
                                         </a>
                                         <span class="label">Sale</span>
                                         <ul class="product__hover">
                                             <li>
-                                                <a href="javascript:void(0)" id="@idsp" onclick="yeu('@idsp')">
-                                                    <img src="/public/img/icon/heart.png" alt="">
+                                                <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                    @{ if (yeeuthich)
+                                                        {
+                                                            <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                        }
+                                                    }
                                                 </a>
                                             </li>
                                         </ul>
@@ -261,7 +307,7 @@
 
                                     <div class="product__item__text">
                                         <h6>@item.name_pro</h6>
-                                        <a href="#" class="add-cart ">+ Add To Cart</a>
+                                        <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
                                         <div class="rating">
                                             @{
                                                 for (int i = 0; i < rate; i++)
@@ -344,14 +390,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    function yeu(idbutton) {
-        var yeuthichElement = document.getElementById(idbutton);
-        if (yeuthichElement.innerHTML == '<img src="/public/img/icon/heart_red.png" alt="">') {
-            yeuthichElement.innerHTML = '<img src="/public/img/icon/heart.png" alt="">';
-        } else {
-            yeuthichElement.innerHTML = '<img src="/public/img/icon/heart_red.png" alt="">';
-        }
-    }
-</script>

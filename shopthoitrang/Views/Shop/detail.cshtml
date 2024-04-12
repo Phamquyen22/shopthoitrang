@@ -22,7 +22,7 @@
     }
 }
 
-
+<script src="~/public/js/custom.js"></script>
 <!-- Shop Details Section Begin -->
 <section class="shop-details">
     <div class="product__details__pic">
@@ -618,52 +618,5 @@
         </div>
     </div>
 </div>
-<script>
-    function them(id_product) {
-        $.ajax({
-            url: '@Url.Action("favourite", "Shop")',
-            type: 'POST',
-            data: {
-                id_pro:id_product,
-            },
-        })
-        var tomau = document.getElementById('tomau');
-        if (tomau.style.color == 'palevioletred') {
-            tomau.style.color = '';
-        }
-        else {
-            tomau.style.color ='palevioletred';
-        }
-        var notification = document.getElementById('notification');
-        notification.style.display = "block";
-        setTimeout(function () {
-            notification.style.display = "none";
-        }, 2000);
-    }
-    function themgiohang() {
-    var form = document.getElementById('myform');
-    var formData = new FormData(form);
 
-    $.ajax({
-        url: '@Url.Action("addtocart", "Cart")',
-        type: 'POST',
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(response) {
-            if (response.success === true) {
-                console.log('Thêm sản phẩm vào giỏ hàng thành công');
-                alert("Thêm sản phẩm vào giỏ hàng thành công");
-            } else if (response.redirectUrl != null) {
-                window.location.href = response.redirectUrl;
-            }
-        },
-        error: function(xhr, status, error) {
-            // Xử lý lỗi, nếu có
-            console.error(xhr.responseText);
-        }
-    });
-}
-
-</script>
 <!-- Related Section End -->

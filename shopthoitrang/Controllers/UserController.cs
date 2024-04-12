@@ -202,7 +202,8 @@ namespace shopthoitrang.Controllers
                     }
                     else
                     {
-                        int id = db.Conversations.Where(c => c.UserID1 == acc).Select(c => c.ConversationID).Count() + 1;
+                       
+                        int id = db.Conversations.Select(c => c.ConversationID).FirstOrDefault() + 1;
                         Conversations conversations = new Conversations();
                         conversations.ConversationID = id;
                         conversations.UserID1 = acc;

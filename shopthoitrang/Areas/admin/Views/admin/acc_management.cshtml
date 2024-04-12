@@ -2,8 +2,24 @@
 @{
     ViewBag.Title = "acc_management";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
-    database database = new database();
-
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    database db = new database();
+    string username, userData;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        int iduser = int.Parse(username);
+        userData = db.Account.Where(c => c.id_user == iduser).Select(c => c.role).FirstOrDefault();
+    }
 }
 @using shopthoitrang.Models;
 @model List<Account>
@@ -225,21 +241,10 @@
                                 <option value="user">user</option>
                                 <option value="management">management</option>
                                 @{
-                                    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-
-                                    if (authCookie != null)
+                                    if (userData == "admin")
                                     {
-                                        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-
-                                        string userData = authTicket.UserData;
-                                        if (userData == "admin")
-                                        {
-                                            <option value="admin">admin</option>
-
-                                        }
+                                        <option value="admin">admin</option>
                                     }
-
-
                                 }
                             </select>
 

@@ -1,6 +1,9 @@
 ﻿
 @{
     Layout = null;
+    database db = new database();
+    var order = db.Order.Where(c=>c.status_order=="Chờ xác nhận").ToList();
+    var mes = db.Conversations.ToList();
 }
 @using shopthoitrang.Models;
 <!DOCTYPE html>
@@ -8,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@ViewBag.Tile</title>
+    <title>@ViewBag.Title</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="~/Areas/admin/assets/modules/bootstrap/css/bootstrap.min.css">
@@ -19,7 +22,7 @@
     <link rel="stylesheet" href="~/Areas/admin/assets/modules/summernote/summernote-bs4.css">
     <link rel="stylesheet" href="~/Areas/admin/assets/modules/owlcarousel2/dist/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="~/Areas/admin/assets/modules/owlcarousel2/dist/assets/owl.theme.default.min.css">
-
+    <link rel="stylesheet" href="~/Areas/admin/assets/css/custom.css" />
     <!-- Template CSS -->
     <link rel="stylesheet" href="~/Areas/admin/assets/css/style.css">
     <link rel="stylesheet" href="~/Areas/admin/assets/css/components.css">
@@ -45,35 +48,42 @@
                         <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
                         <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
                     </ul>
-                    @*<div class="search-element">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
-                        <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-                        <div class="search-backdrop"></div>
 
-                    </div>*@
                 </form>
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown dropdown-list-toggle">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
+                        
                         <div class="dropdown-menu dropdown-list dropdown-menu-right">
                             <div class="dropdown-header">
                                 Messages
                                 <div class="float-right">
-                                    <a href="#">Mark All As Read</a>
+                                    <a href="javascript:void(0)" onclick="markall('@Url.Action("markall","admin")')">Mark All As Read</a>
                                 </div>
                             </div>
-                            <div class="dropdown-list-content dropdown-list-message">
-                                <a href="#" class="dropdown-item dropdown-item-unread">
-                                    <div class="dropdown-item-avatar">
-                                        <img alt="image" src="~/Areas/Admin/public/assets/img/avatar/avatar-1.png" class="rounded-circle">
-                                        <div class="is-online"></div>
-                                    </div>
-                                    <div class="dropdown-item-desc">
-                                        <b>Kusnaedi</b>
-                                        <p>Hello, Bro!</p>
-                                        <div class="time">10 Hours Ago</div>
-                                    </div>
-                                </a>
+                            <div class="dropdown-list-content dropdown-list-message" id="chat">
+                                @{
+
+                                    foreach (var item in mes)
+                                    {
+                                        var data = db.Messages.Where(c => c.ConversationID == item.ConversationID && c.status == "no").ToList();
+                                        foreach (var message in data)
+                                        {
+                                            <a href="@Url.Action("Contact","Contact")" class="dropdown-item dropdown-item-unread">
+                                                <div class="dropdown-item-avatar">
+                                                    <img alt="image" src="~/public/img/user/@(db.User_info.Where(c => c.id_user == item.UserID1).Select(c=>c.img).FirstOrDefault())" class="rounded-circle">
+
+                                                </div>
+                                                <div class="dropdown-item-desc">
+                                                    <b>@(db.User_info.Where(c => c.id_user == item.UserID1).Select(c => c.name).FirstOrDefault())</b>
+                                                    <p>@message.message</p>
+                                                    <div class="time">@message.Timestamp</div>
+                                                </div>
+                                            </a>
+                                        }
+                                    }
+
+                                }
 
 
                             </div>
@@ -87,31 +97,32 @@
                         <div class="dropdown-menu dropdown-list dropdown-menu-right">
                             <div class="dropdown-header">
                                 Notifications
-                                <div class="float-right">
-                                    <a href="#">Mark All As Read</a>
-                                </div>
-                            </div>
-                            <div class="dropdown-list-content dropdown-list-icons">
-                                <a href="#" class="dropdown-item dropdown-item-unread">
-                                    <div class="dropdown-item-icon bg-primary text-white">
-                                        <i class="fas fa-code"></i>
-                                    </div>
-                                    <div class="dropdown-item-desc">
-                                        Template update is available now!
-                                        <div class="time text-primary">2 Min Ago</div>
-                                    </div>
-                                </a>
 
                             </div>
-                            <div class="dropdown-footer text-center">
-                                <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                            <div class="dropdown-list-content dropdown-list-icons">
+                                @{
+                                    foreach (var item in order)
+                                    {
+                                        <a href="javacript:void(0)" class="dropdown-item dropdown-item-unread">
+                                            <div class="dropdown-item-icon bg-primary text-white">
+                                                <i class="fas fa-shopping-bag"></i>
+                                            </div>
+                                            <div class="dropdown-item-desc">
+                                                New Order by @(db.User_info.Where(c => c.id_user == item.id_user).Select(c => c.name).FirstOrDefault())
+                                                <div class="time text-primary">@item.date_order</div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+
+
                             </div>
                         </div>
                     </li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             @{
-                                database db = new database();
+
                                 var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
 
                                 if (authCookie != null)
@@ -162,43 +173,51 @@
                     </div>
                     <ul class="sidebar-menu">
                         <li class="menu-header">Thống Kê</li>
-                        <li class="dropdown active">
+                        <li class="dropdown" id="Index">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                             <ul class="dropdown-menu">
 
-                                <li class=active><a class="nav-link" href="/Admin/admin/index">Thống kê</a></li>
+                                <li><a class="nav-link" href="/Admin/admin/index">Thống kê</a></li>
                             </ul>
                         </li>
                         <li class="menu-header">product</li>
-                        <li class="dropdown">
+                        <li class="dropdown" id="product">
                             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-passport"></i> <span>Products</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="@Url.Action("Category","Products")">Categories</a></li>
                                 <li><a class="nav-link" href="@Url.Action("ProductType","Products")">product type</a></li>
 
                                 <li><a class="nav-link" href="@Url.Action("Producer","Products")">Producers</a></li>
-                                <li><a class="nav-link" href="@Url.Action("product","Products")">Products</a></li>
+                                <li id="product"><a class="nav-link" href="@Url.Action("product","Products")">Products</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown " id="Discount">
                             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-passport"></i> <span>Discount code</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="@Url.Action("Discount","DiscountCode")">Discount</a></li>
-                                
+
                             </ul>
                         </li>
                         <li class="menu-header">Order</li>
-                        <li class="dropdown">
+                        <li class="dropdown" id="donhang">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-bag"></i> <span>Order</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="/admin/Order/donhang">Đơn hàng</a></li>
-                                <li><a class="nav-link" href="/admin/Order/choxacnhan">Đơn hàng chờ xác nhận</a></li>
-                                <li><a class="nav-link" href="/admin/Order/chovanchuyen">Đơn hàng chờ vận chuyển</a></li>
-                                <li><a class="nav-link" href="/admin/Order/donhoanthanh">Đơn hàng hoàn thành</a></li>
+                                <li id="donhang"><a class="nav-link" href="@Url.Action("donhang","Order")">Đơn hàng</a></li>
+                                <li id="choxacnhan"><a class="nav-link" href="@Url.Action("choxacnhan","Order")">Đơn hàng chờ xác nhận</a></li>
+                                <li id="vanchuyen"><a class="nav-link" href="@Url.Action("Delivery","Order")">Đơn hàng chờ vận chuyển</a></li>
+                                <li><a class="nav-link" href="@Url.Action("Ordercompleted","Order")">Đơn hàng hoàn thành</a></li>
                             </ul>
                         </li>
+                        <li class="menu-header">Contact</li>
 
+                        <li class="dropdown">
+                            <a href="#" id="Contact" class="nav-link has-dropdown"><i class="far fa-user"></i> <span>Contact</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Contact","Contact")">Contact </a></li>
+                            </ul>
+                        </li>
                         <li class="menu-header">Account</li>
+
                         <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i> <span>Auth</span></a>
                             <ul class="dropdown-menu">
@@ -214,7 +233,7 @@
             @RenderBody()
             <footer class="main-footer">
                 <div class="footer-left">
-                    Copyright &copy; 2023 <div class="bullet"></div> Design By Quyen
+                    Copyright &copy; 2024 <div class="bullet"></div> Design By Quyen
                 </div>
                 <div class="footer-right">
 
@@ -222,7 +241,36 @@
             </footer>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tile = '@ViewBag.Title';
+        var a = document.getElementById(tile);
 
+        if (a) {
+            a.classList.add("dropdown", "active");
+        } else {
+            console.error("Không tìm thấy thẻ có id: " + tile);
+        }
+        });
+
+        setInterval(function () {
+
+            var orderlistUrl = "/admin/admin/get_mes";
+            $.ajax({
+                url: orderlistUrl,
+                method: 'GET',
+                success: function (response) {
+                    $('#chat').html(response);
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi
+                    console.error(error);
+                }
+            });
+
+        }, 4000);
+        
+    </script>
     <!-- General JS Scripts -->
     <script src="~/Areas/admin/assets/modules/jquery.min.js"></script>
     <script src="~/Areas/admin/assets/modules/popper.js"></script>
@@ -241,7 +289,7 @@
 
     <!-- Page Specific JS File -->
     <script src="~/Areas/admin/assets/js/page/index.js"></script>
-
+    <script src="~/Areas/admin/assets/order.js"></script>
     <!-- Template JS File -->
     <script src="~/Areas/admin/assets/js/scripts.js"></script>
     <script src="~/Areas/admin/assets/js/custom.js"></script>

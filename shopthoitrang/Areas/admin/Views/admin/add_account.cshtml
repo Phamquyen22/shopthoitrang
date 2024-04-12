@@ -2,7 +2,26 @@
 @{
     ViewBag.Title = "add_account";
     Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    database db = new database();
+    string username, userData;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        int iduser = int.Parse(username);
+        userData = db.Account.Where(c => c.id_user == iduser).Select(c => c.role).FirstOrDefault();
+    }
 }
+@using shopthoitrang.Models
 <!-- Main Content -->
 <div class="main-content">
     <section class="section">
@@ -75,9 +94,8 @@
 
                                         <option value="user" selected>user</option>
                                         <option value="management">management</option>
-                                        @{ string acc = Session["role"] as string;
-
-                                            if (acc == "admin")
+                                        @{
+                                            if (userData == "admin")
                                             {
                                                 <option value="admin">admin</option>
                                             }

@@ -17,7 +17,7 @@
                         <div class="card-header">
                             <h4>Chat with Admin</h4>
                         </div>
-                        <div class="card-body chat-content nice-scroll" id="message">
+                        <div class="card-body chat-content nice-scroll"style="height: 600px;" id="message">
                             
                         </div>
                         <div class="card-footer chat-form">
@@ -40,12 +40,9 @@
                         post_chat('@Url.Action("post_chat","User")');
                     }
                 }
-                function scrollToBottom() {
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                }
+               
                 function post_chat(url) {
                     var form = document.getElementById('input_message');
-                    
                     $.ajax({
                         url: url,
                         type: 'POST',
@@ -55,11 +52,11 @@
                                 console.log("thành công");
                                 form.value = "";
                                 $.ajax({
-                                    url: '@Url.Action("message","User")',
+                                    url: '/User/message',
                                     method: 'GET',
                                     success: function (response) {
                                         $('#message').html(response);
-                                        scrollToBottom();
+                                        
                                     },
                                     error: function (xhr, status, error) {
                                         // Xử lý lỗi
@@ -73,7 +70,7 @@
                 setInterval(function () {
 
                     $.ajax({
-                        url: '@Url.Action("message","User")',
+                        url: '/User/message',
                         method: 'GET',
                         success: function (response) {
                             $('#message').html(response);
@@ -85,4 +82,19 @@
                     })
 
                 }, 2000);
+                
+                var scrollableDiv = document.getElementById('message');
+
+                var prevHeight = scrollableDiv.scrollHeight;
+
+                setInterval(function () {
+
+                    if (scrollableDiv.scrollHeight !== prevHeight) {
+
+                        prevHeight = scrollableDiv.scrollHeight;
+
+                        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+                    }
+                }, 500);
             </script>
+            

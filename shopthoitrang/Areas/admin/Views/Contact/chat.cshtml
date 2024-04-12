@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = null;
+    database db = new database();
+
+}
+@using shopthoitrang.Models
+@model Conversations
+@{
+    var user = db.User_info.Where(c => c.id_user == Model.UserID1).FirstOrDefault();
+    var user2 = db.User_info.Where(c => c.id_user == Model.UserID2).FirstOrDefault();
+}
+
+<input value="@Model.ConversationID" hidden id="id_chat" />
+@{
+
+    var data = db.Messages.Where(c => c.ConversationID == Model.ConversationID).OrderBy(c => c.id_chat).ToList();
+    if (data != null)
+    {
+        
+        foreach (var item in data)
+        {
+
+
+            if (item.UserID == user.id_user)
+            {
+                <div class="chat-item chat-left">
+                    <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user.img">
+                    <div class="chat-details">
+                        <div class="chat-text">@item.message</div>
+                        <div class="chat-time">
+                            @{ if (item.status == "yes")
+                                {<span>Đã đọc</span>}
+                            }
+                            @item.Timestamp
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="chat-item  chat-right">
+                    <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user2.img">
+                    <div class="chat-details">
+                        <div class="chat-text">@item.message</div>
+                        <div class="chat-time">
+                            @{ if (item.status == "yes")
+                                {<span>Đã đọc</span>}
+                            }
+                            @item.Timestamp
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+
+}
+

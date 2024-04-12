@@ -225,11 +225,11 @@ namespace shopthoitrang.Controllers
                 int giamgia = db.Discount_code.Where(c => c.code == voucher).Select(c => c.sale).FirstOrDefault();
                 if (giamgia <= 100)
                 {
-                    giatien = (tongtien + 16000) - (tongtien * giamgia / 100);
+                    giatien = (tongtien) - (tongtien * giamgia / 100);
                 }
                 else
                 {
-                    giatien = tongtien + 16000 - giamgia;
+                    giatien = tongtien- giamgia;
                 }
                 idvoucher = db.Discount_code.Where(p => p.code == voucher).Select(c=>c.id_discount).FirstOrDefault();
                 if (idvoucher!=0)
@@ -240,6 +240,10 @@ namespace shopthoitrang.Controllers
             }
             order.id_order = id_order;
             order.id_user = id_acc();
+            if (giatien < 0)
+                giatien = 0 + 16000;
+            else
+                giatien = giatien + 16000;
             order.total = giatien;
             order.status_order = "Chờ xác nhận";
             order.date_order = DateTime.Now.ToString("yyyy-MM-dd");

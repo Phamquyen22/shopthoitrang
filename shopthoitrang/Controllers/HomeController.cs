@@ -10,18 +10,22 @@ namespace shopthoitrang.Controllers
     public class HomeController : Controller
     {
         private database db = new database();
+        private string username, userData = null;
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            string user = Session["id_user"] as string;
             bool check = false;
             if (authCookie != null)
             {
                 check = true;
                 var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                string username = authTicket.Name;
-                string userData = authTicket.UserData;
+                username = authTicket.Name;
+                userData = authTicket.UserData;
             }
+            else if (user != null) { check = true; username = Session["id_user"] as string; }
             return check;
+            
         }
         public ActionResult Index()
         {

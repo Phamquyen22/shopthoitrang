@@ -147,8 +147,7 @@
                                                         <div class="content">
                                                             <span class="name">@ten.name</span>
                                                             <a  href="@Url.Action("Profile", "User")">Profile</a>
-                                                            <a  href="@Url.Action("Orderlist","User")">Order List</a>
-                                                            <a href="@Url.Action("favourite","User")">favorites list</a>
+                                                            
                                                         </div>
                                                         <div class="bottom-bottom">
                                                             <div class="social-links-container">
@@ -206,9 +205,9 @@
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
             <div class="search_input" id="search_input_box">
                 <div class="container ">
-                    <form class="d-flex justify-content-between search-inner">
+                    <form class="d-flex justify-content-between search-inner" action="@Url.Action("search","Shop")">
                         <input type="text" class="form-control" style="background-color: #ff386d; border: none;"
-                               id="search_input" placeholder="Search Here">
+                               id="search_input" name="key" placeholder="Search Here">
                         <button type="submit" class="btn"><img src="~/public/img/icon/search.png" alt=""></button>
                         <span class="ti-close" id="close_search" title="Close Search"></span>
                     </form>

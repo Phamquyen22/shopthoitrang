@@ -200,8 +200,8 @@
                             kq = tong + 16000 - res.code_data;
                             var vnpay = document.getElementById('VNPAY');
                             vnpay.style.display = "none";
-                            if ((tong + 16000 - res.code_data) < 0)
-                                kq = 0;
+                            if ((tong - res.code_data) < 0)
+                                kq = 0+16000;
                         } else {
                             var vnpay = document.getElementById('VNPAY');
                             vnpay.style.display = "block";

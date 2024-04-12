@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = null;
+    database db = new database();
+}
+@using shopthoitrang.Models
+@model List<Order_detail>
+<table class="table table-striped" id="sortable-table">
+    <thead>
+        <tr>
+            <th class="text-center">
+                #
+            </th>
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>giá tiền</th>
+            <th>Số lượng</th>
+            <th>Tổng tiền</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+
+        @{ foreach (var order in Model)
+            {
+                var pro = db.product.Where(or => or.id_product == order.id_product).FirstOrDefault();
+        <tr>
+            <td>
+                <img alt="image" src="~/public/img/product/@pro.photo_pro" width="35" data-toggle="tooltip" title="@pro.name_pro">
+            </td>
+            <td>
+                @pro.id_product
+            </td>
+
+            <td>@pro.name_pro</td>
+
+
+
+            <td>@string.Format("{0:N0}", (pro.price_pro-(pro.price_pro*pro.discount_pro/100)))</td>
+            
+            <td>x @order.quantity_pro</td>
+
+            <td>@((pro.price_pro - (pro.price_pro * pro.discount_pro / 100))*order.quantity_pro)</td>
+            
+        </tr>
+            }
+        }
+
+    </tbody>
+</table>

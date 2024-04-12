@@ -187,6 +187,15 @@ namespace shopthoitrang.Controllers
             }
             
         }
-       
+        public ActionResult search(int page=1, string key="")
+        {
+            int so = (page - 1) * 9;
+            Uri currentUrl = Request.Url;
+            TempData["trangtruoc"] = currentUrl.ToString();
+            
+            ViewBag.page_index= db.product.Where(p => p.name_pro.Contains(key) || p.tag.Contains(key)).Select(c => c.id_product).Count();
+            var data = db.product.Where(p => p.name_pro.Trim().Contains(key.Trim())||p.tag.Trim().Contains(key.Trim())).OrderByDescending(c => c.id_product).Skip(so).Take(so+9).ToList();
+            return View(data);
+        }
     }
 }
