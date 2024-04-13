@@ -75,6 +75,17 @@ namespace shopthoitrang.Areas.admin.Controllers
             else
                 return RedirectToAction("login", "admin");
         }
+        public ActionResult searchCategory(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                var cate = db.Category.Where(c=>c.name_cate.Contains(key)).ToList();
+                return View("Category",cate);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
         [HttpPost]
         public ActionResult add_cate(string name_cateName,HttpPostedFileBase f_file)
         {
@@ -158,6 +169,17 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 var type = db.product_type.ToList();
                 return View(type);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
+        public ActionResult searchProductType(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                var type = db.product_type.Where(c=>c.name_type.Contains(key)).ToList();
+                return View("ProductType", type);
             }
             else
                 return RedirectToAction("login", "admin");
@@ -252,6 +274,18 @@ namespace shopthoitrang.Areas.admin.Controllers
             }
 
         }
+        public ActionResult searchProducer(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                var prod = db.producer.Where(c => c.name.Contains(key)).ToList();
+                return View("Producer", prod);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
+
         [HttpPost]
         public ActionResult add_producer(string pdcName,string pdcPhone,string pdcEmail, string pdcAddress,HttpPostedFileBase file, string pdcInfo)
         {
@@ -447,5 +481,19 @@ namespace shopthoitrang.Areas.admin.Controllers
             return View("product", prod);
         }
 
+
+        public ActionResult searchproduct(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                var prod = db.product.Where(c=>c.name_pro.Contains(key)).ToList();
+                return View("product",prod);
+            }
+            else
+                return RedirectToAction("login", "admin");
+
+           
+        }
     }
 }

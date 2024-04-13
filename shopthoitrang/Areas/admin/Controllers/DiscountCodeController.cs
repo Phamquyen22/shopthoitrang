@@ -42,6 +42,19 @@ namespace shopthoitrang.Areas.admin.Controllers
             var code = db.Discount_code.ToList();
             return View(code);
         }
+        public ActionResult searchDiscount(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                int id;
+                int.TryParse(key, out id);
+                var don = db.Discount_code.Where(c => c.id_discount == id || c.name_code.Contains(key)||c.code.Contains(key)||c.end_date.Contains(key)||c.rank_user.Contains(key)).ToList();
+                return View("Discount", don);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
         [HttpPost]
         public ActionResult add_discount(string namecodeq,string codeq,int saleq, int stockq,string startdateq,string enddateq,string typediscountq, string rankuserq, string infoq,string an_spq)
         {

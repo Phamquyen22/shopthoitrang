@@ -51,8 +51,29 @@ namespace shopthoitrang.Areas.admin.Controllers
         }
         public ActionResult donhang()
         {
-            var don = db.Order.ToList();
-            return View(don);
+            bool check = check_login();
+            if (check)
+            {
+                var don = db.Order.ToList();
+                return View(don);
+            }
+            else
+                return RedirectToAction("login", "admin");
+           
+        }
+        public ActionResult searchdonhang(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+
+                int id;
+                int.TryParse(key,out id);
+                var don = db.Order.Where(c => c.id_order==id|| c.date_order.Contains(key)).ToList();
+                return View("donhang", don);
+            }
+            else
+                return RedirectToAction("login", "admin");
         }
         public ActionResult orderdetail(int id)
         {
@@ -73,7 +94,6 @@ namespace shopthoitrang.Areas.admin.Controllers
                 return Json(new { sucsses = false });
             }
         }
-
         public JsonResult xoadonhang(int id)
         {
             var order = db.Order.Where(c => c.id_order == id).FirstOrDefault();
@@ -94,25 +114,60 @@ namespace shopthoitrang.Areas.admin.Controllers
                 return Json(new { sucsses = false });
             }
         }
-
         public ActionResult choxacnhan()
         {
             var don = db.Order.Where(c=>c.status_order=="Chờ xác nhận").ToList();
             return View(don);
         }
-
+        public ActionResult searchchoxacnhan(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                int id;
+                int.TryParse(key, out id);
+                var don = db.Order.Where(c => c.id_order==id || c.date_order.Contains(key)).Select(c=>c.status_order== "Chờ xác nhận").ToList();
+                return View("choxacnhan", don);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
         public ActionResult delivery()
         {
             var don = db.Order.Where(c => c.status_order == "Chờ vận chuyển").ToList();
             return View(don);
+        }
+        public ActionResult searchdelivery(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                int id;
+                int.TryParse(key, out id);
+                var don = db.Order.Where(c => c.id_order==id || c.date_order.Contains(key)).Select(c => c.status_order == "Chờ vận chuyển").ToList();
+                return View("delivery", don);
+            }
+            else
+                return RedirectToAction("login", "admin");
         }
         public ActionResult ordercompleted()
         {
             var don = db.Order.Where(c => c.status_order == "Hoàn thành").ToList();
             return View(don);
         }
-
-
+        public ActionResult searchordercompleted(string key)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                int id;
+                int.TryParse(key, out id);
+                var don = db.Order.Where(c => c.id_order==id || c.date_order.Contains(key)).Select(c => c.status_order == "Hoàn thành").ToList();
+                return View("ordercompleted", don);
+            }
+            else
+                return RedirectToAction("login", "admin");
+        }
         public JsonResult thanhcong(int id)
         {
             var order = db.Order.Where(c => c.id_order == id).FirstOrDefault();

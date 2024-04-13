@@ -28,9 +28,9 @@
                             <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
                             <h4></h4>
                             <div class="card-header-action">
-                                <form>
+                                <form  action="@Url.Action("searchProductType","Products")" method="post">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search">
+                                        <input type="text" name="key" class="form-control" placeholder="Search">
                                         <div class="input-group-btn">
                                             <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         </div>
