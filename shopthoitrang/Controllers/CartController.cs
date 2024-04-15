@@ -296,7 +296,9 @@ namespace shopthoitrang.Controllers
                 vnpay.AddRequestData("vnp_Locale", "vn");
                 vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + OrderId);
                 vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
-
+                //DateTime expireDateTime = DateTime.Now.AddMinutes(20);
+                //string vnp_ExpireDate = expireDateTime.ToString("yyyyMMddHHmmss");
+                //vnpay.AddRequestData("vnp_ExpireDate", vnp_ExpireDate);
                 vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
                 vnpay.AddRequestData("vnp_TxnRef", OrderId.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
                 

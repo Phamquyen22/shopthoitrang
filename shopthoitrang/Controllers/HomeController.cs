@@ -119,5 +119,9 @@ namespace shopthoitrang.Controllers
            
         }
 
+        public ActionResult error()
+        {
+            return View();
+        }
     }
 }

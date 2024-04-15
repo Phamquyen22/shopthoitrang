@@ -33,7 +33,7 @@ namespace shopthoitrang.Controllers
             Uri currentUrl = Request.Url;
             TempData["trangtruoc"] = currentUrl.ToString();
             ViewBag.page_index = db.product.Select(c=>c.id_product).Count();
-            Session.Add("controller", "Product");
+           
             var data = db.product.OrderByDescending(c => c.id_product).Skip(0).Take(9).ToList();
             return View(data);
         }
@@ -43,7 +43,40 @@ namespace shopthoitrang.Controllers
             var pro = db.product.Where(p => p.id_product == id_pro).FirstOrDefault();
             return View(pro);
         }
+        [HttpPost]
+        public ActionResult detail(int id_pro ,int rating,int id_user, string comment)
+        {
+            bool check = check_login();
+            if (check)
+            {
+                int id = db.comment.Count() + 1;
+                comment com = new comment();
+                com.id_comment = id;
+                com.id_user = id_user;
+                com.comment1 = comment;
 
+                com.date_post = DateTime.Now.ToString("dd/MM/yyyy");
+                db.comment.Add(com);
+                int id_rate = db.rate.Count() + 1;
+                rate star = new rate();
+                star.id_comment = id;
+                star.id_product = id_pro;
+                star.Id_rate = id;
+                star.star_rate = rating;
+                db.rate.Add(star);
+                db.SaveChanges();
+                var pro = db.product.Where(p => p.id_product == id_pro).FirstOrDefault();
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
+                return View(pro);
+            }
+            else
+            {
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
+                return RedirectToAction("Login", "Home");
+            }
+        }
         
         public JsonResult favourite(int id_pro)
         {

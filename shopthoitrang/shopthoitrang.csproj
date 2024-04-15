@@ -2556,7 +2556,6 @@
     <Content Include="Areas\admin\assets\modules\upload-preview\assets\css\application.scss" />
     <Content Include="Areas\admin\assets\modules\upload-preview\LICENSE" />
     <Content Include="Areas\admin\assets\modules\upload-preview\README.md" />
-    <Content Include="Areas\admin\Views\admin\error.cshtml" />
     <Content Include="Areas\admin\Views\admin\acc_management.cshtml" />
     <Content Include="Areas\admin\Views\admin\add_account.cshtml" />
     <Content Include="Areas\admin\Views\admin\login.cshtml" />
@@ -2671,6 +2670,7 @@
     <Content Include="Areas\admin\Views\admin\get_mes.cshtml" />
     <Content Include="Areas\admin\Views\Contact\Contact.cshtml" />
     <Content Include="Areas\admin\Views\Contact\chat.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -2713,6 +2713,7 @@
     <Content Include="Views\Home\Signup.cshtml" />
     <Content Include="Views\User\order_list.cshtml" />
     <Content Include="Views\Shop\search.cshtml" />
+    <Content Include="Views\Home\error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

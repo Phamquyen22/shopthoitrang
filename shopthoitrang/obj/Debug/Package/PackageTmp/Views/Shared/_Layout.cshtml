@@ -1,0 +1,312 @@
+﻿@using shopthoitrang.Models;
+@{
+    database db = new database();
+
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
+}
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Male_Fashion Template">
+    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewBag.Title</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/public/css/detail.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/public/css/style.css" type="text/css">
+
+</head>
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a href="@Url.Action("Index", "Home")">
+                            <div class="stage">
+                                <div class="wrapper">
+                                    <div class="slash"></div>
+                                    <div class="sides">
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                        <div class="side"></div>
+                                    </div>
+                                    <div class="text">
+                                        <div class="text--backing">SHOP.FASHION</div>
+                                        <div class="text--left">
+                                            <div class="inner">SHOP.FASHION</div>
+                                        </div>
+                                        <div class="text--right">
+                                            <div class="inner">SHOP.FASHION</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+
+                            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+
+                            <li>
+                                <a href="@Url.Action("Product", "Shop")">Shop</a>
+                                
+                            </li>
+                            <li><a href="@Url.Action("Contact","User")">Contacts</a></li>
+                            @{ if (authCookie == null)
+                                {
+                                    string user = Session["id_user"] as string;
+                                    if (user != null)
+                                    {
+                                        
+                                        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+                                        <li>
+                                            <a href="@Url.Action("Login", "Home")">@ten.name</a>
+                                            <ul class="dropdown">
+                                                <li>
+                                                    <a href="@Url.Action("Profile", "User")">Profile</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="@Url.Action("Orderlist","User")">Order List</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("favourite","User")">favorites list</a>
+                                                </li>
+                                                <li>
+                                                <li>
+                                                    <a href="@Url.Action("Login", "Home")">Sign out</a>
+                                                </li>
+                                                
+                                            </ul>
+
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href="@Url.Action("Login", "Home")">Sign in</a></li>
+                                    }
+                                }
+                                else
+                                {
+                                    
+                                    var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+                                    <li>
+                                        <a href="@Url.Action("Profile", "User")">@ten.name</a>
+                                        <ul class="dropdown" style="background-color:white">
+
+                                            <li>
+                                                <div class="profile ">
+
+                                                    <div class="profile-pic"><img style="object-fit:cover;"  src="~/public/img/user/@ten.img"/></div>
+                                                    <div class="bottom">
+                                                        <div class="content">
+                                                            <span class="name">@ten.name</span>
+                                                            <a  href="@Url.Action("Profile", "User")">Profile</a>
+                                                            
+                                                        </div>
+                                                        <div class="bottom-bottom">
+                                                            <div class="social-links-container">
+                                                                
+                                                            </div>
+                                                            <a class="button" href="@Url.Action("Login", "Home")">Sign out</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+
+                                }
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+                        <a id="search_1" href="javascript:void(0)"><img src="~/public/img/icon/search.png" alt=""></a>
+
+                        <a href="#"><img src="~/public/img/icon/heart.png" alt=""></a>
+                        @{
+                            if (id != -1)
+                            {
+                                var giohang = db.Cart.Where(c => c.id_user == id).ToList();
+                                int tongtien = 0;
+                                foreach (var it in giohang)
+                                {
+                                    var item = db.product.Where(c => c.id_product == it.id_product).FirstOrDefault();
+
+                                    var tien = (item.price_pro - (item.price_pro * item.discount_pro / 100))*it.quantity_cart;
+
+                                    tongtien += tien ?? 0;
+
+                                }
+                                string gia = string.Format("{0:#,##0}₫", tongtien);
+                                <a href="@Url.Action("Cart","Cart")"><img src="~/public/img/icon/cart.png" alt=""> <span id="solg">@giohang.Count</span></a>
+                                <div id="gia" class="price">@gia</div>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Cart","Cart")"><img src="~/public/img/icon/cart.png" alt=""> <span id="solg">0</span></a>
+                                <div id="gia" class="price">$0.00</div>
+                            }
+
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+            <div class="search_input" id="search_input_box">
+                <div class="container ">
+                    <form class="d-flex justify-content-between search-inner" action="@Url.Action("search","Shop")">
+                        <input type="text" class="form-control" style="background-color: #ff386d; border: none;"
+                               id="search_input" name="key" placeholder="Search Here">
+                        <button type="submit" class="btn"><img src="~/public/img/icon/search.png" alt=""></button>
+                        <span class="ti-close" id="close_search" title="Close Search"></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @RenderBody()
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="header__logo">
+                            <a href="@Url.Action("Index", "Home")">
+                                <div class="stage">
+                                    <div class="wrapper">
+                                        <div class="slash"></div>
+                                        <div class="sides">
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                            <div class="side"></div>
+                                        </div>
+                                        <div class="text">
+                                            <div class="text--backing">SHOP.FASHION</div>
+                                            <div class="text--left">
+                                                <div class="inner">SHOP.FASHION</div>
+                                            </div>
+                                            <div class="text--right">
+                                                <div class="inner">SHOP.FASHION</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <p>Thời trang độc đáo, phong cách riêng của bạn.</p>
+                        <a href="#"><img src="~/public/img/payment.png" alt=""></a>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer__copyright__text">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        <p>
+                            Copyright ©
+                             2024 - 
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a href="#" target="_blank">Quyen</a>
+                        </p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        setInterval(function () {
+           
+            $.ajax({
+                url: '/Shop/getpro',
+                type:'POST',
+                success: function (response) {
+                    if (response.success === true) {
+                        var gia = document.getElementById('gia');
+                        var solghang = document.getElementById('solg');
+                        gia.innerText = response.giatien;
+                        solghang.innerText = response.tongsohang;
+                    } 
+                },
+            })
+            
+        }, 4000); 
+    </script>
+
+    <!-- Footer Section End -->
+    <!-- Search Begin -->
+    <!-- Search End -->
+    <!-- Js Plugins -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="~/public/js/jquery-3.3.1.min.js"></script>
+    <script src="~/public/js/bootstrap.min.js"></script>
+    <script src="~/public/js/jquery.nice-select.min.js"></script>
+    <script src="~/public/js/jquery.nicescroll.min.js"></script>
+    <script src="~/public/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/public/js/jquery.countdown.min.js"></script>
+    <script src="~/public/js/jquery.slicknav.js"></script>
+    <script src="~/public/js/mixitup.min.js"></script>
+    <script src="~/public/js/owl.carousel.min.js"></script>
+    <script src="~/public/js/main.js"></script>
+</body>
+
+</html>

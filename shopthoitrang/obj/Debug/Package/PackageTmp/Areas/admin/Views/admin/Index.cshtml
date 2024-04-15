@@ -1,0 +1,261 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database db = new database();
+    var order = db.Order.ToList();
+    
+    var product = db.product.ToList();
+}
+@using shopthoitrang.Models
+
+<div class="main-content">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="card card-statistic-2">
+                    <div class="card-stats">
+                        <div class="card-stats-title">
+                            Order Statistics -
+                            <div class="dropdown d-inline">
+                                <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">Select Month</a>
+                                <ul class="dropdown-menu dropdown-menu-sm">
+                                    <li><a href="javascript:void(0)" id="01" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="01" })','01')" class="dropdown-item">January</a></li>
+                                    <li><a href="javascript:void(0)" id="02" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="02" })','02')" class="dropdown-item">February</a></li>
+                                    <li><a href="javascript:void(0)" id="03" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="03" })',03')" class="dropdown-item">March</a></li>
+                                    <li><a href="javascript:void(0)" id="04" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="04" })','04')" class="dropdown-item">April</a></li>
+                                    <li><a href="javascript:void(0)" id="05" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="05" })','05')" class="dropdown-item">May</a></li>
+                                    <li><a href="javascript:void(0)" id="06" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="06" })','06')" class="dropdown-item">June</a></li>
+                                    <li><a href="javascript:void(0)" id="07" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="07" })','07')" class="dropdown-item">July</a></li>
+                                    <li><a href="javascript:void(0)" id="08" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="08" })','08')" class="dropdown-item">August</a></li>
+                                    <li><a href="javascript:void(0)" id="09" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="09" })','09')" class="dropdown-item">September</a></li>
+                                    <li><a href="javascript:void(0)" id="10" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="10" })','10')" class="dropdown-item">October</a></li>
+                                    <li><a href="javascript:void(0)" id="11" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="11" })','11')" class="dropdown-item">November</a></li>
+                                    <li><a href="javascript:void(0)" id="12" onclick="loctheothang('@Url.Action("thongke","admin",new {thang="12" })','12')" class="dropdown-item">December</a></li>
+                                </ul>
+
+
+                            </div>
+                            <a class="btn btn-success btn-sm" id="xuatfile" href="">xuất file excel</a>
+                        </div>
+                        <div class="card-stats-items">
+
+                            <div class="card-stats-item">
+                                <div class="card-stats-item-count" id="Pending">@order.Count(c => c.status_order == "Chờ xác nhận")</div>
+                                <div class="card-stats-item-label">Pending</div>
+                            </div>
+                            <div class="card-stats-item">
+                                <div class="card-stats-item-count" id="Shipping">@order.Count(c => c.status_order == "Chờ vận chuyển")</div>
+                                <div class="card-stats-item-label">Shipping</div>
+                            </div>
+                            <div class="card-stats-item">
+                                <div class="card-stats-item-count" id="Completed">@order.Count(c => c.status_order == "Hoàn thành")</div>
+                                <div class="card-stats-item-label">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-icon shadow-primary bg-primary">
+                        <i class="fas fa-archive"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Orders</h4>
+                        </div>
+                        <div class="card-body" id="total">
+                            @order.Count()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="card card-statistic-2">
+                    <div class="card-chart">
+                        <img style="height:88px;object-fit:cover; width:200px;padding-left:10px;" src="~/Areas/admin/assets/img/tien.png" />
+                    </div>
+                    <div class="card-icon shadow-primary bg-primary">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Balance</h4>
+                        </div>
+                        <div class="card-body">
+
+                            @((order.Sum(c => c.total) ?? 0).ToString("#,##0₫"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Hot Product Banner</h4>
+
+                        <a href="javascript:void(0)"  class="btn btn-primary"style="color:white" data-toggle="modal" data-target="#adddanhmuc">
+                            <span>Change</span>
+                        </a>
+                    </div>
+                    <div class="card-body col-6">
+                        <div>
+                            @{
+                                var hotproduct = db.best_pro.FirstOrDefault();
+                                if (hotproduct != null)
+                                {
+                                    var pro_hot = db.product.Where(c => c.id_product == hotproduct.id_pro).FirstOrDefault();
+                                    <img class="mr-5 rounded float-left" width="170" src="~/public/img/product/@pro_hot.photo_pro" alt="product">
+                                    <h1 class="float-left">@pro_hot.name_pro</h1>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card gradient-bottom">
+                    <div class="card-header">
+                        <h4>Top 5 Products</h4>
+                        @*<div class="card-header-action dropdown">
+                            <a href="#" data-toggle="dropdown" class="btn btn-danger dropdown-toggle">Month</a>
+                            <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                <li class="dropdown-title">Select Period</li>
+                                <li><a href="#" class="dropdown-item">Today</a></li>
+                                <li><a href="#" class="dropdown-item">Week</a></li>
+                                <li><a href="#" class="dropdown-item active">Month</a></li>
+                                <li><a href="#" class="dropdown-item">This Year</a></li>
+                            </ul>
+                        </div>*@
+                    </div>
+                    <div class="card-body" id="top-5-scroll">
+                        <ul class="list-unstyled list-unstyled-border">
+                            @{
+                                foreach (var i in product.OrderByDescending(c=>c.buy_count).Take(5))
+                                {
+                                    <li class="media">
+                                        <img class="mr-3 rounded" width="55" src="~/public/img/product/@i.photo_pro" alt="product">
+                                        <div class="media-body">
+                                            <div class="float-right"><div class="font-weight-600 text-muted text-small">@i.buy_count sales</div></div>
+                                            <div class="media-title">@i.name_pro</div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Invoices</h4>
+                        <div class="card-header-action">
+                            <a href="@Url.Action("donhang","Order")" class="btn btn-danger">View More <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive table-invoice">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Invoice ID</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Due Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                @{
+                                    foreach (var item in order.OrderByDescending(c => c.id_order).Take(5))
+                                    {
+                                        var customer = db.User_info.Where(c => c.id_user == item.id_user).FirstOrDefault();
+                                <tr>
+                                    <td><a href="#">@item.id_order</a></td>
+                                    <td class="font-weight-600">@customer.name</td>
+                                    @if (item.status_order == "Chờ xác nhận")
+                                    {
+                                        <td><div class="badge badge-danger">@item.status_order</div></td>
+                                    }
+                                    else if (item.status_order == "Chờ vận chuyển")
+                                    {
+                                        <td><div class="badge badge-warning">@item.status_order</div></td>
+                                    }
+                                    else if (item.status_order == "Hoàn thành")
+                                    {
+                                        <td><div class="badge badge-success">@item.status_order</div></td>
+                                    }
+                                    <td>@item.date_order</td>
+                                    <td>
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#exampleModal" onclick="order_list('@Url.Action("orderdetail","order",new { id=item.id_order})')" class="btn btn-primary">Detail</a>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="min-width:800px" id="list_order">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc" >
+    <div class="modal-dialog" role="document">
+        <form action="@Url.Action("bestpro","admin")" method="post">
+            <div class="modal-content table-responsive" style="width:580px; height:800px;">
+                <label>Date End</label>
+                <div class="form-group">
+                    <input type="date" name="date" class="form-control float-left col-lg-7 datepicker">
+                    <button type="submit" class="float-left btn btn-primary" style="color:white;">ok</button>
+                </div>
+                <table class="table table-striped" >
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Tên sản phẩm</th>
+                            <th>Giảm giá (%)</th>
+                            <th>Số lượt mua</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in product)
+                            {
+                        <tr>
+                            <td class="p-0 text-center">
+                                <div class="custom-checkbox custom-control">
+                                    <input type="radio" name="probest" class="custom-control-input" value="@item.id_product" id="checkbox-@item.id_product">
+                                    <label for="checkbox-@item.id_product" class="custom-control-label"></label>
+                                </div>
+                            </td>
+                            <td><img class="mr-3 rounded" width="55" src="~/public/img/product/@item.photo_pro" alt="product"></td>
+                            <td><a>@item.name_pro</a></td>
+                            <td>@item.discount_pro</td>
+                            <td>@item.buy_count</td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>

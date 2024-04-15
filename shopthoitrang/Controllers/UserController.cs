@@ -45,7 +45,7 @@ namespace shopthoitrang.Controllers
         {
             bool check = check_login();
             if(check)
-            return View();
+                return View();
             else
             {
                 Uri currentUrl = Request.Url;
@@ -109,19 +109,48 @@ namespace shopthoitrang.Controllers
 
         public ActionResult Orderlist()
         {
-
-            return View();
-        }
+            bool check = check_login();
+            if (check)
+            {
+                return View();
+            }
+            else
+            {
+                Uri currentUrl = Request.Url;
+        TempData["trangtruoc"] = currentUrl.ToString();
+                return RedirectToAction("Login", "Home");
+    }
+}
 
         public ActionResult order_list(int order_id)
         {
-            var data = db.Order_detail.Where(c => c.id_order == order_id).ToList();
+            bool check = check_login();
+            if (check)
+            {
+                var data = db.Order_detail.Where(c => c.id_order == order_id).ToList();
             return View(data);
+            }
+            else
+            {
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
+                return RedirectToAction("Login", "Home");
+            }
         }
 
         public ActionResult Favourite()
         {
-            return View();
+            bool check = check_login();
+            if (check)
+            {
+                return View();
+            }
+            else
+            {
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
+                return RedirectToAction("Login", "Home");
+            }
         }
         
         public ActionResult yeuthich(string id_pro)
@@ -173,8 +202,17 @@ namespace shopthoitrang.Controllers
 
         public ActionResult Contact()
         {
-
-            return View();
+            bool check = check_login();
+            if (check)
+            {
+                return View();
+            }
+            else
+            {
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
+                return RedirectToAction("Login", "Home");
+            }
         }
         public JsonResult post_chat(string message)
         {

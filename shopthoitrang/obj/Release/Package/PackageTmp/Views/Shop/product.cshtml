@@ -1,0 +1,330 @@
+﻿
+@{
+    ViewBag.Title = "product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+}
+@using shopthoitrang.Models;
+@model List<product>
+<script src="~/public/js/custom.js" type="text/javascript"></script>
+
+<section class="shop spad">
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="@Url.Action("Index","Home")">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="shop__sidebar">
+
+                    <div class="shop__sidebar__accordion">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                </div>
+                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__categories">
+                                            <ul class="nice-scroll">
+                                                @{
+                                                    var cate = db.Category.ToList();
+                                                    foreach (var item in cate)
+                                                    {
+                                                        <li><a onclick="category('@Url.Action("Category","Shop",new { Page=1,id=item.id_cate })')">@item.name_cate</a></li>
+                                                    }
+                                                }
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
+                                </div>
+                                <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__brand">
+                                            <ul class="nice-scroll">
+                                                @{
+                                                    var barnding = db.producer.ToList();
+                                                    foreach (var p in barnding)
+                                                    {
+                                                        <li><a onclick="category('@Url.Action("Barnding","Shop",new { Page=1,id=p.id_producer })')">@p.name</a></li>
+                                                    }
+                                                }
+
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9" id="layout_product" >
+
+                <div class="row" id="nextpage">
+                    @{
+                        foreach (var item in Model)
+                        {
+                            var tien = item.price_pro - (item.price_pro * item.discount_pro / 100);
+                            string gia = string.Format("{0:#,##0}₫", tien);
+
+                            var SinceUpdate = (DateTime.Now - DateTime.Parse(item.date_update)).Days;
+                            string idsp = "sp" + item.id_product;
+                            var danhgia = db.rate.Where(r => r.id_product == item.id_product).Select(r => r.star_rate).ToList();
+                            int rate = 0, demso = 0;
+
+                            bool yeeuthich = false;
+                            if (id != -1)
+                            {
+                                var check = db.User_info.Where(p => p.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                                if (check != null)
+                                {
+                                    var data = check.Split(',').ToList();
+                                    string idpro = item.id_product.ToString();
+
+                                    foreach (var yt in data)
+                                    {
+
+                                        if (yt == idpro)
+                                        {
+                                            yeeuthich = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (danhgia.Count > 0)
+                            {
+                                foreach (var dem in danhgia)
+                                {
+                                    demso += dem ?? 0;
+                                }
+                                rate = demso / danhgia.Count;
+                            }
+                            if (SinceUpdate < 3)
+                            {
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="product__item sale">
+                                        <div class="product__item__pic">
+                                            <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                                <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                            </a>
+                                            <span class="label">Sale</span>
+                                            <ul class="product__hover">
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                        @{ if (yeeuthich)
+                                                            {
+                                                                <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                            }
+                                                        }
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="product__item__text">
+                                            <h6>@item.name_pro</h6>
+                                            <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                            <div class="rating">
+                                                @{
+                                                    for (int i = 0; i < rate; i++)
+                                                    {
+                                                        <i class="fa fa-star"></i>
+                                                    }
+                                                    for (int i = 0; i < 5 - rate; i++)
+                                                    {
+                                                        <i class="fa fa-star-o"></i>
+                                                    }
+                                                }
+
+                                            </div>
+
+                                            <h5>@gia</h5>
+                                            <span>lượt mua: @item.buy_count</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.discount_pro > 10)
+                            {
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+
+                                    <div class="product__item sale">
+
+                                        <div class="product__item__pic">
+                                            <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                                <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                            </a>
+                                            <span class="label">Sale</span>
+                                            <ul class="product__hover">
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                        @{ if (yeeuthich)
+                                                            {
+                                                                <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                            }
+                                                        }
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="product__item__text">
+                                            <h6>@item.name_pro</h6>
+
+                                            <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                            <div class="rating">
+                                                @{
+                                                    for (int i = 0; i < rate; i++)
+                                                    {
+                                                        <i class="fa fa-star"></i>
+                                                    }
+                                                    for (int i = 0; i < 5 - rate; i++)
+                                                    {
+                                                        <i class="fa fa-star-o"></i>
+                                                    }
+                                                }
+                                            </div>
+
+                                            <h5>@gia</h5>
+                                            <span>lượt mua: @item.buy_count</span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="col-lg-4 col-md-6 col-sm-6 ">
+                                    <a href="#">
+                                        <div class="product__item sale">
+
+                                            <div class="product__item__pic">
+                                                <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                                    <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                                </a>
+                                                <span class="label">Sale</span>
+                                                <ul class="product__hover">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                            @{ if (yeeuthich)
+                                                                {
+                                                                    <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                                }
+                                                            }
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="product__item__text">
+                                                <h6>@item.name_pro</h6>
+                                                <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                                <div class="rating">
+                                                    @{
+                                                        for (int i = 0; i < rate; i++)
+                                                        {
+                                                            <i class="fa fa-star"></i>
+                                                        }
+                                                        for (int i = 0; i < 5 - rate; i++)
+                                                        {
+                                                            <i class="fa fa-star-o"></i>
+                                                        }
+                                                    }
+                                                </div>
+                                                <h5>@gia</h5>
+                                                <span>lượt mua: @item.buy_count</span>
+
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                    }
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product__pagination">
+                            @{
+
+                                int kq = ViewBag.page_index / 9;
+
+
+                                for (int i = 1; i <= kq+1; i++)
+                                {
+                                    var pageid = "page"+i.ToString();
+                                    <a id="@pageid" onclick="nextpage('@Url.Action("nextpage","Shop",new {page=i})',@i,@kq)">@i</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

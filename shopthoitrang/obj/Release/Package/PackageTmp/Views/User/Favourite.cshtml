@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Favourite";
+    Layout = null;
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    var ten = db.User_info.Where(i => i.id_user == id).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4 pb-5">
+            <!-- Account Sidebar-->
+            <div class="author-card pb-3">
+                <div class="author-card-cover" style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);">
+                    <a class="btn" style="background-color:white" href="#" data-toggle="tooltip">
+                        @ten.rank_user
+                    </a>
+                </div>
+                <div class="author-card-profile">
+                    <div class="author-card-avatar">
+                        <a href="javascript:void(0)" onclick="show()">
+                            <img src="~/public/img/user/@ten.img" alt="@ten.name">
+                        </a>
+                    </div>
+                    <div class="author-card-details">
+                        <h5 class="author-card-name text-lg">@ten.name</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard">
+                <nav class="list-group">
+                    <a class="list-group-item" style="color:black" href="@Url.Action("Profile","User")">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Profile settings</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="list-group-item" style="color:black" onclick="orderlist('@Url.Action("Orderlist", "User")')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
+                                @{ var cout_order = db.Order.Where(c => c.id_user == id).Count();}
+                            </div><span class="badge badge-secondary">@cout_order</span>
+                        </div>
+                    </a>
+                    <a class="list-group-item" style="color:black" onclick="favouritelist('@Url.Action("Favourite", "User")')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">favorites list</div>
+                            </div>
+                        </div>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Profile Settings-->
+
+        <div class="col-lg-8 pb-5">
+
+            <!-- Profile Settings-->
+
+            <div class="shopping__cart__table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name Products</th>
+
+                            <th>Price</th>
+                            <th>Photo</th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var data = db.User_info.Where(c => c.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                            if (data != null)
+                            {
+                                var data_list = data.Trim().Split(',').ToList();
+
+                                if (data_list != null)
+                                {
+                                    foreach (var item in data_list)
+                                    {
+                                        if (item != "")
+                                        {
+                                            int id_product = Convert.ToInt32(item);
+                                            var pro = db.product.Where(p => p.id_product == id_product).FirstOrDefault();
+
+                                            <tr>
+                                                <td class="product__cart__item"><a style="color:black; font-size:21px;" href="@Url.Action("Detail", "Shop", new { id_pro = pro.id_product })">@pro.name_pro</a> </td>
+
+                                                <td class="product__cart__item">@(pro.price_pro - pro.price_pro * pro.discount_pro / 100)</td>
+
+                                                <td class="product__cart__item"><img style="max-height:80px;" src="~/public/img/product/@pro.photo_pro" /></td>
+
+                                                <td><a href="@Url.Action("yeuthich", "User", new { id_pro = pro.id_product })" class="btn btn-primary"><i class="fa  fa-close"></i></a></td>
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>

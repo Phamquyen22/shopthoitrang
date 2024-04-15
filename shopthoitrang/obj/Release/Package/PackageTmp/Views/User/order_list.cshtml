@@ -1,0 +1,43 @@
+﻿
+@{
+    Layout = null;
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    var ten = db.User_info.Where(i => i.id_user == id).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+@model List<Order_detail>
+
+
+@{ foreach (var item in Model)
+    {
+        var pro = db.product.Where(c => c.id_product == item.id_product).FirstOrDefault();
+<tr>
+    <td class="product__cart__item"><img style="max-height:80px;" src="~/public/img/product/@pro.photo_pro" /></td>
+    
+        <td class="product__cart__item">@pro.name_pro</td>
+   
+        <td class="product__cart__item">@(pro.price_pro-(pro.price_pro*pro.discount_pro/100))</td>
+    
+    <td class="product__cart__item">@item.quantity_pro</td>
+    
+    <td class="product__cart__item">@(item.quantity_pro*(pro.price_pro - (pro.price_pro * pro.discount_pro / 100)))</td>
+    
+</tr>
+        }
+    }

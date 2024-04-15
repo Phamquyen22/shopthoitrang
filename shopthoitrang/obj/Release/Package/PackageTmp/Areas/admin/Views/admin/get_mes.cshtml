@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+    database db = new database();
+    var order = db.Order.Where(c => c.status_order == "Chờ xác nhận").ToList();
+    var mes = db.Conversations.ToList();
+}
+@using shopthoitrang.Models;
+
+@{
+    foreach (var item in mes)
+    {
+        var data = db.Messages.Where(c => c.ConversationID == item.ConversationID && c.status == "no").ToList();
+        foreach (var message in data)
+        {
+            <a href="#" class="dropdown-item dropdown-item-unread">
+                <div class="dropdown-item-avatar">
+                    <img alt="image" src="~/public/img/user/@(db.User_info.Where(c => c.id_user == item.UserID1).Select(c => c.img).FirstOrDefault())" class="rounded-circle">
+
+                </div>
+                <div class="dropdown-item-desc">
+                    <b>@(db.User_info.Where(c => c.id_user == item.UserID1).Select(c => c.name).FirstOrDefault())</b>
+                    <p>@message.message</p>
+                    <div class="time">@message.Timestamp</div>
+                </div>
+            </a>
+        }
+    }
+}

@@ -1,0 +1,392 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Trang chủ | Fashsion";
+    
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+    }
+}
+@using shopthoitrang.Models;
+
+<script src="~/public/js/custom.js"></script>
+<!-- Header Section End -->
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="hero__slider owl-carousel">
+        <div class="hero__items set-bg" data-setbg="/public/img/hero/hero-1.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Fall - Winter Collections </h6>
+                            <h2>Fall - Winter Collections @DateTime.Now.Year</h2>
+                            <p>
+                                A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                                commitment to exceptional quality.
+                            </p>
+                            <a href="@Url.Action("Product", "Shop")" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__items set-bg" data-setbg="/public/img/hero/hero-2.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Summer Collection</h6>
+                            <h2>Summer Collection @DateTime.Now.Year</h2>
+                            <p>
+                                A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                                commitment to exceptional quality.
+                            </p>
+                            <a href="@Url.Action("Product", "Shop")" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+<!-- Banner Section Begin -->
+<section class="banner spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 offset-lg-4">
+                <div class="banner__item">
+                    <div class="banner__item__pic">
+                        <img src="/public/img/banner/banner-1.jpg" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Clothing Collections 2024</h2>
+                        <a href="@Url.Action("Product", "Shop")">Shop now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="banner__item banner__item--middle">
+                    <div class="banner__item__pic">
+                        <img src="/public/img/banner/banner-2.jpg" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Accessories</h2>
+                        <a href="@Url.Action("Product", "Shop")">Shop now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="banner__item banner__item--last">
+                    <div class="banner__item__pic">
+                        <img src="~/public/img/banner/banner-3.jpg" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Shoes Spring 2024</h2>
+                        <a href="@Url.Action("Product", "Shop")">Shop now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Banner Section End -->
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
+                    <li class="active" data-filter="*">Best Sellers</li>
+                    <li data-filter=".new-arrivals">New Arrivals</li>
+                    <li data-filter=".hot-sales">Hot Sales</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row product__filter">
+            @{
+                var pro = db.product.OrderByDescending(c => c.discount_pro).Take(9).ToList();
+                foreach (var item in pro)
+                {
+                    var tien = item.price_pro - (item.price_pro * item.discount_pro / 100);
+                    string gia = string.Format("{0:#,##0}₫", tien); ;
+
+                    var SinceUpdate = (DateTime.Now - DateTime.Parse(item.date_update)).Days;
+                    string idsp = "sp" + item.id_product;
+                    var danhgia = db.rate.Where(r => r.id_product == item.id_product).Select(r => r.star_rate).ToList();
+                    int rate = 0, demso = 0;
+                    bool yeeuthich = false;
+                    if (id != -1)
+                    {
+                        var check = db.User_info.Where(p => p.id_user == id).Select(c => c.favourite_pro).FirstOrDefault();
+                        if (check != null)
+                        {
+                            var data = check.Split(',').ToList();
+                            string idpro = item.id_product.ToString();
+
+                            foreach (var yt in data)
+                            {
+
+                                if (yt == idpro)
+                                {
+                                    yeeuthich = true;
+                                }
+                            }
+                        }
+                    }
+                    if (danhgia.Count > 0)
+                    {
+                        foreach (var dem in danhgia)
+                        {
+                            demso += dem ?? 0;
+                        }
+                        rate = demso / danhgia.Count;
+                    }
+                    if (SinceUpdate < 3)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item sale">
+                                <div class="product__item__pic">
+                                    <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                        <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                    </a>
+                                    <span class="label">Sale</span>
+                                    <ul class="product__hover">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                @{ if (yeeuthich)
+                                                    {
+                                                        <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                    }
+                                                }
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>@item.name_pro</h6>
+                                    <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                    <div class="rating">
+                                        @{
+                                            for (int i = 0; i < rate; i++)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            for (int i = 0; i < 5 - rate; i++)
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
+
+                                    </div>
+
+                                    <h5>@gia</h5>
+                                    <span>lượt mua: @item.buy_count</span>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (item.discount_pro > 10)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+
+                            <div class="product__item sale">
+
+                                <div class="product__item__pic">
+                                    <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                        <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                    </a>
+                                    <span class="label">Sale</span>
+                                    <ul class="product__hover">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                @{ if (yeeuthich)
+                                                    {
+                                                        <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                    }
+                                                }
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="product__item__text">
+                                    <h6>@item.name_pro</h6>
+
+                                    <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                    <div class="rating">
+                                        @{
+                                            for (int i = 0; i < rate; i++)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            for (int i = 0; i < 5 - rate; i++)
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
+                                    </div>
+
+                                    <h5>@gia</h5>
+                                    <span>lượt mua: @item.buy_count</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6 ">
+                            <a href="#">
+                                <div class="product__item sale">
+
+                                    <div class="product__item__pic">
+                                        <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
+                                            <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                        </a>
+                                        <span class="label">Sale</span>
+                                        <ul class="product__hover">
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="yeu('@idsp','@item.id_product','@Url.Action("favourite","Shop")')">
+                                                    @{ if (yeeuthich)
+                                                        {
+                                                            <img id="@idsp" src="/public/img/icon/heart_red.png" alt="">
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <img id="@idsp" src="/public/img/icon/heart.png" alt="">
+                                                        }
+                                                    }
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="product__item__text">
+                                        <h6>@item.name_pro</h6>
+                                        <a href="@Url.Action("detail","Shop", new { id_pro=item.id_product})" class="add-cart">+ View more</a>
+                                        <div class="rating">
+                                            @{
+                                                for (int i = 0; i < rate; i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                                for (int i = 0; i < 5 - rate; i++)
+                                                {
+                                                    <i class="fa fa-star-o"></i>
+                                                }
+                                            }
+                                        </div>
+                                        <h5>@gia</h5>
+                                        <span>lượt mua: @item.buy_count</span>
+
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            }
+
+
+
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
+<!-- Categories Section Begin -->
+<section class="categories spad">
+    <div class="container">
+        <div class="row">
+            @{
+                var banner = db.best_pro.FirstOrDefault();
+                var pro_data = db.product.Where(c => c.id_product == banner.id_pro).FirstOrDefault();
+                
+                string hienthigia = string.Format("{0:#,##0}₫", (pro_data.price_pro - (pro_data.price_pro * pro_data.discount_pro / 100))); ;
+            }
+            <div class="col-lg-4">
+                <div class="categories__hot__deal">
+                    <img src="~/public/img/product/@pro_data.photo_pro" alt="@pro_data.name_pro">
+                    <div class="hot__deal__sticker">
+                        <span>Sale Of</span>
+                        <h5>@hienthigia</h5>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                    var timerdate = '<%=@banner.date_end%>';
+            </script>
+
+            <div class="col-lg-4 offset-lg-1">
+                <div class="categories__deal__countdown">
+                    <span>Deal Of The Week</span>
+                    <h2>Multi-pocket Chest Bag Black</h2>
+                    <div class="categories__deal__countdown__timer" id="countdown">
+                        <div class="cd-item">
+                            <span>28</span>
+                            <p>Days</p>
+                        </div>
+                        <div class="cd-item">
+                            <span>5</span>
+                            <p>Hours</p>
+                        </div>
+                        <div class="cd-item">
+                            <span>50</span>
+                            <p>Minutes</p>
+                        </div>
+                        <div class="cd-item">
+                            <span>18</span>
+                            <p>Seconds</p>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Detail","Shop",new {id_pro=banner.id_pro })" class="primary-btn">Shop now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

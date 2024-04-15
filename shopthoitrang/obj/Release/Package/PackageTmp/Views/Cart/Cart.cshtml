@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+}
+@using shopthoitrang.Models;
+@model List<Cart>
+<script src="~/public/js/custom.js"></script>
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th></th>
+                                <th>Color</th>
+                                <th>Size</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    var pro = db.product.Where(p => p.id_product == item.id_product).FirstOrDefault();
+                                    var tien = pro.price_pro - (pro.price_pro * pro.discount_pro / 100);
+                                    string gia = string.Format("{0:#,##0}₫", tien);
+                                    string sanpham = "sanpham" + item.id_product;
+                                    <tr id="@sanpham">
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img style="max-height:60px" src="~/public/img/product/@pro.photo_pro" alt="@pro.name_pro">
+                                            </div>
+
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <a href="@Url.Action("detail", "Shop", new { id_pro = item.id_product })">
+                                                <h5>@pro.name_pro</h5>
+                                            </a>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <select id="color">
+                                                @{
+                                                    var listcolor = pro.color_pro.Trim().Split(',');
+                                                    foreach (var color in listcolor)
+                                                    {
+                                                        if (color == item.color_pro)
+                                                        {
+                                                            <option selected value="@color">@color</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@color">@color</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td class="product__cart__item">
+                                            <select id="size">
+                                                @{
+                                                    var listsize = pro.size_pro.Trim().Split(',');
+                                                    foreach (var size in listsize)
+                                                    {
+                                                        if (size == item.size_pro)
+                                                        {
+                                                            <option selected value="@size">@size</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@size">@size</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+
+                                        </td>
+
+                                        <td class="product__cart__item">
+
+                                            <h5>@gia</h5>
+
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input id="@("soluonghang"+item.id_product)" onchange="soluong('@item.id_product','@tien')" type="number" min="0" max="99" value="@item.quantity_cart" placeholder="1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="@("tongtien"+item.id_product)" class="cart__price">@(tien * item.quantity_cart) ₫</td>
+                                        <td class="cart__close"><a href="javascript:void(0)" onclick="xoacart('@Url.Action("xoa_cart", "Cart", new { id_pro = item.id_product })','@sanpham')"><i class="fa fa-close"></i></a></td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="muasam">
+                            <a href="@Url.Action("product", "Shop")"><span class="text">Continue Shopping</span> </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+
+                <div class="cart__total">
+
+                    <h6>Cart total</h6>
+                    <ul>
+                        @{
+                            if (id != -1)
+                            {
+                                var giohang = db.Cart.Where(c => c.id_user == id).ToList();
+                                int tongtien = 0;
+                                foreach (var it in giohang)
+                                {
+                                    var item = db.product.Where(c => c.id_product == it.id_product).FirstOrDefault();
+
+                                    var tien = (item.price_pro - (item.price_pro * item.discount_pro / 100)) * it.quantity_cart;
+
+                                    tongtien += tien ?? 0;
+
+                                }
+                                string giatong = string.Format("{0:#,##0}₫", tongtien);
+                                <li>Total <span id="totaltien">@giatong</span></li>
+                            }
+                            else
+                            {
+                                <li>Total <span id="totaltien">0 ₫</span></li>
+                            }
+                        }
+
+                    </ul>
+                    <a href="@Url.Action("checkout","Cart")" class="thanhtoan">
+                        <div>
+                            <span>
+                                <p>Proceed to checkout</p>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <p>Checkout</p>
+                            </span>
+                        </div>
+
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

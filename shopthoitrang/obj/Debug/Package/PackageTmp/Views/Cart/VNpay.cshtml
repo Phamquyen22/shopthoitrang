@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+}
+@using shopthoitrang.Models;
+@model List<Order_detail>
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Bill</h4>
+                    <div class="breadcrumb__links">
+                        <a href="@Url.Action("Index","Home")">Home</a>
+                        <a href="@Url.Action("product","Shop")">Shop</a>
+                        <span>Bill</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="checkout__order">
+                        <h3 class="checkout__order">@ViewBag.Message</h3>
+                        <hr />
+                        <div class="checkout__order__products">@ViewBag.TxnRef</div>
+                        <div class="checkout__order__products">@ViewBag.VnpayTranNo</div>
+                        <div class="checkout__order__products">Product <span>Total</span></div>
+                        <ul class="checkout__total__products">
+                            @{
+                                int dem = 0;
+                                int tongtien = 0;
+                                foreach (var list in Model)
+                                {
+                                    var pro = db.product.Where(c => c.id_product == list.id_product).FirstOrDefault();
+                                    dem++;
+                                    var tien = (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)) * list.quantity_pro;
+                                    tongtien += tien ?? 0;
+                                    string giatong = string.Format("{0:#,##0}₫", tien);
+                                    <li>@dem. @pro.name_pro (x @list.quantity_pro) <span>@giatong</span></li>
+
+                                }
+                            }
+                                    <li>transport fee<span>16,000₫</span></li>
+                        </ul>
+                        <ul class="checkout__total__all">
+
+                            <li>@ViewBag.Amount</li>
+
+                        </ul>
+                        <div class="checkout__order__products">@ViewBag.thank</div>
+                        <a href="@Url.Action("product", "Shop")" class="thanhtoan">
+                            <div>
+                                <span>
+                                    <p>Thanks Order</p>
+                                </span>
+                            </div>
+                            <div>
+                                <span>
+                                    <p>Continue Shopping</p>
+                                </span>
+                            </div>
+
+                        </a>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</section>

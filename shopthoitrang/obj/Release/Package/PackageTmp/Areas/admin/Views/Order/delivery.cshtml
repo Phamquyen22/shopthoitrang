@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "vanchuyen";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database database = new database();
+}
+@using shopthoitrang.Models;
+@model List<Order>
+
+<script src="~/Areas/admin/assets/order.js"></script>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+
+            <div class="breadcrumb bg-primary text-white-all">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">product</a></div>
+                <div class="breadcrumb-item">categories</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <h2 class="section-title">Danh sách đơn hàng</h2>
+            <p class="section-lead">Chúng tôi cần điền đầy đủ thông tin</p>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4></h4>
+                            <div class="card-header-action">
+                                <form action="@Url.Action("searchdelivery","Order")" method="post">
+                                    <div class="input-group">
+                                        <input type="text" name="key" class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                @{ if (@ViewBag.error != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible show fade">
+                                            <button class="close" data-dismiss="alert">
+                                                <span>×</span>
+                                            </button>
+                                            @ViewBag.error
+                                        </div>
+                                    };
+                                    if (ViewBag.thanhcong != null)
+                                    {
+                                        <div class="alert alert-success alert-dismissible show fade">
+                                            <button class="close" data-dismiss="alert">
+                                                <span>×</span>
+                                            </button>
+                                            @ViewBag.thanhcong
+                                        </div>
+                                    }
+
+                                }
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Số điện thoại người mua</th>
+                                            <th>Tên người đặt hàng</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Ngày đặt đơn</th>
+                                            <th>tình trạng đơn hàng</th>
+                                            <th>Tình trạng thanh toán</th>
+
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @{ foreach (var order in Model)
+                                            {
+                                                var nameor = database.User_info.Where(or => or.id_user == order.id_user).FirstOrDefault();
+                                                string xacnhan = "xacnhan" + order.id_order;
+                                                string sanpham = "donhang" + order.id_order;
+                                                <tr id="@sanpham">
+                                                    <td>
+                                                        @order.id_order
+                                                    </td>
+                                                    <td>@nameor.phone</td>
+                                                    <td>@nameor.name</td>
+
+                                                    <td>@order.total</td>
+                                                    <td>@order.date_order</td>
+                                                    <td>
+                                                        @if (order.status_order == "Chờ xác nhận")
+                                                        {
+                                                            <div id="@xacnhan" class="badge badge-danger">@order.status_order</div>
+                                                        }
+                                                        else if (order.status_order == "Chờ vận chuyển")
+                                                        {
+                                                            <div id="@xacnhan" class="badge badge-warning">@order.status_order</div>
+                                                        }
+                                                        else if (order.status_order == "Hoàn thành")
+                                                        {
+                                                            <div id="@xacnhan" class="badge badge-success">@order.status_order</div>
+
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (order.payment_status == "Chờ thanh toán" || order.payment_status == "Chưa thanh toán")
+                                                        {
+                                                            <div class="badge badge-danger">@order.payment_status</div>
+                                                        }
+
+                                                        else if (order.payment_status == "Đã thanh toán")
+                                                        {
+                                                            <div class="badge badge-success">@order.payment_status</div>
+
+                                                        }
+                                                    </td>
+
+                                                    <td><a href="javascript:void(0)" onclick="thanhcong_order('@Url.Action("thanhcong","Order",new {id=order.id_order})','@xacnhan','Hoàn thành')" alt="Xác nhận" class="btn btn-icon btn-sm btn-success"><i class="far fa-check-circle"></i></a> | <a href="javascript:void(0)" onclick="order_list('@Url.Action("orderdetail","order",new { id=order.id_order})')" class="btn btn-icon btn-sm btn-info" data-toggle="modal" data-target="#adddanhmuc"><i class="fas fa-info-circle"></i></a></td>
+
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="list_order">
+
+        </div>
+    </div>
+</div>

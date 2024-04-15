@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+@model List<Cart>
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Check Out</h4>
+                    <div class="breadcrumb__links">
+                        <a href="@Url.Action("Index","Home")">Home</a>
+                        <a href="@Url.Action("product","Home")">Shop</a>
+                        <span>Check Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <form action="@Url.Action("thanhtoan","Cart")" method="post">
+                
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+
+                        <h6 class="checkout__title">Billing Details</h6>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Name<span>*</span></p>
+                                    <input name="name" type="text" value="@ten.name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Address<span>*</span></p>
+                            <input name="address" type="text" placeholder="Address" value="@ten.address" class="checkout__input__add">
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input name="phone" type="text" value="@ten.phone">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    <input name="email" type="text" value="@ten.email">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                            <div class="checkout__order__products">Product <span>Total</span></div>
+                            <ul class="checkout__total__products">
+                                @{
+                                    int dem = 0;
+                                    int tongtien = 0;
+                                    foreach (var list in Model)
+                                    {
+                                        var pro = db.product.Where(c => c.id_product == list.id_product).FirstOrDefault();
+                                        dem++;
+                                        var tien = (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)) * list.quantity_cart;
+                                        tongtien += tien ?? 0;
+                                        string giatong = string.Format("{0:#,##0}₫", tien);
+                                        <li>@dem. @pro.name_pro (x @list.quantity_cart) <span>@giatong</span></li>
+
+                                    }
+                                }
+                            </ul>
+                            <h6 class="coupon__code">
+                                <span class="icon_tag_alt"></span> Have a coupon?
+                            </h6>
+                            <div class="cart__discount">
+
+                                <h6>Discount codes</h6>
+                                <div>
+                                    <input class="onhapdulieu" name="voucher" id="voucher" type="text" placeholder="Coupon code">
+                                    <a class="nutbam" onclick="voucher(@tongtien)"style="color:white">Apply</a>
+                                </div>
+
+
+                            </div>
+                            <ul class="checkout__total__all">
+                                <li>Subtotal <span>@(string.Format("{0:#,##0}₫", tongtien) )</span></li>
+                                <li>shipping fee <span>16,000₫</span></li>
+                                <li>Discount <span id="discount">-0₫</span></li>
+                                <li>Total <span id="tongtien">@(string.Format("{0:#,##0}₫", tongtien + 16000))</span></li>
+                            </ul>
+
+                            <input type="number" name="tongtien" value="@tongtien" hidden />
+                            <div class="checkbox-wrapper" id="VNPAY">
+                                <input id="terms-checkbox-37" name="payment" value="VNPAY" type="radio">
+                                <label class="terms-label" for="terms-checkbox-37">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
+                                        <mask fill="white" id="path-1-inside-1_476_5-37">
+                                            <rect height="200" width="200"></rect>
+                                        </mask>
+                                        <rect mask="url(#path-1-inside-1_476_5-37)" stroke-width="40" class="checkbox-box" height="200" width="200"></rect>
+                                        <path stroke-width="15" d="M52 111.018L76.9867 136L149 64" class="checkbox-tick"></path>
+                                    </svg>
+                                    <span class="label-text">Payment VNpay</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input id="terms-checkbox-36" name="payment" value="COD" checked type="radio">
+                                <label class="terms-label" for="terms-checkbox-36">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
+                                        <mask fill="white" id="path-1-inside-1_476_5-37">
+                                            <rect height="200" width="200"></rect>
+                                        </mask>
+                                        <rect mask="url(#path-1-inside-1_476_5-37)" stroke-width="40" class="checkbox-box" height="200" width="200"></rect>
+                                        <path stroke-width="15" d="M52 111.018L76.9867 136L149 64" class="checkbox-tick"></path>
+                                    </svg>
+                                    <span class="label-text">COD</span>
+                                </label>
+                            </div>
+                            <button type="submit"  class="thanhtoan">
+                                <div>
+                                    <span>
+                                        <p style="color:white">Proceed to ORDER</p>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <p>Thanks order</p>
+                                    </span>
+                                </div>
+
+                            </button>
+                            
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    function formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    function voucher(tong) {
+        var code_voucher = document.getElementById('voucher').value;
+        var tongtien = document.getElementById('tongtien');
+        var discount = document.getElementById('discount');
+
+        $.ajax({
+            url: '@Url.Action("voucher","Cart")',
+            type: 'POST',
+            data: {
+                code_vchr: code_voucher
+            },
+            success: function (res) {
+                if (res.success) {
+                    if (res.code_data <= 100) {
+
+                        tongtien.innerHTML = formatCurrency((tong + 16000) - (tong * res.code_data / 100)) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(tong * res.code_data.sale / 100) + '₫';
+                    } else {
+                        var kq = 0;
+                        
+                        if ((tong + 16000 - res.code_data) < 5000) {
+
+                            kq = tong + 16000 - res.code_data;
+                            var vnpay = document.getElementById('VNPAY');
+                            vnpay.style.display = "none";
+                            if ((tong - res.code_data) < 0)
+                                kq = 0+16000;
+                        } else {
+                            var vnpay = document.getElementById('VNPAY');
+                            vnpay.style.display = "block";
+                        }
+                        tongtien.innerHTML = formatCurrency(kq) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(res.code_data) + '₫';
+                    }
+                }
+                else {
+                    var vnpay = document.getElementById('VNPAY');
+                    vnpay.style.display = "block";
+                    tongtien.innerHTML = formatCurrency(tong+16000) + '₫';
+                    discount.innerHTML = '- 0₫';
+                }
+            }
+        });
+    }
+</script>

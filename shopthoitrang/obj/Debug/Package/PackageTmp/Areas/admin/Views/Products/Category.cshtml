@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Areas/admin/Views/Shared/layout_share.cshtml";
+    database database = new database();
+}
+
+@using shopthoitrang.Models;
+@model List<Category>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+
+            <div class="breadcrumb bg-primary text-white-all">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">product</a></div>
+                <div class="breadcrumb-item">categories</div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <h2 class="section-title">danh mục sản phẩm</h2>
+            <p class="section-lead">Các danh muc sản phẩm</p>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#adddanhmuc">Thêm</button>
+                            <h4></h4>
+
+                            <div class="card-header-action">
+                                <form action="@Url.Action("searchCategory","Products")" method="post">
+                                    <div class="input-group">
+                                        <input type="text" name="key" class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                @{ if (@ViewBag.error != null)
+                                    {
+                                <div class="alert alert-danger">
+                                    <button class="close" data-dismiss="alert">
+                                        <span>×</span>
+                                    </button>
+                                    @ViewBag.error
+                                </div>
+                                    };
+                                    if (ViewBag.thanhcong != null)
+                                    {
+                                <div class="alert alert-success">
+                                    <button class="close" data-dismiss="alert">
+                                        <span>×</span>
+                                    </button>
+                                    @ViewBag.thanhcong
+
+                                </div>
+                                    }
+
+                                }
+
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Tên danh mục sản phẩm</th>
+
+                                            <th>Image</th>
+
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                     
+                                        @{ foreach (var c in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @c.id_cate
+                                                    </td>
+                                                    <td>@c.name_cate</td>
+
+                                                    <td>
+                                                        <img alt="image" src="~/public/img/cate/@c.image_cate" width="60" data-toggle="tooltip" title="@c.name_cate">
+                                                    </td>
+
+                                                    <td>
+                                                        <button class="btn btn-primary" onclick="editCategory('@c.id_cate','@c.name_cate')" data-toggle="modal" data-target="#exampleModal">Sửa</button>
+                                                        | <a class="btn btn-danger" href="@Url.Action("xoa_cate","Products",new{cateID=c.id_cate })">xóa</a>
+                                                    </td>
+                                                </tr>
+
+                                            }
+
+                                        }
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function editCategory(cateID, cateName) {
+            // Set the value of the hidden input field in the modal
+            document.getElementById('cateID').value = cateID;
+            document.getElementById('cateName').value = cateName;
+
+        }
+
+    </script>
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("sua_cate", "Products")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="editCateName">Category id</label>
+                            <input type="text" class="form-control" id="cateID" name="cateID" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCateName">Category Name</label>
+                            <input type="text" class="form-control" id="cateName" name="cateName" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Category Image URL</label>
+                            <input type="file" accept="image/*" class="form-control" id="file" name="file">
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Lưu</button>
+
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="adddanhmuc">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <form action="@Url.Action("add_cate", "Products")" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="editCateName">Category Name</label>
+                            <input type="text" class="form-control" id="name_cateName" name="name_cateName" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Category Image URL</label>
+                            <input type="file" accept="image/*" class="form-control" id="f_file" name="f_file">
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+
+                        <button type="submit" class="btn btn-primary" aria-label="Close">Thêm mới</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>

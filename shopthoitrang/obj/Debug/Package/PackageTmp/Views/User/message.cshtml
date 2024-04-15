@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+    database db = new database();
+    var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    int id = -1;
+
+    string username;
+    if (authCookie != null)
+    {
+        var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+        username = authTicket.Name;
+        string userData = authTicket.UserData;
+        id = int.Parse(username);
+        var ten = db.User_info.Where(c => c.id_user == id).FirstOrDefault();
+    }
+    else
+    {
+        username = Session["id_user"] as string;
+        id = int.Parse(username);
+    }
+    string role = db.Account.Where(c => c.id_user == id).Select(c => c.role).FirstOrDefault();
+}
+@using shopthoitrang.Models;
+
+@{
+    if (role != null && role != "admin")
+    {
+        var chat = db.Conversations.Where(c => c.UserID1 == id).FirstOrDefault();
+        if (chat != null)
+        {
+            var data = db.Messages.Where(c => c.ConversationID == chat.ConversationID).OrderBy(c=>c.id_chat).ToList();
+            foreach (var item in data)
+            {
+                var user = db.User_info.Where(u => u.id_user == item.UserID).FirstOrDefault();
+                var taikhoan = db.Account.Where(c => c.id_user == item.UserID).FirstOrDefault();
+
+                if (taikhoan.role != "admin")
+                {
+
+                    <div class="chat-item chat-right" style="">
+                        <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user.img">
+                        <div class="chat-details">
+                            <div class="chat-text">@item.message</div>
+                            <div class="chat-time">@{ if (item.status == "yes")
+                                {<span>Đã đọc</span>}
+                                }
+                            @item.Timestamp</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="chat-item chat-left" style="">
+                        <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user.img">
+                        <div class="chat-details">
+                            <div class="chat-text">@item.message</div>
+                            <div class="chat-time">@item.Timestamp</div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    }
+    else
+    {
+        var chat = db.Conversations.Where(c => c.UserID2 == id).FirstOrDefault();
+        if (chat != null)
+        {
+            var data = db.Messages.Where(c => c.ConversationID == chat.ConversationID).ToList();
+            foreach (var item in data)
+            {
+                var user = db.User_info.Where(u => u.id_user == item.UserID).FirstOrDefault();
+                var taikhoan = db.Account.Where(c => c.id_user == item.UserID).FirstOrDefault();
+
+                if (taikhoan.role != "admin")
+                {
+
+                    <div class="chat-item chat-right" style="">
+                        <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user.img">
+                        <div class="chat-details">
+                            <div class="chat-text">@item.message</div>
+                            <div class="chat-time">@item.Timestamp</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="chat-item chat-left" style="">
+                        <img width="50" style="object-fit:cover" height="50" src="~/public/img/user/@user.img">
+                        <div class="chat-details">
+                            <div class="chat-text">@item.message</div>
+                            <div class="chat-time">@item.Timestamp</div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    }
+
+}
