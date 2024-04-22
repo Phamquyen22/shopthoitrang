@@ -41,7 +41,7 @@ namespace shopthoitrang.Controllers
         [HttpPost]
         public ActionResult Login(string taikhoan,string matkhau,string luuthongtin)
         {
-            var check = db.Account.Where(c => c.taikhoan == taikhoan && c.matkhau == matkhau).FirstOrDefault();
+            var check = db.Account.Where(c => c.taikhoan == taikhoan && c.matkhau == matkhau&&c.acc_lock!="false").FirstOrDefault();
             if (check != null)
             {
                 if (luuthongtin == "on")

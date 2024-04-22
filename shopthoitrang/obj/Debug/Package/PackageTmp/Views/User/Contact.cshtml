@@ -8,7 +8,7 @@
 <script src="~/public/js/stisla.js"></script>
 <link rel="stylesheet" href="~/public/css/components.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-
+<script src="~/public/js/contact.js"></script>
   
             <div class="row align-items-center justify-content-center">
                 <div class="col-1 col-sm-5 col-lg-5">
@@ -36,67 +36,3 @@
 
             </div>
        
-
-            <script>
-                function handleKeyDown(event) {
-                    if (event.key === 'Enter') {
-                        post_chat('@Url.Action("post_chat","User")');
-                    }
-                }
-               
-                function post_chat(url) {
-                    var form = document.getElementById('input_message');
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: { message: form.value },
-                        success: function (res) {
-                            if (res.result == true) {
-                                console.log("thành công");
-                                form.value = "";
-                                $.ajax({
-                                    url: '/User/message',
-                                    method: 'GET',
-                                    success: function (response) {
-                                        $('#message').html(response);
-                                    },
-                                    error: function (xhr, status, error) {
-                                        // Xử lý lỗi
-                                        console.error(error);
-                                    },
-                                })
-                            } 
-                        },
-                    });
-                }
-                setInterval(function () {
-
-                    $.ajax({
-                        url: '/User/message',
-                        method: 'GET',
-                        success: function (response) {
-                            $('#message').html(response);
-                        },
-                        error: function (xhr, status, error) {
-                            // Xử lý lỗi
-                            console.error(error);
-                        },
-                    })
-
-                }, 2000);
-                
-                var scrollableDiv = document.getElementById('message');
-
-                var prevHeight = scrollableDiv.scrollHeight;
-
-                setInterval(function () {
-
-                    if (scrollableDiv.scrollHeight !== prevHeight) {
-
-                        prevHeight = scrollableDiv.scrollHeight;
-
-                        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
-                    }
-                }, 500);
-            </script>
-            

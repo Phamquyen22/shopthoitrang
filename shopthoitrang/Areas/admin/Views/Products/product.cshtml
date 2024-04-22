@@ -13,12 +13,12 @@
             <div class="breadcrumb bg-primary text-white-all">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">product</a></div>
-                <div class="breadcrumb-item">sản phẩm</div>
+                <div class="breadcrumb-item">Product</div>
             </div>
         </div>
 
         <div class="section-body">
-            <h2 class="section-title">Loại sản phẩm</h2>
+            <h2 class="section-title">sản phẩm</h2>
             <p class="section-lead">Chúng tôi cần điền đầy đủ thông tin</p>
 
             <div class="row">
@@ -88,6 +88,7 @@
 
                                                 string nameprod = database.producer.Where(c => c.id_producer == i.id_producer).Select(c => c.name).FirstOrDefault();
                                                 string nametype = database.product_type.Where(c => c.id_protype == i.id_protype).Select(c => c.name_type).FirstOrDefault();
+                                                List<string> anh = i.photo_pro.TrimEnd(',').Split(',').ToList();
                                                 <tr>
                                                     <td>
                                                         @i.id_product
@@ -101,7 +102,7 @@
                                                     <td>@string.Format("{0:N0}", i.price_pro)</td>
                                                     <td>@i.discount_pro</td>
                                                     <td>
-                                                        <img alt="image" src="~/public/img/product/@i.photo_pro" width="35" data-toggle="tooltip" title="@i.name_pro">
+                                                        <img alt="image" src="~/public/img/product/@anh[0]" width="35" data-toggle="tooltip" title="@i.name_pro">
                                                     </td>
                                                     <td>@i.date_update</td>
                                                     
@@ -219,9 +220,9 @@
                             <input type="number" min="0" max="100" class="form-control" id="N_proDiscount" name="N_proDiscount" value="">
 
                             <label>Ảnh sản phẩm</label>
-                            <input type="file" id="file" name="file" accept="image/*" class="form-control" value="">
+                            <input type="file" id="file" name="file" accept="image/*" class="form-control" value="" multiple>
                             <label>Video sản phẩm</label>
-                            <input type="file" id="V_file" name="V_file" accept="video/*" class="form-control" value="">
+                            <input type="file" id="video" name="video" accept="video/*" class="form-control" value="">
 
                             <label>Ngày cập nhật sản phẩm</label>
                             <input type="date" class="form-control datepicker" id="N_proUpdateDate" name="N_proUpdateDate" value="" readonly>
@@ -306,9 +307,9 @@
                                 <input type="number" min="0" max="100" class="form-control" id="proDiscount" name="proDiscount" value="0">
 
                                 <label>Ảnh sản phẩm</label>
-                                <input type="file" id="file" name="file" accept="image/*" class="form-control" value="">
+                                <input type="file" id="file" name="file[]" accept="image/*" class="form-control" value="" multiple>
                                 <label>Video sản phẩm</label>
-                                <input type="file" id="V_file" name="V_file" accept="video/*" class="form-control" value="">
+                                <input type="file" id="V_file" name="video" accept="video/*" class="form-control" value="">
 
                                 
                                 <label>Tag sản phẩm</label>

@@ -17,7 +17,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -2349,20 +2350,6 @@
     <Content Include="public\img\producers\avatar-1.png" />
     <Content Include="public\img\product-sale.png" />
     <Content Include="public\img\product\demo.jpg" />
-    <Content Include="public\img\product\product-1.jpg" />
-    <Content Include="public\img\product\product-10.jpg" />
-    <Content Include="public\img\product\product-11.jpg" />
-    <Content Include="public\img\product\product-12.jpg" />
-    <Content Include="public\img\product\product-13.jpg" />
-    <Content Include="public\img\product\product-14.jpg" />
-    <Content Include="public\img\product\product-2.jpg" />
-    <Content Include="public\img\product\product-3.jpg" />
-    <Content Include="public\img\product\product-4.jpg" />
-    <Content Include="public\img\product\product-5.jpg" />
-    <Content Include="public\img\product\product-6.jpg" />
-    <Content Include="public\img\product\product-7.jpg" />
-    <Content Include="public\img\product\product-8.jpg" />
-    <Content Include="public\img\product\product-9.jpg" />
     <Content Include="public\img\shop-details\details-payment.png" />
     <Content Include="public\img\shop-details\product-big-2.png" />
     <Content Include="public\img\shop-details\product-big-3.png" />
@@ -2380,6 +2367,7 @@
     <Content Include="public\img\typing.svg" />
     <Content Include="public\img\user\avatar-1.png" />
     <Content Include="public\js\bootstrap.min.js" />
+    <Content Include="public\js\contact.js" />
     <Content Include="public\js\custom.js" />
     <Content Include="public\js\jquery-3.3.1.min.js" />
     <Content Include="public\js\jquery.countdown.min.js" />
@@ -2751,7 +2739,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49812</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49812/</IISUrl>
+          <IISUrl>http://localhost:49999/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://localhost:49813/</CustomServerUrl>

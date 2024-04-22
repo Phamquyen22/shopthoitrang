@@ -54,6 +54,7 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Name<span>*</span></p>
+                                    <input name="id_user" type="text" value="@ten.id_user" hidden>
                                     <input name="name" type="text" value="@ten.name">
                                 </div>
                             </div>
@@ -108,7 +109,21 @@
 
                                 <h6>Discount codes</h6>
                                 <div>
-                                    <input class="onhapdulieu" name="voucher" id="voucher" type="text" placeholder="Coupon code">
+                                    <select class="onhapdulieu" id="voucher" name="voucher">
+                                        <option value="0" selected>Không</option>
+                                        @{
+                                            var vchr = db.Voucher_user.Where(c => c.id_user == id && c.status_use == "false").ToList();
+                                            foreach (var item in vchr)
+                                            {
+                                                var namecode = db.Discount_code.Where(c => c.id_discount == item.id_discount && c.stock > 0).FirstOrDefault();
+                                                if (namecode != null)
+                                                {
+                                                    <option value="@item.id_voucher">@namecode.name_code</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                    
                                     <a class="nutbam" onclick="voucher(@tongtien)"style="color:white">Apply</a>
                                 </div>
 
@@ -121,7 +136,7 @@
                                 <li>Total <span id="tongtien">@(string.Format("{0:#,##0}₫", tongtien + 16000))</span></li>
                             </ul>
 
-                            <input type="number" name="tongtien" value="@tongtien" hidden />
+                            
                             <div class="checkbox-wrapper" id="VNPAY">
                                 <input id="terms-checkbox-37" name="payment" value="VNPAY" type="radio">
                                 <label class="terms-label" for="terms-checkbox-37">
@@ -191,7 +206,7 @@
                     if (res.code_data <= 100) {
 
                         tongtien.innerHTML = formatCurrency((tong + 16000) - (tong * res.code_data / 100)) + '₫';
-                        discount.innerHTML = '- ' + formatCurrency(tong * res.code_data.sale / 100) + '₫';
+                        discount.innerHTML = '- ' + formatCurrency(tong * res.code_data / 100) + '₫';
                     } else {
                         var kq = 0;
                         

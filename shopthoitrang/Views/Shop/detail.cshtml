@@ -41,57 +41,83 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@Model.photo_pro">
-                                    <i class="fa fa-play"></i>
-                                </div>
-                            </a>
-                        </li>
+                        @{
+
+                            List<string> anh = Model.photo_pro.TrimEnd(',').Split(',').ToList();
+                            for (int i = 0; i < anh.Count(); i++)
+                            {
+                                if ((i + 1) == 1)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-@(i + 1)" role="tab">
+                                            <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@anh[i]">
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-@(i + 1)" role="tab">
+                                            <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@anh[i]">
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                            if (Model.video_pro != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-99" role="tab">
+                                        <div class="product__thumb__pic set-bg" data-setbg="/public/img/product/@anh[anh.Count()-1]">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                        }
+
+
                     </ul>
                 </div>
                 <div class="col-lg-6 col-md-9">
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="~/public/img/product/@Model.photo_pro " alt="">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="~/public/img/product/@Model.photo_pro " alt="">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="~/public/img/product/@Model.photo_pro " alt="">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-4" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="~/public/img/product/@Model.photo_pro " alt="">
-                                <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1" class="video-popup"><i class="fa fa-play"></i></a>
-                            </div>
-                        </div>
+                        @{
+                            for (int i = 0; i < anh.Count(); i++)
+                            {
+                                if (i == 0)
+                                {
+                                    <div class="tab-pane active" id="tabs-@(i + 1)" role="tabpanel">
+                                        <div class="product__details__pic__item">
+                                            <img src="~/public/img/product/@anh[i] " alt="@anh[i]">
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="tab-pane" id="tabs-@(i+1)" role="tabpanel">
+                                        <div class="product__details__pic__item">
+                                            <img src="~/public/img/product/@anh[i] " alt="@anh[i]">
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            if (Model.video_pro != null)
+                            {
+                                <div class="tab-pane" id="tabs-99" role="tabpanel">
+                                    <div class="product__details__pic__item">
+                                        <video controls>
+                                            <source src="~/public/img/product/video/@Model.video_pro" type="video/mp4">
+
+                                        </video>
+                                    </div>
+                                </div>
+                            }
+                        }
+                       
+
                     </div>
+
                 </div>
             </div>
         </div>

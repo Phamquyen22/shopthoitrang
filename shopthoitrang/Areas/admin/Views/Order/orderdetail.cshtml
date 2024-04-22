@@ -24,9 +24,10 @@
         @{ foreach (var order in Model)
             {
                 var pro = db.product.Where(or => or.id_product == order.id_product).FirstOrDefault();
+                List<string> anh = pro.photo_pro.TrimEnd(',').Split(',').ToList();
         <tr>
             <td>
-                <img alt="image" src="~/public/img/product/@pro.photo_pro" width="35" data-toggle="tooltip" title="@pro.name_pro">
+                <img alt="image" src="~/public/img/product/@anh[0]" width="35" data-toggle="tooltip" title="@pro.name_pro">
             </td>
             <td>
                 @pro.id_product

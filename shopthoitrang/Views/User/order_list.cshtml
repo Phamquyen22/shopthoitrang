@@ -27,17 +27,19 @@
 @{ foreach (var item in Model)
     {
         var pro = db.product.Where(c => c.id_product == item.id_product).FirstOrDefault();
-<tr>
-    <td class="product__cart__item"><img style="max-height:80px;" src="~/public/img/product/@pro.photo_pro" /></td>
-    
-        <td class="product__cart__item">@pro.name_pro</td>
-   
-        <td class="product__cart__item">@(pro.price_pro-(pro.price_pro*pro.discount_pro/100))</td>
-    
-    <td class="product__cart__item">@item.quantity_pro</td>
-    
-    <td class="product__cart__item">@(item.quantity_pro*(pro.price_pro - (pro.price_pro * pro.discount_pro / 100)))</td>
-    
-</tr>
-        }
+        List<string> anh = pro.photo_pro.Trim(',').Split(',').ToList();
+        <tr>
+            <td class="product__cart__item"><img style="max-height:80px;" src="~/public/img/product/@anh[0]" /></td>
+
+            <td class="product__cart__item">@pro.name_pro</td>
+
+            <td class="product__cart__item">@(pro.price_pro - (pro.price_pro * pro.discount_pro / 100))</td>
+
+            <td class="product__cart__item">@item.quantity_pro</td>
+
+            <td class="product__cart__item">@(item.quantity_pro * (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)))</td>
+
+        </tr>
+        
     }
+}

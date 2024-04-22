@@ -34,7 +34,7 @@
             string idsp = "sp" + item.id_product;
             var danhgia = db.rate.Where(r => r.id_product == item.id_product).Select(r => r.star_rate).ToList();
             int rate = 0, demso = 0;
-
+            List<string> anh = item.photo_pro.TrimEnd(',').Split(',').ToList();
             bool yeeuthich = false;
             if (id != -1)
             {
@@ -69,7 +69,7 @@
                     <div class="product__item sale">
                         <div class="product__item__pic">
                             <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
-                                <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                <img class=" product__item__pic set-bg" src="~/public/img/product/@anh[0]" />
                             </a>
                             <span class="label">Sale</span>
                             <ul class="product__hover">
@@ -121,7 +121,7 @@
 
                         <div class="product__item__pic">
                             <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
-                                <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                <img class=" product__item__pic set-bg" src="~/public/img/product/@anh[0]" />
                             </a>
                             <span class="label">Sale</span>
                             <ul class="product__hover">
@@ -177,7 +177,7 @@
 
                             <div class="product__item__pic">
                                 <a class="product__item__pic " href="@Url.Action("detail","Shop", new { id_pro=item.id_product})">
-                                    <img class=" product__item__pic set-bg" src="~/public/img/product/@item.photo_pro" />
+                                    <img class=" product__item__pic set-bg" src="~/public/img/product/@anh[0]" />
                                 </a>
                                 <span class="label">Sale</span>
                                 <ul class="product__hover">

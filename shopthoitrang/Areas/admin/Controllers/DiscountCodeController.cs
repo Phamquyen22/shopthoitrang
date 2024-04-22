@@ -12,7 +12,8 @@ namespace shopthoitrang.Areas.admin.Controllers
     {
         // GET: admin/DiscountCode
         private database db = new database();
-        private string username, userData = null;
+        private int username;
+        private string userData = null;
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -22,17 +23,17 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
 
                 var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                username = authTicket.Name;
+                username = int.Parse(authTicket.Name);
                 userData = authTicket.UserData;
-                if (userData == "admin")
+                if (userData == "admin" || userData == "management")
                     check = true;
             }
             else if (user != null)
             {
-                username = Session["id_user"] as string;
+                username = int.Parse(Session["id_user"] as string);
                 int id = int.Parse(user);
-                var tk = db.Account.Where(c => c.id_user == id).FirstOrDefault();
-                if (tk.role == "admin") check = true;
+                var tk = db.Account.Where(c => c.id_user == id && c.acc_lock != "false").FirstOrDefault();
+                if (tk.role == "admin" || tk.role == "management") check = true;
             }
             return check;
 
@@ -58,6 +59,13 @@ namespace shopthoitrang.Areas.admin.Controllers
         [HttpPost]
         public ActionResult add_discount(string namecodeq,string codeq,int saleq, int stockq,string startdateq,string enddateq,string typediscountq, string rankuserq, string infoq,string an_spq)
         {
+           
+            Dictionary<int,string> rank = new Dictionary<int,string>();
+            rank.Add(1,"Đồng");
+            rank.Add(2,"Bạc");
+            rank.Add(3,"Vàng");
+            rank.Add( 4,"Kim cương" );
+            rank.Add(5,"Untimate");
             var id_code = db.Discount_code.Select(i => i.id_discount).ToList();
             int dem = 1;
             if (id_code != null)
@@ -101,6 +109,39 @@ namespace shopthoitrang.Areas.admin.Controllers
             };
             db.Discount_code.Add(dis_code);
             db.SaveChanges();
+            int id_rank = 1;
+            for (int i = 1; i <= 5; i++)
+            {
+                if (rank[i]==rankuserq) id_rank = i;
+            }
+            for (int i= id_rank; i <= 5; i++)
+            {
+                
+                string a = rank[i];
+                var user = db.User_info.Where(c=>c.rank_user==a).ToList();
+                if (user != null)
+                {
+                    foreach (var item in user)
+                    {
+                        Voucher_user vchr = new Voucher_user();
+                        int id = 1;
+                        var id_vhr= db.Voucher_user.ToList();
+                        foreach(var c in id_vhr)
+                        {
+                            if (c.id_voucher == id) id +=1;
+                        }
+                        vchr.id_voucher = id;
+                        vchr.id_discount = dem;
+                        vchr.status_use = "false";
+                        vchr.id_user = item.id_user;
+                        db.Voucher_user.Add(vchr);
+                        db.SaveChanges();
+                    }
+
+                }
+                
+            }
+            
             var code_view = db.Discount_code.ToList();
             return View("Discount", code_view);
         }
@@ -110,6 +151,13 @@ namespace shopthoitrang.Areas.admin.Controllers
             var id_code = db.Discount_code.Where(i => i.id_discount==id_discount).FirstOrDefault();
             if (id_code != null)
             {
+                Dictionary<int, string> rank = new Dictionary<int, string>();
+                rank.Add(0, null);
+                rank.Add(1, "Đồng");
+                rank.Add(2, "Bạc");
+                rank.Add(3, "Vàng");
+                rank.Add(4, "Kim cương");
+                rank.Add(5, "Untimate");
                 id_code.name_code = namecode;
 
                 code = code.Trim();
@@ -137,6 +185,39 @@ namespace shopthoitrang.Areas.admin.Controllers
                 id_code.info = info;
                 id_code.hide = anmagiam;
                 db.SaveChanges();
+                int id_rank = 1;
+                for (int i = 1; i <= 5; i++)
+                {
+                    if (rank[i] == rankuser) id_rank = i;
+                }
+                var data = db.Voucher_user.Where(c => c.id_discount == id_discount).ToList();
+                foreach (var item in data)
+                {      
+                    db.Voucher_user.Remove(item);
+                    db.SaveChanges();
+                }
+                 
+                
+                for (int i = id_rank; i <= 5; i++)
+                {
+                    Voucher_user vchr = new Voucher_user();
+                    string a = rank[i];
+
+                    var user = db.User_info.Where(c => c.rank_user == a).ToList();
+                    if (user != null)
+                    {
+                        foreach (var item in user)
+                        {
+                            int id = db.Voucher_user.Count() + 1;
+                            vchr.id_voucher = id;
+                            vchr.id_discount = id_discount;
+                            vchr.status_use = "false";
+                            vchr.id_user = item.id_user;
+                            db.Voucher_user.Add(vchr);
+                        }
+                        db.SaveChanges();
+                    }
+                }
                 ViewBag.thanhcong = "sua thanh cong ma giam gia";
             }
             else
@@ -154,6 +235,12 @@ namespace shopthoitrang.Areas.admin.Controllers
             var id_code = db.Discount_code.Where(i => i.id_discount == disID).FirstOrDefault();
             if (id_code != null)
             {
+                var data = db.Voucher_user.Where(c => c.id_discount == disID).ToList();
+                foreach (var item in data)
+                {
+                    db.Voucher_user.Remove(item);
+                    db.SaveChanges();
+                }
                 db.Discount_code.Remove(id_code);
                 db.SaveChanges();
                 ViewBag.thanhcong = "xoa thanh cong ma giam gia";

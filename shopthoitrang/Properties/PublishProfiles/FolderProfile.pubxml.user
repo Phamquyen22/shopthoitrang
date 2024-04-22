@@ -6662,7 +6662,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/05/2024 20:41:06</publishTime>
     </File>
     <File Include="Areas/admin/assets/order.js">
-      <publishTime>04/13/2024 01:38:11</publishTime>
+      <publishTime>04/15/2024 13:25:33</publishTime>
     </File>
     <File Include="Areas/admin/Views/admin/acc_management.cshtml">
       <publishTime>04/13/2024 01:47:49</publishTime>
@@ -6719,25 +6719,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/13/2024 09:22:15</publishTime>
     </File>
     <File Include="Areas/admin/Views/Shared/layout_share.cshtml">
-      <publishTime>04/13/2024 01:36:46</publishTime>
+      <publishTime>04/15/2024 13:21:43</publishTime>
     </File>
     <File Include="Areas/admin/Views/web.config">
       <publishTime>02/05/2024 20:34:51</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
-      <publishTime>10/09/2013 16:29:20</publishTime>
+      <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.pdb">
-      <publishTime>10/09/2013 16:29:20</publishTime>
+      <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
-      <publishTime>07/06/2018 11:03:48</publishTime>
+      <publishTime>06/07/2018 11:03:48</publishTime>
     </File>
     <File Include="bin/EntityFramework.SqlServer.dll">
-      <publishTime>07/06/2018 11:03:48</publishTime>
+      <publishTime>06/07/2018 11:03:48</publishTime>
     </File>
     <File Include="bin/EPPlus.dll">
-      <publishTime>08/04/2024 09:24:58</publishTime>
+      <publishTime>04/08/2024 09:24:58</publishTime>
     </File>
     <File Include="bin/EPPlus.Interfaces.dll">
       <publishTime>11/21/2022 12:51:04</publishTime>
@@ -6893,31 +6893,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/24/2018 13:38:24</publishTime>
     </File>
     <File Include="bin/shopthoitrang.dll">
-      <publishTime>04/15/2024 10:25:18</publishTime>
+      <publishTime>04/15/2024 13:31:12</publishTime>
     </File>
     <File Include="bin/shopthoitrang.pdb">
-      <publishTime>04/15/2024 10:25:18</publishTime>
+      <publishTime>04/15/2024 13:31:12</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
-      <publishTime>01/02/2018 12:20:56</publishTime>
+      <publishTime>02/01/2018 12:20:56</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>01/02/2018 12:16:32</publishTime>
+      <publishTime>02/01/2018 12:16:32</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
-      <publishTime>11/02/2014 15:26:04</publishTime>
+      <publishTime>02/11/2014 15:26:04</publishTime>
     </File>
     <File Include="bin/System.Web.Razor.dll">
-      <publishTime>01/02/2018 12:16:56</publishTime>
+      <publishTime>02/01/2018 12:16:56</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Deployment.dll">
-      <publishTime>01/02/2018 12:20:56</publishTime>
+      <publishTime>02/01/2018 12:20:56</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.dll">
-      <publishTime>01/02/2018 12:20:56</publishTime>
+      <publishTime>02/01/2018 12:20:56</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Razor.dll">
-      <publishTime>01/02/2018 12:20:56</publishTime>
+      <publishTime>02/01/2018 12:20:56</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>01/23/2014 13:57:34</publishTime>
@@ -7284,6 +7284,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="public/js/bootstrap.min.js">
       <publishTime>02/05/2024 17:09:56</publishTime>
+    </File>
+    <File Include="public/js/contact.js">
+      <publishTime>04/15/2024 13:15:53</publishTime>
     </File>
     <File Include="public/js/custom.js">
       <publishTime>04/11/2024 19:00:54</publishTime>
@@ -7805,7 +7808,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/13/2024 01:49:34</publishTime>
     </File>
     <File Include="Views/User/Contact.cshtml">
-      <publishTime>04/15/2024 10:32:15</publishTime>
+      <publishTime>04/15/2024 13:16:17</publishTime>
     </File>
     <File Include="Views/User/Favourite.cshtml">
       <publishTime>04/11/2024 15:30:16</publishTime>
@@ -7826,7 +7829,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/04/2024 19:00:08</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/15/2024 10:27:01</publishTime>
+      <publishTime>04/15/2024 13:34:50</publishTime>
     </File>
   </ItemGroup>
 </Project>

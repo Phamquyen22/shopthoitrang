@@ -21,18 +21,18 @@
     }
 }
 @using shopthoitrang.Models;
-@model List<Order_detail>
-
+@model Order
+<link rel="stylesheet" href="~/public/css/detail.css" />
 <section class="breadcrumb-option">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__text">
-                    <h4>Bill</h4>
+                    <h4>Check Out</h4>
                     <div class="breadcrumb__links">
-                        <a href="@Url.Action("Index","Home")">Home</a>
-                        <a href="@Url.Action("product","Shop")">Shop</a>
-                        <span>Bill</span>
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Check Out</span>
                     </div>
                 </div>
             </div>
@@ -45,49 +45,130 @@
     <div class="container">
         <div class="checkout__form">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-12">
                     <div class="checkout__order">
-                        <h3 class="checkout__order">@ViewBag.Message</h3>
-                        <hr />
-                        <div class="checkout__order__products">@ViewBag.TxnRef</div>
-                        <div class="checkout__order__products">@ViewBag.VnpayTranNo</div>
-                        <div class="checkout__order__products">Product <span>Total</span></div>
-                        <ul class="checkout__total__products">
-                            @{
-                                int dem = 0;
-                                int tongtien = 0;
-                                foreach (var list in Model)
-                                {
-                                    var pro = db.product.Where(c => c.id_product == list.id_product).FirstOrDefault();
-                                    dem++;
-                                    var tien = (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)) * list.quantity_pro;
-                                    tongtien += tien ?? 0;
-                                    string giatong = string.Format("{0:#,##0}₫", tien);
-                                    <li>@dem. @pro.name_pro (x @list.quantity_pro) <span>@giatong</span></li>
-
-                                }
-                            }
-                                    <li>transport fee<span>16,000₫</span></li>
-                        </ul>
-                        <ul class="checkout__total__all">
-
-                            <li>@ViewBag.Amount</li>
-
-                        </ul>
-                        <div class="checkout__order__products">@ViewBag.thank</div>
-                        <a href="@Url.Action("product", "Shop")" class="thanhtoan">
-                            <div>
-                                <span>
-                                    <p>Thanks Order</p>
-                                </span>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="confirmation_tittle">
+                                    <span>Thank you. Your order has been received.</span>
+                                </div>
                             </div>
-                            <div>
-                                <span>
-                                    <p>Continue Shopping</p>
-                                </span>
+                            <div class="col-lg-5 col-lx-4">
+                                <div class="single_confirmation_details">
+                                    <h4>order info</h4>
+                                    <ul>
+                                        <li>
+                                            <p>order number</p><span>: @Model.id_order</span>
+                                        </li>
+                                        <li>
+                                            <p>Date</p><span>: @Model.date_order</span>
+                                        </li>
+                                        <li>
+                                            <p>Total</p><span>: @string.Format("{0:#,##0}₫", Model.total)</span>
+                                        </li>
+                                        <li>
+                                            <p>Mayment methord</p><span>: @ViewBag.payment</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
 
-                        </a>
+                            <div class="col-lg-6 col-lx-4">
+                                <div class="single_confirmation_details">
+                                    <h4>shipping Address</h4>
+                                    <ul>
+                                        @{
+                                            var user = db.User_info.Where(c => c.id_user == Model.id_user).FirstOrDefault();
+                                        }
+                                        <li>
+                                            <p>Name</p><span>:@user.name</span>
+                                        </li>
+                                        <li>
+                                            <p>Email</p><span>:@user.email</span>
+                                        </li>
+                                        <li>
+                                            <p>Phone</p><span>: @user.phone</span>
+                                        </li>
+                                        <li>
+                                            <p>Adress</p><span>: @user.address</span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="order_details_iner">
+                                    <h3>Order Details</h3>
+                                    <table class="table table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="2">Product</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int dem = 0;
+                                                int tongtien = 0;
+                                                var data = db.Order_detail.Where(c => c.id_order == Model.id_order).ToList();
+                                                foreach (var list in data)
+                                                {
+                                                    var pro = db.product.Where(c => c.id_product == list.id_product).FirstOrDefault();
+                                                    dem++;
+                                                    var tien = (pro.price_pro - (pro.price_pro * pro.discount_pro / 100)) * list.quantity_pro;
+                                                    tongtien += tien ?? 0;
+                                                    string giatong = string.Format("{0:#,##0}₫", tien);
+
+                                                    <tr>
+                                                        <th colspan="2"><span>@pro.name_pro</span></th>
+                                                        <th>x@(list.quantity_pro)</th>
+                                                        <th> <span>@giatong</span></th>
+                                                    </tr>
+
+                                                }
+                                            }
+
+
+                                            <tr>
+                                                <th colspan="3">Subtotal</th>
+                                                <th> <span>@(string.Format("{0:#,##0}₫", (tongtien)))</span></th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="3">shipping</th>
+                                                <th><span>flat rate: 16,000₫</span></th>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                                <th scope="col">Total</th>
+                                                <th scope="col">@(string.Format("{0:#,##0}₫", (tongtien + 16000)))</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="@Url.Action("product", "Shop")" class="thanhtoan">
+                                            <div>
+                                                <span>
+                                                    <p>Thanks Order</p>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    <p>Continue Shopping</p>
+                                                </span>
+                                            </div>
+
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                     </div>
                 </div>

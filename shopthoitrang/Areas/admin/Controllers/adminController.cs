@@ -15,7 +15,8 @@ namespace shopthoitrang.Areas.admin.Controllers
 
         // GET: admin/admin
         private database db = new database();
-        private string username, userData = null;
+        private int username;
+        private string userData = null;
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -25,16 +26,16 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
                 
                 var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                username = authTicket.Name;
+                username = int.Parse(authTicket.Name);
                 userData = authTicket.UserData;
-                if(userData=="admin")
+                if(userData=="admin"||userData== "management")
                     check = true;
             }
             else if (user != null) {
-                 username = Session["id_user"] as string;
-                int id = int.Parse(user);
-                var tk = db.Account.Where(c => c.id_user == id).FirstOrDefault();
-                if (tk.role == "admin") check = true;
+                    username = int.Parse(Session["id_user"] as string);
+                    int id = int.Parse(user);
+                    var tk = db.Account.Where(c => c.id_user == id&&c.acc_lock!="false").FirstOrDefault();
+                    if (tk.role == "admin"||tk.role== "management") check = true;
             }
             return check;
 
@@ -54,8 +55,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             bool check = check_login();
             if (check)
             {
-               
-                var acc = db.Account.ToList();
+                var acc = db.Account.Where(c=>c.id_user!=username).ToList();
                 return View(acc);
             }
             else
@@ -89,7 +89,7 @@ namespace shopthoitrang.Areas.admin.Controllers
                 {
                     ViewBag.error = "Người dùng không tồn tại";
                 }
-                var acc = db.Account.ToList();
+                var acc = db.Account.Where(c => c.id_user != username).ToList();
                 return View(acc);
             }
             else
@@ -177,15 +177,16 @@ namespace shopthoitrang.Areas.admin.Controllers
                 db.SaveChanges();
                 db.Account.Add(add_acc_tk);
                 db.SaveChanges();
-                ViewBag.thanhcong = "tao thanh cong tai khoan";
+                ViewBag.thanhcong = "Tạo tài khoản thành công";
             }
             else
             {
-                ViewBag.error = "tai khoan da ton tai";
+                ViewBag.error = "Tài khoản đã tồn tại";
             }
             return View();
         }
 
+        
 
         public ActionResult login()
         {

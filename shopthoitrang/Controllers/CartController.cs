@@ -197,60 +197,80 @@ namespace shopthoitrang.Controllers
                 return RedirectToAction("Login", "Home");
             }
         }
-        public JsonResult voucher(string code_vchr)
+        public JsonResult voucher(int code_vchr)
         {
-            var data = db.Discount_code.Where(d => d.code == code_vchr).FirstOrDefault();
-            if (data != null)   
-                return Json(new {code_data=data.sale, success =true});
+            var value = db.Voucher_user.Where(d => d.id_voucher == code_vchr).FirstOrDefault();
+            if (value != null)
+            {
+                var data = db.Discount_code.Where(c => c.id_discount == value.id_discount).FirstOrDefault();
+                return Json(new { code_data = data.sale, success = true });
+            }
             else
-                return Json(new { success = false});
+                return Json(new { success = false });
         }
         //thanh toan vnpay
-        public ActionResult thanhtoan(string name, string address,string phone, string email,int tongtien, string voucher, string payment)
+        public ActionResult thanhtoan(int id_user,string name, string address,string phone, string email, int voucher, string payment)
         {
 
-            string vnp_Returnurl = ConfigurationManager.AppSettings["vnp_Returnurl"]; //URL nhan ket qua tra ve 
-            string vnp_Url = ConfigurationManager.AppSettings["vnp_Url"]; //URL thanh toan cua VNPAY 
-            string vnp_TmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"]; //Ma định danh merchant kết nối (Terminal Id)
-            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"]; //Secret Key
+            string vnp_Returnurl = ConfigurationManager.AppSettings["vnp_Returnurl"]; 
+            string vnp_Url = ConfigurationManager.AppSettings["vnp_Url"];
+            string vnp_TmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"];
+            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
 
-            //Get payment input
             Order order = new Order();
             int id_order = db.Order.OrderByDescending(c=>c.id_order).Select(p=>p.id_order).FirstOrDefault()+1;
 
             long giatien = 0;
             int idvoucher;
-            if (voucher != null)
+            int tongtien = 0;
+            foreach(var item in db.Cart.Where(c => c.id_user == id_user).ToList())
             {
-                int giamgia = db.Discount_code.Where(c => c.code == voucher).Select(c => c.sale).FirstOrDefault();
-                if (giamgia <= 100)
+                tongtien += ((item.product.price_pro - (item.product.discount_pro * item.product.price_pro) / 100)  * item.quantity_cart)??0;
+            }
+            if (voucher != 0)
+            {
+
+                var giamgia = db.Discount_code.Where(c => c.id_discount == c.Voucher_user.Where(p=>p.id_voucher==voucher).Select(p=>p.id_discount).FirstOrDefault()).FirstOrDefault();
+                if (giamgia.sale <= 100)
                 {
-                    giatien = (tongtien) - (tongtien * giamgia / 100);
+                    giatien = (tongtien) - (tongtien * giamgia.sale / 100);
                 }
                 else
                 {
-                    giatien = tongtien- giamgia;
+                    giatien = tongtien- giamgia.sale;
                 }
-                idvoucher = db.Discount_code.Where(p => p.code == voucher).Select(c=>c.id_discount).FirstOrDefault();
+                idvoucher = db.Discount_code.Where(c => c.id_discount == c.Voucher_user.Where(p => p.id_voucher == voucher).Select(p => p.id_discount).FirstOrDefault()).Select(c => c.id_discount).FirstOrDefault();
                 if (idvoucher!=0)
                 {
                     order.id_discount = idvoucher;
                 }
-                
+                var vchr = db.Voucher_user.Where(p => p.id_voucher == voucher).FirstOrDefault();
+                vchr.status_use = "true";
+                giamgia.stock -= 1;
+                if (giatien < 0)
+                    giatien = 0 + 16000;
+                else
+                    giatien = giatien + 16000;
+                order.total = giatien;
             }
+            else
+            {
+                order.total = tongtien+16000;
+                giatien = tongtien + 16000;
+            }
+            var user = db.User_info.Where(c => c.id_user == id_user).FirstOrDefault();
+            user.name = name;
+            user.phone = phone;
+            user.address = address;
+            user.email = email;
             order.id_order = id_order;
             order.id_user = id_acc();
-            if (giatien < 0)
-                giatien = 0 + 16000;
-            else
-                giatien = giatien + 16000;
-            order.total = giatien;
+            
             order.status_order = "Chờ xác nhận";
             order.date_order = DateTime.Now.ToString("yyyy-MM-dd");
             order.payment_status= "Chưa thanh toán";
-            long OrderId = id_order; // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
-            long Amount = giatien; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
-            
+            long OrderId = id_order; 
+            long Amount = giatien; 
             int id = id_acc();
             var data = db.Cart.Where(c => c.id_user == id).ToList();
             
@@ -270,6 +290,7 @@ namespace shopthoitrang.Controllers
                 db.Order_detail.Add(odr_detail);
                 var pro = db.product.Where(c => c.id_product == item.id_product).FirstOrDefault();
                 pro.buy_count += 1;
+                pro.quantity_pro -= 1;
                 db.SaveChanges();
             }
             DateTime CreatedDate = DateTime.Now;
@@ -279,28 +300,26 @@ namespace shopthoitrang.Controllers
                 db.Cart.Remove(cartItem);
             }
             db.SaveChanges();
-
-            //Build URL for VNPAY
+            
             if (payment == "VNPAY" &&Amount>=5000&&Amount<=1000000000)
             {
                 VnPayLibrary vnpay = new VnPayLibrary();
-
                 vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
                 vnpay.AddRequestData("vnp_Command", "pay");
                 vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-                vnpay.AddRequestData("vnp_Amount", (Amount * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
+                vnpay.AddRequestData("vnp_Amount", (Amount * 100).ToString()); 
                 vnpay.AddRequestData("vnp_BankCode", "VNBANK");
                 vnpay.AddRequestData("vnp_CreateDate", CreatedDate.ToString("yyyyMMddHHmmss"));
                 vnpay.AddRequestData("vnp_CurrCode", "VND");
                 vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress());
                 vnpay.AddRequestData("vnp_Locale", "vn");
                 vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + OrderId);
-                vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
-                //DateTime expireDateTime = DateTime.Now.AddMinutes(20);
-                //string vnp_ExpireDate = expireDateTime.ToString("yyyyMMddHHmmss");
-                //vnpay.AddRequestData("vnp_ExpireDate", vnp_ExpireDate);
+                vnpay.AddRequestData("vnp_OrderType", "other");
+                DateTime expireDateTime = DateTime.Now.AddMinutes(20);
+                string vnp_ExpireDate = expireDateTime.ToString("yyyyMMddHHmmss");
+                vnpay.AddRequestData("vnp_ExpireDate", vnp_ExpireDate);
                 vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
-                vnpay.AddRequestData("vnp_TxnRef", OrderId.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
+                vnpay.AddRequestData("vnp_TxnRef", OrderId.ToString());
                 
                 string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
@@ -308,26 +327,25 @@ namespace shopthoitrang.Controllers
             }
             else
             {
-                return RedirectToAction("COD","Cart");
+                return RedirectToAction("COD","Cart",new {id= id_order });
             }
 
         }
         public ActionResult VNpay()
         {
-            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"]; // Chuỗi bí mật
+            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
             var vnpayData = Request.QueryString;
             VnPayLibrary vnpay = new VnPayLibrary();
 
             foreach (string s in vnpayData)
             {
-                // Lấy tất cả dữ liệu từ query string
+                
                 if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
                 {
                     vnpay.AddResponseData(s, vnpayData[s]);
                 }
             }
-
-            // Lấy các thông tin từ phản hồi VNPAY
+            
             long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
             long vnpayTranId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));
             string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
@@ -342,39 +360,30 @@ namespace shopthoitrang.Controllers
             {
                 if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                 {
-                    // Thanh toán thành công
-                    ViewBag.Message = "Giao dịch được thực hiện thành công.";
-                    ViewBag.thank = "Quý Khách vui lòng chờ đợi đơn hàng gửi đến bạn.";
                     var order_done = db.Order.Where(c => c.id_order == orderId).FirstOrDefault();
                     order_done.payment_status = "Đã thanh toán";
                     db.SaveChanges();
                 }
                 else
                 {
-                    // Thanh toán không thành công
+                    
                     ViewBag.Message = "Có lỗi xảy ra trong quá trình xử lý.Mã lỗi: " + vnp_ResponseCode;
                 }
-                ViewBag.TmnCode = "Mã Website (Terminal ID):" + TerminalID;
-                ViewBag.TxnRef = "Payment transaction code:" + orderId.ToString();
-                ViewBag.VnpayTranNo = "Transaction code at VNPAY:" + vnpayTranId.ToString();
-                ViewBag.Amount = "Total Payment (VND):" + vnp_Amount.ToString();
-                ViewBag.BankCode = "Bank payment:" + bankCode;
+               
             }
             else
             {
                 ViewBag.Message = "Có lỗi xảy ra trong quá trình xử lý";
             }
-            var data = db.Order_detail.Where(p => p.id_order == orderId).ToList();
+            var data = db.Order.Where(p => p.id_order == orderId).FirstOrDefault();
+            ViewBag.payment = "VNPAY";
             return View(data);
 
         }
-        public ActionResult COD()
+        public ActionResult COD(int id)
         {
-            int id = id_acc();
-            int id_order = db.Order.Where(c => c.id_user == id).Select(c=>c.id_order).FirstOrDefault();
-            var data = db.Order_detail.Where(p => p.id_order == id_order).ToList();
-            ViewBag.Message = "Đơn hàng đã được đặt thành công.";
-            ViewBag.thank = "Quý Khách vui lòng chờ đợi đơn hàng gửi đến bạn.";
+            ViewBag.payment = "COD";
+            var data = db.Order.Where(c => c.id_order==id).FirstOrDefault();
             return View(data);
         }
     }

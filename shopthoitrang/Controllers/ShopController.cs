@@ -32,9 +32,9 @@ namespace shopthoitrang.Controllers
         {
             Uri currentUrl = Request.Url;
             TempData["trangtruoc"] = currentUrl.ToString();
-            ViewBag.page_index = db.product.Select(c=>c.id_product).Count();
+            ViewBag.page_index = db.product.Where(c=>c.quantity_pro>0).Select(c=>c.id_product).Count();
            
-            var data = db.product.OrderByDescending(c => c.id_product).Skip(0).Take(9).ToList();
+            var data = db.product.Where(c => c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(0).Take(9).ToList();
             return View(data);
         }
         
@@ -134,7 +134,7 @@ namespace shopthoitrang.Controllers
                int tongtien = 0;
                foreach (var it in giohang)
                {
-                   var item = db.product.Where(c => c.id_product == it.id_product).FirstOrDefault();
+                   var item = db.product.Where(c => c.id_product == it.id_product&& c.quantity_pro > 0).FirstOrDefault();
 
                    var tien = (item.price_pro - (item.price_pro * item.discount_pro / 100)) * it.quantity_cart;
 
@@ -149,7 +149,7 @@ namespace shopthoitrang.Controllers
         public ActionResult nextpage(int page = 0,int search=0)
         {
             int so = (page-1)*9;
-            var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+            var data = db.product.Where(c => c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
             return View(data);
         }
         public ActionResult barnding(int page, int id = 0)
@@ -164,13 +164,13 @@ namespace shopthoitrang.Controllers
                 if (key != null)
                 {
                     tim = int.Parse(key);
-                    var data = db.product.Where(c => c.id_producer == tim).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    var data = db.product.Where(c => c.id_producer == tim && c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
                     ViewBag.page_index = db.product.Where(c => c.id_protype == tim).Select(c => c.id_product).Count();
                     return View(data);
                 }
                 else
                 {
-                    var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    var data = db.product.Where(c => c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
                     ViewBag.page_index = db.product.Select(c => c.id_product).Count();
                     return View(data);
                 }
@@ -179,8 +179,8 @@ namespace shopthoitrang.Controllers
             else
             {
                 Session.Add("timkiem", id);
-                var data = db.product.Where(c => c.id_producer == id).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
-                ViewBag.page_index = db.product.Where(c => c.id_producer == id).Select(c => c.id_product).Count();
+                var data = db.product.Where(c => c.id_producer == id&&c.quantity_pro>0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                ViewBag.page_index = db.product.Where(c => c.id_producer == id&&c.quantity_pro>0).Select(c => c.id_product).Count();
                 return View(data);
             }
         }
@@ -197,15 +197,15 @@ namespace shopthoitrang.Controllers
                 {
                     tim = int.Parse(key);
                     var type = db.product_type.Where(c => c.id_cate == tim).Select(c => c.id_protype).FirstOrDefault();
-                    var data = db.product.Where(c => c.id_protype == type).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
-                    ViewBag.page_index = db.product.Where(c => c.id_protype == type).Select(c => c.id_product).Count();
+                    var data = db.product.Where(c => c.id_protype == type&&c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Where(c => c.id_protype == type&&c.quantity_pro>0).Select(c => c.id_product).Count();
                     return View(data);
                 }
                 else
                 {
                    
-                    var data = db.product.OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
-                    ViewBag.page_index = db.product.Select(c => c.id_product).Count();
+                    var data = db.product.Where(c => c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                    ViewBag.page_index = db.product.Where(c => c.quantity_pro > 0).Select(c => c.id_product).Count();
                     return View(data);
                 }
                 
@@ -214,8 +214,8 @@ namespace shopthoitrang.Controllers
             {
                 Session.Add("timkiem", id);
                 var type = db.product_type.Where(c => c.id_cate == id).Select(c => c.id_protype).FirstOrDefault();
-                var data = db.product.Where(c => c.id_protype == type).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
-                ViewBag.page_index = db.product.Where(c => c.id_protype == type).Select(c => c.id_product).Count();
+                var data = db.product.Where(c => c.id_protype == type&& c.quantity_pro > 0).OrderByDescending(c => c.id_product).Skip(so).Take(so + 9).ToList();
+                ViewBag.page_index = db.product.Where(c => c.id_protype == type&&c.quantity_pro>0).Select(c => c.id_product).Count();
                 return View(data);
             }
             
@@ -226,8 +226,8 @@ namespace shopthoitrang.Controllers
             Uri currentUrl = Request.Url;
             TempData["trangtruoc"] = currentUrl.ToString();
             
-            ViewBag.page_index= db.product.Where(p => p.name_pro.Contains(key) || p.tag.Contains(key)).Select(c => c.id_product).Count();
-            var data = db.product.Where(p => p.name_pro.Trim().Contains(key.Trim())||p.tag.Trim().Contains(key.Trim())).OrderByDescending(c => c.id_product).Skip(so).Take(so+9).ToList();
+            ViewBag.page_index= db.product.Where(p => p.quantity_pro>0&&(p.name_pro.Contains(key) || p.tag.Contains(key))).Select(c => c.id_product).Count();
+            var data = db.product.Where(p => p.quantity_pro>0&& (p.name_pro.Trim().Contains(key.Trim())||p.tag.Trim().Contains(key.Trim()))).OrderByDescending(c => c.id_product).Skip(so).Take(so+9).ToList();
             return View(data);
         }
     }

@@ -13,7 +13,8 @@ namespace shopthoitrang.Areas.admin.Controllers
     {
         // GET: admin/sanpham
         private database db = new database();
-        private string username, userData = null;
+        private int username;
+        private string userData = null;
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -23,17 +24,17 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
 
                 var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                username = authTicket.Name;
+                username = int.Parse(authTicket.Name);
                 userData = authTicket.UserData;
-                if (userData == "admin")
+                if (userData == "admin" || userData == "management")
                     check = true;
             }
             else if (user != null)
             {
-                username = Session["id_user"] as string;
+                username = int.Parse(Session["id_user"] as string);
                 int id = int.Parse(user);
-                var tk = db.Account.Where(c => c.id_user == id).FirstOrDefault();
-                if (tk.role == "admin") check = true;
+                var tk = db.Account.Where(c => c.id_user == id && c.acc_lock != "false").FirstOrDefault();
+                if (tk.role == "admin" || tk.role == "management") check = true;
             }
             return check;
 
@@ -43,7 +44,8 @@ namespace shopthoitrang.Areas.admin.Controllers
             string photo=null;
             if (file != null && file.ContentLength > 0)
             {
-                photo = DateTime.Now.ToString("yyyyMMddHHmmss") + "-" + Path.GetFileName(file.FileName);
+                
+                photo = DateTime.Now.ToString("yyyyMMddHHmmss") + "-" + Path.GetFileName(file.FileName).Replace(" ", "_");
                 string file_path = Path.Combine(Server.MapPath(url), photo);
                 file.SaveAs(file_path);
             }
@@ -386,7 +388,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             
         }
         [HttpPost]
-        public ActionResult add_product(int nameprod,int nametype, string proName, string proSize, string proColor,int proPrice, int proDiscount, HttpPostedFileBase file, HttpPostedFileBase V_file, string proTag, string proDescription, int proQuantity,string an_sp)
+        public ActionResult add_product(int nameprod,int nametype, string proName, string proSize, string proColor,int proPrice, int proDiscount, IEnumerable<HttpPostedFileBase> file, HttpPostedFileBase video, string proTag, string proDescription, int proQuantity,string an_sp)
         {
             var id = db.product.Select(p => p.id_product).ToList();
             int dem = 1;
@@ -398,9 +400,22 @@ namespace shopthoitrang.Areas.admin.Controllers
                 }
             }
             string anh = "demo.jpg";
-            if (file != null && file.ContentLength > 0)
+            if (file != null && file.GetEnumerator().MoveNext())
             {
-                anh = file_upload("~/public/img/product/", file);
+                anh = null;
+                foreach (var file_img in file)
+                {
+                    if (file_img != null && file_img.ContentLength > 0)
+                    {
+                        // Lấy tên tệp tin
+                        var fileName = Path.GetFileName(file_img.FileName);
+                        // Lưu tệp tin vào thư mục
+                        var filePath = Path.Combine(Server.MapPath("~/public/img/product/"), fileName);
+                        file_img.SaveAs(filePath);
+                        anh = anh + fileName + ",";
+                    }
+                }
+                ViewBag.Message = "Tải lên thành công!";
             }
             var pro = new product
             {
@@ -413,20 +428,24 @@ namespace shopthoitrang.Areas.admin.Controllers
                 price_pro = proPrice,
                 discount_pro = proDiscount,
                 photo_pro = anh,
-                video_pro = file_upload("~/public/img/product/", V_file),
+                
                 date_update = DateTime.Now.ToString("yyyy-MM-dd"),
                 tag = proTag,
                 info_pro = proDescription,
                 quantity_pro = proQuantity,
                 hide = an_sp,
             };
+            if (video != null && video.ContentLength > 0)
+            {
+                pro.video_pro = file_upload("~/public/img/product/video/", video);
+            }
             db.product.Add(pro);
             db.SaveChanges();
             var prod = db.product.ToList();
             return View("product", prod);
         }
         [HttpPost]
-        public ActionResult sua_product(int id_proID, int id_nameprod, int id_nametype, string N_proName, string N_proSize,string proColor,int N_proPrice,int N_proDiscount, HttpPostedFileBase file, HttpPostedFileBase V_file,string proTag, string N_proDescription,int N_proQuantity,string an_sp)
+        public ActionResult sua_product(int id_proID, int id_nameprod, int id_nametype, string N_proName, string N_proSize,string proColor,int N_proPrice,int N_proDiscount, IEnumerable<HttpPostedFileBase> file, HttpPostedFileBase video, string proTag, string N_proDescription,int N_proQuantity,string an_sp)
         {
             var tim = db.product.Where(id => id.id_product == id_proID).FirstOrDefault();
             if (tim != null)
@@ -438,15 +457,27 @@ namespace shopthoitrang.Areas.admin.Controllers
                 tim.color_pro = proColor;
                 tim.price_pro = N_proPrice;
                 tim.discount_pro = N_proDiscount;
-                if (file != null)
+                if (file != null && file.GetEnumerator().MoveNext())
                 {
-                    xoa_file("~/public/img/product/" , tim.photo_pro);
-                    tim.photo_pro = file_upload("~/public/img/product/", file);
+                    tim.photo_pro = null;
+                    foreach (var file_img in file)
+                    {
+                        if (file_img != null && file_img.ContentLength > 0)
+                        {
+                            // Lấy tên tệp tin
+                            var fileName = Path.GetFileName(file_img.FileName);
+                            // Lưu tệp tin vào thư mục
+                            var filePath = Path.Combine(Server.MapPath("~/public/img/product/"), fileName);
+                            file_img.SaveAs(filePath);
+                            tim.photo_pro = tim.photo_pro+fileName + ",";
+                        }
+                    }
+                    ViewBag.Message = "Tải lên thành công!";
                 }
-                if (V_file != null)
+                if (video != null&& video.ContentLength > 0)
                 {
-                    xoa_file("~/public/img/product/video", tim.video_pro);
-                    tim.photo_pro = file_upload("~/public/img/product/video", V_file);
+                    xoa_file("~/public/img/product/video/", tim.video_pro);
+                    tim.video_pro = file_upload("~/public/img/product/video/", video);
                 }
                 tim.tag = proTag;
                 tim.quantity_pro = N_proQuantity;

@@ -67,11 +67,12 @@
                                     var pro = db.product.Where(p => p.id_product == item.id_product).FirstOrDefault();
                                     var tien = pro.price_pro - (pro.price_pro * pro.discount_pro / 100);
                                     string gia = string.Format("{0:#,##0}₫", tien);
+                                    List<string> anh = pro.photo_pro.TrimEnd(',').Split(',').ToList();
                                     string sanpham = "sanpham" + item.id_product;
                                     <tr id="@sanpham">
                                         <td class="product__cart__item">
                                             <div class="product__cart__item__pic">
-                                                <img style="max-height:60px" src="~/public/img/product/@pro.photo_pro" alt="@pro.name_pro">
+                                                <img style="max-height:60px" src="~/public/img/product/@anh[0]" alt="@pro.name_pro">
                                             </div>
 
                                         </td>

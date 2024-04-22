@@ -95,7 +95,7 @@ namespace shopthoitrang.Controllers
         {
             if (file != null && file.ContentLength > 0)
             {
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +Path.GetFileName(file.FileName);
+                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +Path.GetFileName(file.FileName).Replace(" ", "_");
                 string filePath = Path.Combine(Server.MapPath("~/public/img/user/"), fileName);
                 file.SaveAs(filePath);
                 int id = id_acc();
@@ -205,6 +205,8 @@ namespace shopthoitrang.Controllers
             bool check = check_login();
             if (check)
             {
+                Uri currentUrl = Request.Url;
+                TempData["trangtruoc"] = currentUrl.ToString();
                 return View();
             }
             else
@@ -281,7 +283,7 @@ namespace shopthoitrang.Controllers
                 var chat = db.Conversations.Where(c => c.UserID1 == acc).FirstOrDefault();
                 if (chat != null)
                 {
-                    var read = db.Messages.Where(c => c.ConversationID == chat.ConversationID && c.UserID == chat.UserID2).ToList();
+                    var read = db.Messages.Where(c => c.ConversationID == chat.ConversationID && c.UserID == chat.UserID2 && c.status=="no").ToList();
                     foreach (var item in read)
                     {
                         item.status = "ok";

@@ -12,7 +12,8 @@ namespace shopthoitrang.Areas.admin.Controllers
     {
         // GET: admin/Contact
         private database db = new database();
-        private string username, userData = null;
+        private int username;
+        private string userData = null;
         private bool check_login()
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -22,17 +23,17 @@ namespace shopthoitrang.Areas.admin.Controllers
             {
 
                 var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-                username = authTicket.Name;
+                username = int.Parse(authTicket.Name);
                 userData = authTicket.UserData;
-                if (userData == "admin")
+                if (userData == "admin" || userData == "management")
                     check = true;
             }
             else if (user != null)
             {
-                username = Session["id_user"] as string;
+                username = int.Parse(Session["id_user"] as string);
                 int id = int.Parse(user);
-                var tk = db.Account.Where(c => c.id_user == id).FirstOrDefault();
-                if (tk.role == "admin") check = true;
+                var tk = db.Account.Where(c => c.id_user == id && c.acc_lock != "false").FirstOrDefault();
+                if (tk.role == "admin" || tk.role == "management") check = true;
             }
             return check;
 
@@ -74,7 +75,7 @@ namespace shopthoitrang.Areas.admin.Controllers
             bool check = check_login();
             if (check)
             {
-                if (message != null || message != "")
+                if (message != null || message.Trim() != "")
                 {
                     var chat = db.Conversations.Where(c => c.ConversationID == id).OrderBy(c => c.ConversationID).FirstOrDefault();
                     if (chat != null)

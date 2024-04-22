@@ -43,8 +43,6 @@ function xoa_order(url, id) {
     })
 }
 
-
-
 function thanhcong_order(url, id, mes) {
     $.ajax({
         url: url,
@@ -58,8 +56,6 @@ function thanhcong_order(url, id, mes) {
         }
     })
 }
-
-
 
 function markall(url) {
     $.ajax({
@@ -108,6 +104,18 @@ function post_chat(url) {
             if (res.result == true) {
                 console.log("thành công");
                 form.value = "";
+                $.ajax({
+                    url: '/admin/Contact/chat',
+                    method: 'GET',
+                    data: { id: a.value },
+                    success: function (response) {
+                        $('#mycontact').html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý lỗi
+                        console.error(error);
+                    },
+                })
             }
         },
     });

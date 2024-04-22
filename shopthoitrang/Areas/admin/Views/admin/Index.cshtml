@@ -239,6 +239,7 @@
                         @{
                             foreach (var item in product)
                             {
+                                List<string> anh = item.photo_pro.TrimEnd(',').Split(',').ToList();
                         <tr>
                             <td class="p-0 text-center">
                                 <div class="custom-checkbox custom-control">
@@ -246,7 +247,7 @@
                                     <label for="checkbox-@item.id_product" class="custom-control-label"></label>
                                 </div>
                             </td>
-                            <td><img class="mr-3 rounded" width="55" src="~/public/img/product/@item.photo_pro" alt="product"></td>
+                            <td><img class="mr-3 rounded" width="55" src="~/public/img/product/@anh[0]" alt="product"></td>
                             <td><a>@item.name_pro</a></td>
                             <td>@item.discount_pro</td>
                             <td>@item.buy_count</td>
